@@ -1,0 +1,5 @@
+<Window xmlns:bxml="http://pivot.apache.org/bxml" xmlns="org.apache.pivot.wtk" title="Movie Library" maximized="true">
+	<Border styles="{padding:4, thickness:0}">
+		<TabPane bxml:id="TabsContainer" styles="{buttonSpacing:8, padding:8}"></TabPane>
+	</Border>
+</Window>

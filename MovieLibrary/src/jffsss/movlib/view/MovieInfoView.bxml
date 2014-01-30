@@ -1,0 +1,12 @@
+<TablePane xmlns:bxml="http://pivot.apache.org/bxml" xmlns="org.apache.pivot.wtk">
+	<columns>
+		<TablePane.Column width="150"/>
+		<TablePane.Column width="1*"/>
+	</columns>
+	<TablePane.Row height="1*">
+		<ImageView bxml:id="PosterImage" asynchronous="true" cursor="hand" styles="{fill:true, preserveAspectRatio:true, horizontalAlignment:'center', verticalAlignment:'center'}"/>
+		<ScrollPane horizontalScrollBarPolicy="fill">
+			<TextArea bxml:id="Text" editable="false" styles="{wrapText:true}"/>
+		</ScrollPane>
+	</TablePane.Row>
+</TablePane>

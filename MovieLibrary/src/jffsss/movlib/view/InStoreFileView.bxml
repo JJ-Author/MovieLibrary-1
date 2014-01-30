@@ -1,0 +1,13 @@
+<Border xmlns:bxml="http://pivot.apache.org/bxml" xmlns="org.apache.pivot.wtk" preferredWidth="400" preferredHeight="220" styles="{backgroundColor:'white', padding:4, thickness:1}">
+	<TablePane styles="{verticalSpacing:4}">
+		<columns>
+			<TablePane.Column width="1*"/>
+		</columns>
+		<TablePane.Row height="-1">
+			<Label bxml:id="FilePathText" cursor="hand" styles="{horizontalAlignment:'right'}"/>
+		</TablePane.Row>
+		<TablePane.Row height="1*">
+			<Border bxml:id="MovieInfoViewContainer" styles="{padding:4, thickness:0}"></Border>
+		</TablePane.Row>
+	</TablePane>
+</Border>

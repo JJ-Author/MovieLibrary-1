@@ -1,0 +1,30 @@
+<Border xmlns:bxml="http://pivot.apache.org/bxml" xmlns="org.apache.pivot.wtk" styles="{backgroundColor:'white', padding:4, thickness:1}">
+	<TablePane styles="{verticalSpacing:4}">
+		<columns>
+			<TablePane.Column width="1*"/>
+		</columns>
+		<TablePane.Row height="-1">
+			<TablePane styles="{horizontalSpacing:4}">
+				<columns>
+					<TablePane.Column width="1*"/>
+					<TablePane.Column width="24"/>
+					<TablePane.Column width="96"/>
+					<TablePane.Column width="-1"/>
+					<TablePane.Column width="24"/>
+					<TablePane.Column width="-1"/>
+				</columns>
+				<TablePane.Row height="-1">
+					<Label bxml:id="FilePathText"/>
+					<TablePane.Filler/>
+					<TextInput bxml:id="AddMovieText" prompt="IMDb ID"/>
+					<PushButton bxml:id="AddMovieButton" buttonData="Add Movie"/>
+					<TablePane.Filler/>
+					<PushButton bxml:id="RemoveButton" buttonData="Remove"/>
+				</TablePane.Row>
+			</TablePane>
+		</TablePane.Row>
+		<TablePane.Row height="1*">
+			<FlowPane bxml:id="ProbablyMovieViewsContainer" styles="{padding:8, verticalSpacing:16, horizontalSpacing:16}"></FlowPane>
+		</TablePane.Row>
+	</TablePane>
+</Border>

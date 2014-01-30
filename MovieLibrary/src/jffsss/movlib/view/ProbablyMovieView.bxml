@@ -1,0 +1,28 @@
+<Border xmlns:bxml="http://pivot.apache.org/bxml" xmlns="org.apache.pivot.wtk" styles="{backgroundColor:'white', padding:4, thickness:1}">
+	<TablePane styles="{verticalSpacing:4}">
+		<columns>
+			<TablePane.Column width="1*"/>
+		</columns>
+		<TablePane.Row height="1*">
+			<Border bxml:id="MovieInfoViewContainer" preferredWidth="280" preferredHeight="180" styles="{padding:4, thickness:0}">
+				<BoxPane styles="{horizontalAlignment:'center', verticalAlignment:'center'}">
+					<ActivityIndicator active="true" preferredWidth="48" preferredHeight="48"/>
+				</BoxPane>
+			</Border>
+		</TablePane.Row>
+		<TablePane.Row height="-1">
+			<TablePane styles="{horizontalSpacing:4}">
+				<columns>
+					<TablePane.Column width="1*"/>
+					<TablePane.Column width="-1"/>
+					<TablePane.Column width="-1"/>
+				</columns>
+				<TablePane.Row height="-1">
+					<TablePane.Filler/>
+					<Label bxml:id="ProbabilityText" styles="{verticalAlignment:'center'}"/>
+					<PushButton bxml:id="ConfirmButton" buttonData="Confirm"/>
+				</TablePane.Row>
+			</TablePane>
+		</TablePane.Row>
+	</TablePane>
+</Border>

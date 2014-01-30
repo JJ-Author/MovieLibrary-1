@@ -1,0 +1,24 @@
+<TablePane xmlns:bxml="http://pivot.apache.org/bxml" xmlns="org.apache.pivot.wtk" styles="{verticalSpacing:8}">
+	<columns>
+		<TablePane.Column width="1*"/>
+	</columns>
+	<TablePane.Row height="-1">
+		<TablePane styles="{horizontalSpacing:4}">
+			<columns>
+				<TablePane.Column width="1*"/>
+				<TablePane.Column width="-1"/>
+				<TablePane.Column width="-1"/>
+			</columns>
+			<TablePane.Row height="-1">
+				<TablePane.Filler/>
+				<PushButton bxml:id="ImportFilesButton" buttonData="Import Files"/>
+				<PushButton bxml:id="ImportDirectoriesButton" buttonData="Import Directories"/>
+			</TablePane.Row>
+		</TablePane>
+	</TablePane.Row>
+	<TablePane.Row height="1*">
+		<ScrollPane horizontalScrollBarPolicy="fill" styles="{backgroundColor:null}">
+			<BoxPane bxml:id="ToStoreFileViewsContainer" orientation="vertical" styles="{padding:0, spacing:16, fill:true}"></BoxPane>
+		</ScrollPane>
+	</TablePane.Row>
+</TablePane>
