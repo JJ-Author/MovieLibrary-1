@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import jffsss.api.OMDbAPI;
+import jffsss.api.FreeBaseAPI;
 import jffsss.util.Utils;
 import jffsss.util.d.DObject;
 
@@ -25,7 +26,7 @@ public class GetMovieInfo extends Task<MovieInfo>
 		{
 			OMDbAPI _API = new OMDbAPI();
 			DObject _Response = _API.requestMovieByID(this._IMDbID);
-			return parseResponse(_Response);
+			return parseResponse(_Response,this._IMDbID);
 		}
 		catch (Exception e)
 		{
@@ -33,12 +34,28 @@ public class GetMovieInfo extends Task<MovieInfo>
 		}
 	}
 
-	private MovieInfo parseResponse(DObject _Response) throws Exception
+	private MovieInfo parseResponse(DObject _Response, String IMDbID) throws Exception
 	{
+		DObject _fResponse;
 		try
 		{
+			
+			//lookup German name and description at freebase
+			try 
+			{
+				FreeBaseAPI _fAPI = new FreeBaseAPI();
+				String langs = "de,en";
+				_fResponse = _fAPI.requestSearch(true, "\"tt"+IMDbID+"\"", "(all type:/film/film)", "(all)", 5, langs);
+			}
+			catch (Exception e)
+			{
+				throw new TaskExecutionException(e);
+			}
+			
 			Map<String, DObject> _ResponseMap = _Response.asMap();
-			String _Title = _ResponseMap.get("Title").asString();
+			String _fTitle = getMovieName(_fResponse); //get German movie title from freebase
+			String _Title =  (_fTitle!="") ? _fTitle :_ResponseMap.get("Title").asString();
+			//String _Title = _ResponseMap.get("Title").asString();
 			String _Year = _ResponseMap.get("Year").asString();
 			// Bindestrich im Jahr richtig parsen
 			String _Plot;
@@ -112,5 +129,51 @@ public class GetMovieInfo extends Task<MovieInfo>
 		{
 			throw new RuntimeException("OMDbAPIParse" + _Response + " - " +  this._IMDbID);
 		}
+	}
+	
+    public static String getMovieName(DObject _Response)
+	{
+    	String name = "";
+		if (_Response != null)
+			try
+			{
+				List<DObject> _ResponseMapList = _Response.asMap().get("result").asList();
+				for (DObject _ResponseMapListElement : _ResponseMapList)
+					try
+					{
+						Map<String, DObject> _ResponseMapListMap = _ResponseMapListElement.asMap();
+						name = _ResponseMapListMap.get("name").asString();
+					}
+					catch (Exception e)
+					{System.out.println("!!!!"); e.printStackTrace();}
+			}
+			catch (Exception e)
+			{
+				throw new RuntimeException("FreeBaseParseMovieDetail");
+			}
+		return name;
+	}
+    
+    public static String getElement(DObject _Response)
+	{
+    	String name = "";
+		if (_Response != null)
+			try
+			{
+				List<DObject> _ResponseMapList = _Response.asMap().get("result").asList();
+				for (DObject _ResponseMapListElement : _ResponseMapList)
+					try
+					{
+						Map<String, DObject> _ResponseMapListMap = _ResponseMapListElement.asMap();
+						name = _ResponseMapListMap.get("name").asString();
+					}
+					catch (Exception e)
+					{System.out.println("!!!!"); e.printStackTrace();}
+			}
+			catch (Exception e)
+			{
+				throw new RuntimeException("FreeBaseParseMovieDetail");
+			}
+		return name;
 	}
 }

@@ -19,36 +19,62 @@ public class GetIMDbIDsFromFreeBase extends Task<Map<String, Double>>
 		this._VideoFileInfo = _VideoFileInfo;
 	}
 
+	
+	
+	
 	@Override
 	public Map<String, Double> execute() throws TaskExecutionException
 	{
 		try
 		{
 			FreeBaseAPI _API = new FreeBaseAPI();
-			DObject _Response;
-			while (true)
+			String langs = "de,en";
+			//Exakte Suche
+
+			
+			DObject _Response = _API.requestSearch(true, null, "((all name{full}:\"" + this._VideoFileInfo.getCleanedFileName() + "\" type:/film/film)", "(key:/authority/imdb/title/)", 5, langs);
+			//falls kein ergebnis dann --> reihenfolge erhaltende Suche der Wörter
+			if (HasNoHit(_Response))
 			{
-				try
-				{
-					_Response = _API.requestSearch(true, null, "(all name{phrase}:\"" + this._VideoFileInfo.getCleanedFileName() + "\" type:/film/film)", "(key:/authority/imdb/title/)", 5, "en,de");
-					break;
-				}
-				catch (Exception e)
-				{
-					try
-					{
-						Thread.sleep(2000);
-					}
-					catch (Exception e2)
-					{}
-				}
+				_Response = _API.requestSearch(true, null, "(all name{phrase}:\"" + this._VideoFileInfo.getCleanedFileName() + "\" type:/film/film)", "(key:/authority/imdb/title/)", 5, langs);
+						System.out.println(this._VideoFileInfo.getCleanedFileName()+": NO HITS full");
 			}
+			//falls immer noch kein ergebnis dann suche in jedem film auf jedem schlüssel danach
+			if (HasNoHit(_Response))
+			{
+
+				_Response = _API.requestSearch(true, "\""+this._VideoFileInfo.getCleanedFileName()+"\"", "(all type:/film/film)", "(key:/authority/imdb/title/)", 5, langs);
+				System.out.println(this._VideoFileInfo.getCleanedFileName()+": NO HITS phrase");
+			}
+			if (HasNoHit(_Response))
+			{
+				System.out.println(this._VideoFileInfo.getCleanedFileName()+": NO HITS query");
+			}
+
 			return parseResponse(_Response);
 		}
 		catch (Exception e)
 		{
 			throw new TaskExecutionException(e);
 		}
+	}
+	
+	private static boolean HasNoHit(DObject _Response)
+	{
+		//System.out.print("#HITS:  ");
+		if (_Response != null)
+			try
+			{
+				int hits = _Response.asMap().get("hits").parseAsInteger();
+				//System.out.println(hits);
+				if (hits!=0)
+					return false;
+			}
+			catch (Exception e)
+			{
+				throw new RuntimeException("FreeBaseParse");
+			}
+		return true;
 	}
 
 	private static Map<String, Double> parseResponse(DObject _Response)

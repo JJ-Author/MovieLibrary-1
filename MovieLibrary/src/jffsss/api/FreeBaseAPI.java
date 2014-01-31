@@ -25,7 +25,27 @@ public class FreeBaseAPI
 		_Params.put("limit", _Limit);
 		_Params.put("lang", _Lang);
 		//_Params.put("key", "189173206573");
-		return this.executeAPI("https://www.googleapis.com/freebase/v1/search", _Params);
+		
+		DObject _Response=null;
+		for (int i=0; i<20; i++)
+		{
+			try
+			{
+				_Response = this.executeAPI("https://www.googleapis.com/freebase/v1/search", _Params);
+				return _Response;
+			}
+			catch (Exception e)
+			{
+				try
+				{// try to keep requests in limit (10 requests per second)
+					Thread.sleep(1200);
+					System.out.println("made some timeout for freebase request:");
+				}
+				catch (Exception e2)
+				{}
+			}
+		}
+		return _Response;
 	}
 
 	private DObject executeAPI(String _BaseURL, Map<String, Object> _Params)

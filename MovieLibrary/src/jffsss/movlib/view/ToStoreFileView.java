@@ -98,7 +98,7 @@ public class ToStoreFileView
 		if (this._Model.getVideoFileInfo() == null)
 			this._FilePathText.setText("");
 		else
-			this._FilePathText.setText(this._Model.getVideoFileInfo().getFileInfo().getPath());
+			this._FilePathText.setText(this._Model.getVideoFileInfo().getFileInfo().getPath()+" || "+this._Model.getVideoFileInfo().getCleanedFileName());
 	}
 
 	public void addProbablyMovieView(ProbablyMovie _ProbablyMovie)
