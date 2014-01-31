@@ -93,8 +93,8 @@ public class ToStoreFile
 		{
 			_ProbablyMovieModel = new ProbablyMovie(this._ProbablyMovies.values());
 			this._ProbablyMovies.put(_IMDbID, _ProbablyMovieModel);
-			_ProbablyMovieModel.startRetrieving(_IMDbID);
 			this.onUpdate().notifyListeners("AddProbablyMovie", _ProbablyMovieModel);
+			_ProbablyMovieModel.startRetrieving(_IMDbID);
 		}
 		return _ProbablyMovieModel;
 	}

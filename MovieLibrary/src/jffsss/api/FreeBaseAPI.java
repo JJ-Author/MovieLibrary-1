@@ -24,7 +24,7 @@ public class FreeBaseAPI
 		_Params.put("output", _Output);
 		_Params.put("limit", _Limit);
 		_Params.put("lang", _Lang);
-		_Params.put("key", "189173206573");
+		//_Params.put("key", "189173206573");
 		return this.executeAPI("https://www.googleapis.com/freebase/v1/search", _Params);
 	}
 

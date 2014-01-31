@@ -10,11 +10,11 @@ import jffsss.util.d.DObject;
 import org.apache.pivot.util.concurrent.Task;
 import org.apache.pivot.util.concurrent.TaskExecutionException;
 
-public class GetMovieInfo2 extends Task<MovieInfo>
+public class GetMovieInfo extends Task<MovieInfo>
 {
 	private String _IMDbID;
 
-	public GetMovieInfo2(String _IMDbID)
+	public GetMovieInfo(String _IMDbID)
 	{
 		this._IMDbID = _IMDbID;
 	}
@@ -33,13 +33,14 @@ public class GetMovieInfo2 extends Task<MovieInfo>
 		}
 	}
 
-	private static MovieInfo parseResponse(DObject _Response) throws Exception
+	private MovieInfo parseResponse(DObject _Response) throws Exception
 	{
 		try
 		{
 			Map<String, DObject> _ResponseMap = _Response.asMap();
 			String _Title = _ResponseMap.get("Title").asString();
-			String _Year = _ResponseMap.get("Year").asString().replace('–', '-');
+			String _Year = _ResponseMap.get("Year").asString();
+			// Bindestrich im Jahr richtig parsen
 			String _Plot;
 			try
 			{
@@ -109,7 +110,7 @@ public class GetMovieInfo2 extends Task<MovieInfo>
 		}
 		catch (Exception e)
 		{
-			throw new RuntimeException("OMDbAPIParse");
+			throw new RuntimeException("OMDbAPIParse" + _Response + " - " +  this._IMDbID);
 		}
 	}
 }

@@ -1,7 +1,6 @@
 package jffsss.movlib.view;
 
 import java.awt.Desktop;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.util.List;
@@ -92,7 +91,7 @@ public class MovieInfoView
 			{
 				this._PosterImage.setImage(new URL(_MovieInfo.getPosterSource()));
 			}
-			catch (MalformedURLException e)
+			catch (Exception e)
 			{}
 			this._Text.setText(buildTextInfo(_MovieInfo));
 		}
@@ -104,6 +103,14 @@ public class MovieInfoView
 		_StringBuilder.append(_MovieInfo.getTitle());
 		_StringBuilder.append(" ");
 		_StringBuilder.append("(" + _MovieInfo.getYear() + ")");
+		{
+			Double _IMDbRating = _MovieInfo.getIMDbRating();
+			if (_IMDbRating != null)
+			{
+				_StringBuilder.append(" - ");
+				_StringBuilder.append(_IMDbRating);
+			}
+		}
 		{
 			List<String> _Genres = _MovieInfo.getGenres();
 			if (_Genres != null)
@@ -150,7 +157,6 @@ public class MovieInfoView
 				_StringBuilder.append("Actors:");
 				_StringBuilder.append(" ");
 				_StringBuilder.append(Utils.join(_Actors, ", "));
-				// _Actors.subList(0, Math.min(_Actors.size(), 6))
 			}
 		}
 		return _StringBuilder.toString();

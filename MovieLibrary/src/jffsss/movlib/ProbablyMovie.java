@@ -33,7 +33,7 @@ public class ProbablyMovie
 
 	public void startRetrieving(String _IMDbID)
 	{
-		Task<MovieInfo> _Task = new GetMovieInfo2(_IMDbID);
+		Task<MovieInfo> _Task = new GetMovieInfo(_IMDbID);
 		TaskListener<MovieInfo> _TaskListener = new GetMovieInfoListener();
 		_Task.execute(new TaskAdapter<MovieInfo>(_TaskListener));
 	}
