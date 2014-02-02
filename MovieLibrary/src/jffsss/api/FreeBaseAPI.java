@@ -1,17 +1,22 @@
 package jffsss.api;
 
+import java.lang.InterruptedException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import jffsss.util.Utils;
 import jffsss.util.d.D;
 import jffsss.util.d.DObject;
+import jffsss.util.RequestLimiter;
 
 public class FreeBaseAPI
 {
+	static RequestLimiter request_limiter = new RequestLimiter(30);
 	public FreeBaseAPI()
 	{}
 
@@ -24,22 +29,33 @@ public class FreeBaseAPI
 		_Params.put("output", _Output);
 		_Params.put("limit", _Limit);
 		_Params.put("lang", _Lang);
-		//_Params.put("key", "189173206573");
+		_Params.put("key", "AIzaSyBfL-V2dsatdGVKyOZn3iYPQ3tVUbx7Tcg");
 		
 		DObject _Response=null;
-		for (int i=0; i<20; i++)
+		for (int i=0; i<3; i++)
 		{
 			try
-			{
+			{// try to keep requests in limit (30 requests per second)
+				//Date d = new Date(System.currentTimeMillis()); 
+				//SimpleDateFormat ft = new SimpleDateFormat ("HH:mm:ss.SSS");
+				long s_time = request_limiter.getWaitTime(); 
+				//System.out.println("Thread "+Thread.currentThread().getId()+" got sleep time of "+s_time+" at \t\t"+ft.format(d));
+				Thread.sleep(s_time); 
+				//d = new Date(System.currentTimeMillis()); 
+				//System.out.println("Thread "+Thread.currentThread().getId()+" woke up at "+ft.format(d));
 				_Response = this.executeAPI("https://www.googleapis.com/freebase/v1/search", _Params);
 				return _Response;
+			}
+			catch (InterruptedException e)
+			{
+				System.out.println("<<<<<<< Thread interrupted before end of sleep Freebase API>>>>>>>>>>>>>>>>");
 			}
 			catch (Exception e)
 			{
 				try
 				{// try to keep requests in limit (10 requests per second)
-					Thread.sleep(1200);
-					System.out.println("made some timeout for freebase request:");
+					Thread.sleep(1200/*request_limiter.getWaitTime()*/); 
+					System.out.println("made some extra timeout for freebase request:"+ e.getMessage());
 				}
 				catch (Exception e2)
 				{}

@@ -32,7 +32,7 @@ public class GetIMDbIDsFromFreeBase extends Task<Map<String, Double>>
 			//Exakte Suche
 
 			
-			DObject _Response = _API.requestSearch(true, null, "((all name{full}:\"" + this._VideoFileInfo.getCleanedFileName() + "\" type:/film/film)", "(key:/authority/imdb/title/)", 5, langs);
+			DObject _Response = _API.requestSearch(true, null, "(all name{full}:\"" + this._VideoFileInfo.getCleanedFileName() + "\" type:/film/film)", "(key:/authority/imdb/title/)", 5, langs);
 			//falls kein ergebnis dann --> reihenfolge erhaltende Suche der Wörter
 			if (HasNoHit(_Response))
 			{

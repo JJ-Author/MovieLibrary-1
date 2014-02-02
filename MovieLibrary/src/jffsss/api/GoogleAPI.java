@@ -3,7 +3,9 @@ package jffsss.api;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +13,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
+import jffsss.util.RequestLimiter;
 import jffsss.util.Utils;
 import jffsss.util.d.DList;
 import jffsss.util.d.DMap;
@@ -19,11 +22,24 @@ import jffsss.util.d.DString;
 
 public class GoogleAPI
 {
+	static RequestLimiter request_limiter = new RequestLimiter(1);
 	public GoogleAPI()
 	{}
 
 	public DObject requestSearch(String _Query, Integer _Page, Integer _Count)
 	{
+		Date d = new Date(System.currentTimeMillis()); 
+		SimpleDateFormat ft = new SimpleDateFormat ("HH:mm:ss.SSS");
+		long s_time = request_limiter.getWaitTime(); 
+		System.out.println("Google Thread "+Thread.currentThread().getId()+" got sleep time of "+s_time+" at \t\t"+ft.format(d));
+		try {
+			Thread.sleep(s_time);
+		} catch (InterruptedException e) {
+			System.out.println("<<<<<<< Thread interrupted before end of sleep Google API>>>>>>>>>>>>>>>>");
+		} 
+		d = new Date(System.currentTimeMillis()); 
+		System.out.println("Google Thread "+Thread.currentThread().getId()+" woke up at "+ft.format(d));
+		
 		Map<String, Object> _Params = new HashMap<String, Object>();
 		_Params.put("q", _Query);
 		_Params.put("start", _Page);
