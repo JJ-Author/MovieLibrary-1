@@ -1,7 +1,6 @@
 package jffsss.util.d;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import jffsss.util.Utils;
@@ -12,12 +11,13 @@ public class DList extends DAbstractObject
 
 	public DList()
 	{
-		this(Collections.<DObject>emptyList());
+		this._Value = new ArrayList<DObject>();
 	}
 
 	public DList(List<DObject> _Value)
 	{
-		this._Value = new ArrayList<DObject>(_Value);
+		this();
+		this._Value.addAll(_Value);
 	}
 
 	@Override

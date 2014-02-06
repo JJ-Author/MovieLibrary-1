@@ -89,13 +89,17 @@ public class InStoreFilesCollectionView
 	{
 		InStoreFileView _InStoreFileView = this._InStoreFileViews.remove(_InStoreFileModel);
 		if (_InStoreFileView != null)
+		{
 			this._InStoreFileViewsContainer.remove(_InStoreFileView.getComponent());
+		}
 	}
 
 	public void removeAllInStoreFileViews()
 	{
 		for (InStoreFileView _InStoreFileView : this._InStoreFileViews.values())
+		{
 			this._InStoreFileViewsContainer.remove(_InStoreFileView.getComponent());
+		}
 		this._InStoreFileViews.clear();
 	}
 
@@ -107,6 +111,7 @@ public class InStoreFilesCollectionView
 		public void on(Object _Source, String _Command, Object _Arg)
 		{
 			if (_Source == InStoreFilesCollectionView.this._Model)
+			{
 				switch (_Command)
 				{
 					case "AddInStoreFile":
@@ -121,6 +126,7 @@ public class InStoreFilesCollectionView
 						InStoreFilesCollectionView.this.removeAllInStoreFileViews();
 						break;
 				}
+			}
 		}
 	}
 }

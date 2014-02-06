@@ -1,12 +1,19 @@
 package jffsss.util.d;
 
+import jffsss.ParseException;
+
 public class DString extends DAbstractObject
 {
 	private String _Value;
 
-	public DString(String oValue)
+	public DString(String _Value)
 	{
-		this._Value = oValue;
+		this._Value = _Value;
+	}
+	
+	public DString(int _Value)
+	{
+		this(String.valueOf(_Value));
 	}
 
 	@Override
@@ -22,7 +29,7 @@ public class DString extends DAbstractObject
 	}
 
 	@Override
-	public Boolean parseAsBoolean()
+	public Boolean parseAsBoolean() throws ParseException
 	{
 		try
 		{
@@ -30,12 +37,12 @@ public class DString extends DAbstractObject
 		}
 		catch (Exception e)
 		{
-			throw new RuntimeException("Parse");
+			throw new ParseException();
 		}
 	}
 
 	@Override
-	public Integer parseAsInteger()
+	public Integer parseAsInteger() throws ParseException
 	{
 		try
 		{
@@ -43,12 +50,12 @@ public class DString extends DAbstractObject
 		}
 		catch (Exception e)
 		{
-			throw new RuntimeException("Parse");
+			throw new ParseException();
 		}
 	}
 
 	@Override
-	public Long parseAsLong()
+	public Long parseAsLong() throws ParseException
 	{
 		try
 		{
@@ -56,12 +63,12 @@ public class DString extends DAbstractObject
 		}
 		catch (Exception e)
 		{
-			throw new RuntimeException("Parse");
+			throw new ParseException();
 		}
 	}
 
 	@Override
-	public Double parseAsDouble()
+	public Double parseAsDouble() throws ParseException
 	{
 		try
 		{
@@ -69,7 +76,7 @@ public class DString extends DAbstractObject
 		}
 		catch (Exception e)
 		{
-			throw new RuntimeException("Parse");
+			throw new ParseException();
 		}
 	}
 

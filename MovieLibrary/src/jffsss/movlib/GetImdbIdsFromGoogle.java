@@ -4,17 +4,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import jffsss.api.GoogleAPI;
+import jffsss.ParseException;
+import jffsss.api.GoogleApi;
 import jffsss.util.d.DObject;
 
 import org.apache.pivot.util.concurrent.Task;
 import org.apache.pivot.util.concurrent.TaskExecutionException;
 
-public class GetIMDbIDsFromGoogle extends Task<Map<String, Double>>
+public class GetImdbIdsFromGoogle extends Task<Map<String, Double>>
 {
 	private VideoFileInfo _VideoFileInfo;
 
-	public GetIMDbIDsFromGoogle(VideoFileInfo _FilePath)
+	public GetImdbIdsFromGoogle(VideoFileInfo _FilePath)
 	{
 		this._VideoFileInfo = _FilePath;
 	}
@@ -24,38 +25,42 @@ public class GetIMDbIDsFromGoogle extends Task<Map<String, Double>>
 	{
 		try
 		{
-			GoogleAPI _API = new GoogleAPI();
-			DObject _Response = _API.requestSearch(this._VideoFileInfo.getCleanedFileName() + " site:imdb.com", 0, 5);
-			return parseResponse(_Response);
+			GoogleApi _Api = new GoogleApi();
+			DObject _Response = _Api.requestSearch(this._VideoFileInfo.getCleanedFileName() + " site:imdb.com", 0, 5);
+			return parseResponse(_Response.asMap().get("Content"));
 		}
 		catch (Exception e)
 		{
-			throw new TaskExecutionException(e);
+			throw new TaskExecutionException(e.getMessage());
 		}
 	}
 
-	private static Map<String, Double> parseResponse(DObject _Response)
+	private static Map<String, Double> parseResponse(DObject _Response) throws ParseException
 	{
 		Map<String, Double> _ResultMap = new HashMap<String, Double>();
 		if (_Response != null)
+		{
 			try
 			{
 				List<DObject> _ResponseList = _Response.asList();
 				for (DObject _ResponseListElement : _ResponseList)
+				{
 					try
 					{
 						Map<String, DObject> _ResponseListMap = _ResponseListElement.asMap();
-						String _IMDbID = MovieInfo.extractIMDbIDFromURL(_ResponseListMap.get("Link").asString());
+						String _ImdbId = MovieInfo.extractImdbIdFromUrl(_ResponseListMap.get("Link").asString());
 						Double _Factor = 1.0;
-						_ResultMap.put(_IMDbID, _Factor);
+						_ResultMap.put(_ImdbId, _Factor);
 					}
 					catch (Exception e)
 					{}
+				}
 			}
 			catch (Exception e)
 			{
-				throw new RuntimeException("GoogleParse");
+				throw new ParseException();
 			}
+		}
 		return _ResultMap;
 	}
 }

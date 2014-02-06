@@ -1,6 +1,5 @@
 package jffsss.util.d;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,12 +9,13 @@ public class DMap extends DAbstractObject
 
 	public DMap()
 	{
-		this(Collections.<String, DObject>emptyMap());
+		this._Value = new HashMap<String, DObject>();
 	}
 
 	public DMap(Map<String, DObject> _Value)
 	{
-		this._Value = new HashMap<String, DObject>(_Value);
+		this();
+		this._Value.putAll(_Value);
 	}
 
 	@Override

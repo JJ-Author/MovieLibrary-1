@@ -49,7 +49,7 @@ public class MovieInfoView
 						if (Desktop.isDesktopSupported())
 							try
 							{
-								Desktop.getDesktop().browse(new URI(MovieInfoView.this._MovieInfo.getIMDbURL()));
+								Desktop.getDesktop().browse(new URI(MovieInfoView.this._MovieInfo.getImdbUrl()));
 							}
 							catch (Exception e)
 							{}
@@ -104,7 +104,7 @@ public class MovieInfoView
 		_StringBuilder.append(" ");
 		_StringBuilder.append("(" + _MovieInfo.getYear() + ")");
 		{
-			Double _IMDbRating = _MovieInfo.getIMDbRating();
+			Double _IMDbRating = _MovieInfo.getImdbRating();
 			if (_IMDbRating != null)
 			{
 				_StringBuilder.append(" - ");

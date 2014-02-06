@@ -27,7 +27,9 @@ public class ToStoreFile
 	public Listeners onUpdate()
 	{
 		if (this.onUpdate == null)
+		{
 			this.onUpdate = new Listeners(this);
+		}
 		return this.onUpdate;
 	}
 
@@ -70,38 +72,38 @@ public class ToStoreFile
 	public void startRetrievingProbablyMovies()
 	{
 		{
-			Task<Map<String, Double>> _Task = new GetIMDbIDsFromOpenSubtitles(this._VideoFileInfo);
-			TaskListener<Map<String, Double>> _TaskListener = new GetIMDbIDsListener(3);
+			Task<Map<String, Double>> _Task = new GetImdbIdsFromOpenSubtitles(this._VideoFileInfo);
+			TaskListener<Map<String, Double>> _TaskListener = new GetImdbIdsListener(3);
 			_Task.execute(new TaskAdapter<Map<String, Double>>(_TaskListener));
 		}
 		{
-			Task<Map<String, Double>> _Task = new GetIMDbIDsFromGoogle(this._VideoFileInfo);
-			TaskListener<Map<String, Double>> _TaskListener = new GetIMDbIDsListener(1);
+			Task<Map<String, Double>> _Task = new GetImdbIdsFromGoogle(this._VideoFileInfo);
+			TaskListener<Map<String, Double>> _TaskListener = new GetImdbIdsListener(1);
 			_Task.execute(new TaskAdapter<Map<String, Double>>(_TaskListener));
 		}
 		{
-			Task<Map<String, Double>> _Task = new GetIMDbIDsFromFreeBase(this._VideoFileInfo);
-			TaskListener<Map<String, Double>> _TaskListener = new GetIMDbIDsListener(1);
+			Task<Map<String, Double>> _Task = new GetImdbIdsFromFreeBase(this._VideoFileInfo);
+			TaskListener<Map<String, Double>> _TaskListener = new GetImdbIdsListener(1);
 			_Task.execute(new TaskAdapter<Map<String, Double>>(_TaskListener));
 		}
 	}
 
-	public ProbablyMovie addProbablyMovie(String _IMDbID)
+	public ProbablyMovie addProbablyMovie(String _ImdbId)
 	{
-		ProbablyMovie _ProbablyMovieModel = this._ProbablyMovies.get(_IMDbID);
+		ProbablyMovie _ProbablyMovieModel = this._ProbablyMovies.get(_ImdbId);
 		if (_ProbablyMovieModel == null)
 		{
 			_ProbablyMovieModel = new ProbablyMovie(this._ProbablyMovies.values());
-			this._ProbablyMovies.put(_IMDbID, _ProbablyMovieModel);
+			this._ProbablyMovies.put(_ImdbId, _ProbablyMovieModel);
 			this.onUpdate().notifyListeners("AddProbablyMovie", _ProbablyMovieModel);
-			_ProbablyMovieModel.startRetrieving(_IMDbID);
+			_ProbablyMovieModel.startRetrieving(_ImdbId);
 		}
 		return _ProbablyMovieModel;
 	}
 
-	public ProbablyMovie getProbablyMovie(String _IMDbID)
+	public ProbablyMovie getProbablyMovie(String _ImdbId)
 	{
-		return this._ProbablyMovies.get(_IMDbID);
+		return this._ProbablyMovies.get(_ImdbId);
 	}
 
 	public List<ProbablyMovie> getAllProbablyMovies()
@@ -109,11 +111,11 @@ public class ToStoreFile
 		return new ArrayList<ProbablyMovie>(this._ProbablyMovies.values());
 	}
 
-	private class GetIMDbIDsListener implements TaskListener<Map<String, Double>>
+	private class GetImdbIdsListener implements TaskListener<Map<String, Double>>
 	{
 		private double _AdditionalFactor;
 
-		public GetIMDbIDsListener(double _AdditionalFactor)
+		public GetImdbIdsListener(double _AdditionalFactor)
 		{
 			this._AdditionalFactor = _AdditionalFactor;
 		}
@@ -124,12 +126,14 @@ public class ToStoreFile
 			Map<String, Double> _Results = _Task.getResult();
 			double _TotalCount = 0;
 			for (Map.Entry<String, Double> _Result : _Results.entrySet())
+			{
 				_TotalCount += _Result.getValue();
+			}
 			for (Map.Entry<String, Double> _Result : _Results.entrySet())
 			{
-				String _IMDbID = _Result.getKey();
+				String _ImdbId = _Result.getKey();
 				double _Factor = _TotalCount > 0 ? _Result.getValue() / _TotalCount : 0;
-				ProbablyMovie _ProbablyMovie = ToStoreFile.this.addProbablyMovie(_IMDbID);
+				ProbablyMovie _ProbablyMovie = ToStoreFile.this.addProbablyMovie(_ImdbId);
 				_ProbablyMovie.incProbability(_Factor + this._AdditionalFactor);
 			}
 		}

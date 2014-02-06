@@ -3,6 +3,8 @@ package jffsss.util.d;
 import java.util.List;
 import java.util.Map;
 
+import jffsss.ParseException;
+
 public class DAbstractObject implements DObject
 {
 	public DAbstractObject()
@@ -17,13 +19,13 @@ public class DAbstractObject implements DObject
 	@Override
 	public String asString()
 	{
-		throw new RuntimeException("Unsupported");
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public Boolean parseAsBoolean()
+	public Boolean parseAsBoolean() throws ParseException
 	{
-		throw new RuntimeException("Unsupported");
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
@@ -33,16 +35,16 @@ public class DAbstractObject implements DObject
 		{
 			return this.parseAsBoolean();
 		}
-		catch (Exception e)
+		catch (ParseException e)
 		{
 			return _DefaultValue;
 		}
 	}
 
 	@Override
-	public Integer parseAsInteger()
+	public Integer parseAsInteger() throws ParseException
 	{
-		throw new RuntimeException("Unsupported");
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
@@ -52,16 +54,16 @@ public class DAbstractObject implements DObject
 		{
 			return this.parseAsInteger();
 		}
-		catch (Exception e)
+		catch (ParseException e)
 		{
 			return _DefaultValue;
 		}
 	}
 
 	@Override
-	public Long parseAsLong()
+	public Long parseAsLong() throws ParseException
 	{
-		throw new RuntimeException("Unsupported");
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
@@ -71,16 +73,16 @@ public class DAbstractObject implements DObject
 		{
 			return this.parseAsLong();
 		}
-		catch (Exception e)
+		catch (ParseException e)
 		{
 			return _DefaultValue;
 		}
 	}
 
 	@Override
-	public Double parseAsDouble()
+	public Double parseAsDouble() throws ParseException
 	{
-		throw new RuntimeException("Unsupported");
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
@@ -90,7 +92,7 @@ public class DAbstractObject implements DObject
 		{
 			return this.parseAsDouble();
 		}
-		catch (Exception e)
+		catch (ParseException e)
 		{
 			return _DefaultValue;
 		}
@@ -105,7 +107,7 @@ public class DAbstractObject implements DObject
 	@Override
 	public List<DObject> asList()
 	{
-		throw new RuntimeException("Unsupported");
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
@@ -117,6 +119,6 @@ public class DAbstractObject implements DObject
 	@Override
 	public Map<String, DObject> asMap()
 	{
-		throw new RuntimeException("Unsupported");
+		throw new UnsupportedOperationException();
 	}
 }

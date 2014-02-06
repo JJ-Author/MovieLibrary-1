@@ -45,13 +45,17 @@ public class InStoreFileView
 				public boolean mouseClick(Component _Component, Mouse.Button _MouseButton, int _X, int _Y, int _Count)
 				{
 					if (InStoreFileView.this._Model.getFileInfo() != null)
+					{
 						if (Desktop.isDesktopSupported())
+						{
 							try
 							{
 								Desktop.getDesktop().open(new File(InStoreFileView.this._Model.getFileInfo().getPath()));
 							}
 							catch (Exception e)
 							{}
+						}
+					}
 					return true;
 				}
 
@@ -87,7 +91,9 @@ public class InStoreFileView
 	{
 		FileInfo _FileInfo = this._Model.getFileInfo();
 		if (_FileInfo != null)
+		{
 			this._FilePathText.setText(_FileInfo.getPath());
+		}
 	}
 
 	public void updateMovieInfo()

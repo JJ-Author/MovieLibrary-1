@@ -1,6 +1,7 @@
 package jffsss.movlib;
 
 import java.io.File;
+import java.io.IOException;
 
 import jffsss.api.OpenSubtitlesHasher;
 import jffsss.util.FileNameCleaner;
@@ -18,7 +19,7 @@ public class VideoFileInfo
 		this._CleanedFileName = _CleanedFileName;
 	}
 
-	public static VideoFileInfo getFromFile(String _FilePath)
+	public static VideoFileInfo getFromFile(String _FilePath) throws IOException
 	{
 		FileInfo _FileInfo = FileInfo.getFromFile(_FilePath);
 		String _OpenSubtitlesHash = OpenSubtitlesHasher.computeHash(new File(_FilePath));

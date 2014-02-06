@@ -97,9 +97,13 @@ public class ProbablyMovieView
 		double _TotalCount = this._Model.getProbabilityTotalCount();
 		double _Probability = _TotalCount > 0 ? this._Model.getProbabilityCount() / _TotalCount : 0;
 		if (_Probability > 0)
+		{
 			this._ProbabilityText.setText(MessageFormat.format("{0,number,#.##%}", _Probability));
+		}
 		else
+		{
 			this._ProbabilityText.setText("");
+		}
 	}
 
 	public void clean()
@@ -114,6 +118,7 @@ public class ProbablyMovieView
 		public void on(Object _Source, String _Command, Object _Arg)
 		{
 			if (_Source == ProbablyMovieView.this._Model)
+			{
 				switch (_Command)
 				{
 					case "SetMovieInfo":
@@ -123,6 +128,7 @@ public class ProbablyMovieView
 						ProbablyMovieView.this.updateProbability();
 						break;
 				}
+			}
 		}
 	}
 }

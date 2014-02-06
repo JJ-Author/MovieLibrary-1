@@ -3,8 +3,9 @@ package jffsss.movlib;
 import java.util.List;
 import java.util.Map;
 
-import jffsss.api.OMDbAPI;
-import jffsss.api.FreeBaseAPI;
+import jffsss.ParseException;
+import jffsss.api.OmdbApi;
+import jffsss.api.FreeBaseApi;
 import jffsss.util.Utils;
 import jffsss.util.d.DObject;
 
@@ -13,55 +14,50 @@ import org.apache.pivot.util.concurrent.TaskExecutionException;
 
 public class GetMovieInfo extends Task<MovieInfo>
 {
-	private String _IMDbID;
+	private String _ImdbId;
 
-	public GetMovieInfo(String _IMDbID)
+	public GetMovieInfo(String _ImdbId)
 	{
-		this._IMDbID = _IMDbID;
+		this._ImdbId = _ImdbId;
 	}
 
 	public MovieInfo execute() throws TaskExecutionException
 	{
 		try
 		{
-			OMDbAPI _API = new OMDbAPI();
-			DObject _Response = _API.requestMovieByID(this._IMDbID);
-			return parseResponse(_Response,this._IMDbID);
+			OmdbApi _OmdbApi = new OmdbApi();
+			DObject _OmdbResponse = _OmdbApi.requestMovieById(this._ImdbId);
+			FreeBaseApi _FreeBaseApi = new FreeBaseApi();
+			DObject _FreeBaseResponse = _FreeBaseApi.requestSearch(true, "\"tt" + _ImdbId + "\"", "(all type:/film/film)", "(all)", 1, "de,en");
+			return parseResponse(_OmdbResponse.asMap().get("Content"), _FreeBaseResponse.asMap().get("Content"), this._ImdbId);
 		}
 		catch (Exception e)
 		{
-			throw new TaskExecutionException(e);
+			throw new TaskExecutionException(e.getMessage());
 		}
 	}
 
-	private MovieInfo parseResponse(DObject _Response, String IMDbID) throws Exception
+	private MovieInfo parseResponse(DObject _OmdbResponse, DObject _FreeBaseResponse, String _ImdbId) throws ParseException
 	{
-		DObject _fResponse;
 		try
 		{
-			
-			//lookup German name and description at freebase
-			try 
+			Map<String, DObject> _OmdbResponseMap = _OmdbResponse.asMap();
+			Map<String, DObject> _FreeBaseResponseMap = _FreeBaseResponse.asMap();
+			String _Title;
+			try
 			{
-				FreeBaseAPI _fAPI = new FreeBaseAPI();
-				String langs = "de,en";
-				_fResponse = _fAPI.requestSearch(true, "\"tt"+IMDbID+"\"", "(all type:/film/film)", "(all)", 5, langs);
+				_Title = _FreeBaseResponseMap.get("result").asList().get(0).asMap().get("name").asString();
 			}
 			catch (Exception e)
 			{
-				throw new TaskExecutionException(e);
+				_Title = _OmdbResponseMap.get("Title").asString();
 			}
-			
-			Map<String, DObject> _ResponseMap = _Response.asMap();
-			String _fTitle = getMovieName(_fResponse); //get German movie title from freebase
-			String _Title =  (_fTitle!="") ? _fTitle :_ResponseMap.get("Title").asString();
-			//String _Title = _ResponseMap.get("Title").asString();
-			String _Year = _ResponseMap.get("Year").asString();
+			String _Year = _OmdbResponseMap.get("Year").asString();
 			// Bindestrich im Jahr richtig parsen
 			String _Plot;
 			try
 			{
-				_Plot = _ResponseMap.get("Plot").asString();
+				_Plot = _OmdbResponseMap.get("Plot").asString();
 			}
 			catch (Exception e)
 			{
@@ -70,7 +66,7 @@ public class GetMovieInfo extends Task<MovieInfo>
 			List<String> _Genres;
 			try
 			{
-				_Genres = Utils.split(_ResponseMap.get("Genre").asString(), ", ");
+				_Genres = Utils.split(_OmdbResponseMap.get("Genre").asString(), ", ");
 			}
 			catch (Exception e)
 			{
@@ -79,7 +75,7 @@ public class GetMovieInfo extends Task<MovieInfo>
 			List<String> _Directors;
 			try
 			{
-				_Directors = Utils.split(_ResponseMap.get("Director").asString(), ", ");
+				_Directors = Utils.split(_OmdbResponseMap.get("Director").asString(), ", ");
 			}
 			catch (Exception e)
 			{
@@ -88,7 +84,7 @@ public class GetMovieInfo extends Task<MovieInfo>
 			List<String> _Writers;
 			try
 			{
-				_Writers = Utils.split(_ResponseMap.get("Writer").asString(), ", ");
+				_Writers = Utils.split(_OmdbResponseMap.get("Writer").asString(), ", ");
 			}
 			catch (Exception e)
 			{
@@ -97,17 +93,17 @@ public class GetMovieInfo extends Task<MovieInfo>
 			List<String> _Actors;
 			try
 			{
-				_Actors = Utils.split(_ResponseMap.get("Actors").asString(), ", ");
+				_Actors = Utils.split(_OmdbResponseMap.get("Actors").asString(), ", ");
 			}
 			catch (Exception e)
 			{
 				_Actors = null;
 			}
-			String _IMDbID = _ResponseMap.get("imdbID").asString().substring(2);
+			String _IMDbID = _OmdbResponseMap.get("imdbID").asString().substring(2);
 			Double _IMDbRating;
 			try
 			{
-				_IMDbRating = _ResponseMap.get("imdbRating").parseAsDouble();
+				_IMDbRating = _OmdbResponseMap.get("imdbRating").parseAsDouble();
 			}
 			catch (Exception e)
 			{
@@ -116,7 +112,7 @@ public class GetMovieInfo extends Task<MovieInfo>
 			String _PosterSource;
 			try
 			{
-				_PosterSource = _ResponseMap.get("Poster").asString();
+				_PosterSource = _OmdbResponseMap.get("Poster").asString();
 			}
 			catch (Exception e)
 			{
@@ -127,13 +123,14 @@ public class GetMovieInfo extends Task<MovieInfo>
 		}
 		catch (Exception e)
 		{
-			throw new RuntimeException("OMDbAPIParse" + _Response + " - " +  this._IMDbID);
+			throw new ParseException("OMDbAPIParse" + _OmdbResponse + " - " + this._ImdbId);
 		}
 	}
-	
-    public static String getMovieName(DObject _Response)
+
+	@SuppressWarnings("unused")
+	private static String getElement(DObject _Response)
 	{
-    	String name = "";
+		String name = "";
 		if (_Response != null)
 			try
 			{
@@ -145,30 +142,10 @@ public class GetMovieInfo extends Task<MovieInfo>
 						name = _ResponseMapListMap.get("name").asString();
 					}
 					catch (Exception e)
-					{System.out.println("!!!!"); e.printStackTrace();}
-			}
-			catch (Exception e)
-			{
-				throw new RuntimeException("FreeBaseParseMovieDetail");
-			}
-		return name;
-	}
-    
-    public static String getElement(DObject _Response)
-	{
-    	String name = "";
-		if (_Response != null)
-			try
-			{
-				List<DObject> _ResponseMapList = _Response.asMap().get("result").asList();
-				for (DObject _ResponseMapListElement : _ResponseMapList)
-					try
 					{
-						Map<String, DObject> _ResponseMapListMap = _ResponseMapListElement.asMap();
-						name = _ResponseMapListMap.get("name").asString();
+						System.out.println("!!!!");
+						e.printStackTrace();
 					}
-					catch (Exception e)
-					{System.out.println("!!!!"); e.printStackTrace();}
 			}
 			catch (Exception e)
 			{

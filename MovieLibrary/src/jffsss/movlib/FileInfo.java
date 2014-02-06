@@ -1,6 +1,7 @@
 package jffsss.movlib;
 
 import java.io.File;
+import java.io.IOException;
 
 public class FileInfo
 {
@@ -13,7 +14,7 @@ public class FileInfo
 		this._Size = _Size;
 	}
 
-	public static FileInfo getFromFile(String _FilePath)
+	public static FileInfo getFromFile(String _FilePath) throws IOException
 	{
 		try
 		{
@@ -23,7 +24,7 @@ public class FileInfo
 		}
 		catch (Exception e)
 		{
-			throw new RuntimeException("I/O", e);
+			throw new IOException(e.getMessage());
 		}
 	}
 

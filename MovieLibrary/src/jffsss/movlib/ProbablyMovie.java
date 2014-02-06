@@ -27,13 +27,15 @@ public class ProbablyMovie
 	public Listeners onUpdate()
 	{
 		if (this.onUpdate == null)
+		{
 			this.onUpdate = new Listeners(this);
+		}
 		return this.onUpdate;
 	}
 
-	public void startRetrieving(String _IMDbID)
+	public void startRetrieving(String _ImdbId)
 	{
-		Task<MovieInfo> _Task = new GetMovieInfo(_IMDbID);
+		Task<MovieInfo> _Task = new GetMovieInfo(_ImdbId);
 		TaskListener<MovieInfo> _TaskListener = new GetMovieInfoListener();
 		_Task.execute(new TaskAdapter<MovieInfo>(_TaskListener));
 	}
@@ -69,8 +71,12 @@ public class ProbablyMovie
 	{
 		this._ProbabilityCount += _Count;
 		if (this._ProbablyMovies != null)
+		{
 			for (ProbablyMovie _ProbablyMovie : this._ProbablyMovies)
+			{
 				_ProbablyMovie.onUpdate().notifyListeners("SetProbability", null);
+			}
+		}
 	}
 
 	public double getProbabilityCount()
@@ -82,8 +88,12 @@ public class ProbablyMovie
 	{
 		double _TotalCount = 0;
 		if (this._ProbablyMovies != null)
+		{
 			for (ProbablyMovie _ProbablyMovie : this._ProbablyMovies)
+			{
 				_TotalCount += _ProbablyMovie.getProbabilityCount();
+			}
+		}
 		return _TotalCount;
 	}
 }

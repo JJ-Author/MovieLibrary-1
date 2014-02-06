@@ -79,7 +79,9 @@ public class ToStoreFileView
 	public Listeners onAction()
 	{
 		if (this.onAction == null)
+		{
 			this.onAction = new Listeners(this);
+		}
 		return this.onAction;
 	}
 
@@ -96,9 +98,13 @@ public class ToStoreFileView
 	public void updateVideoFileInfo()
 	{
 		if (this._Model.getVideoFileInfo() == null)
+		{
 			this._FilePathText.setText("");
+		}
 		else
-			this._FilePathText.setText(this._Model.getVideoFileInfo().getFileInfo().getPath()+" || "+this._Model.getVideoFileInfo().getCleanedFileName());
+		{
+			this._FilePathText.setText(this._Model.getVideoFileInfo().getFileInfo().getPath() + " || " + this._Model.getVideoFileInfo().getCleanedFileName());
+		}
 	}
 
 	public void addProbablyMovieView(ProbablyMovie _ProbablyMovie)
@@ -146,6 +152,7 @@ public class ToStoreFileView
 		public void on(Object _Source, String _Command, Object _Arg)
 		{
 			if (_Source == ToStoreFileView.this._Model)
+			{
 				switch (_Command)
 				{
 					case "SetVideoFileInfo":
@@ -156,6 +163,7 @@ public class ToStoreFileView
 							ToStoreFileView.this.addProbablyMovieView((ProbablyMovie) _Arg);
 						break;
 				}
+			}
 		}
 	}
 

@@ -61,53 +61,59 @@ public class InStoreFilesCollection implements Closeable
 	public Listeners onUpdate()
 	{
 		if (this.onUpdate == null)
+		{
 			this.onUpdate = new Listeners(this);
+		}
 		return this.onUpdate;
 	}
 
-	public InStoreFile addInStoreFile(Integer _LuceneID) throws IOException
+	public InStoreFile addInStoreFile(Integer _LuceneId) throws IOException
 	{
 		DirectoryReader _DirectoryReader = this.getDirectoryReader();
-		return this.addInStoreFile(_LuceneID, _DirectoryReader);
+		return this.addInStoreFile(_LuceneId, _DirectoryReader);
 	}
 
-	private InStoreFile addInStoreFile(Integer _LuceneID, DirectoryReader _DirectoryReader) throws IOException
+	private InStoreFile addInStoreFile(Integer _LuceneId, DirectoryReader _DirectoryReader) throws IOException
 	{
-		InStoreFile _InStoreFile = this._InStoreFiles.get(_LuceneID);
+		InStoreFile _InStoreFile = this._InStoreFiles.get(_LuceneId);
 		if (_InStoreFile == null)
 		{
-			_InStoreFile = createInStoreFile(_LuceneID, _DirectoryReader);
+			_InStoreFile = createInStoreFile(_LuceneId, _DirectoryReader);
 			this.onUpdate().notifyListeners("AddInStoreFile", _InStoreFile);
 		}
 		return _InStoreFile;
 	}
 
-	public List<InStoreFile> addInStoreFiles(List<Integer> _LuceneIDs) throws IOException
+	public List<InStoreFile> addInStoreFiles(List<Integer> _LuceneIds) throws IOException
 	{
 		DirectoryReader _DirectoryReader = this.getDirectoryReader();
-		return this.addInStoreFiles(_LuceneIDs, _DirectoryReader);
+		return this.addInStoreFiles(_LuceneIds, _DirectoryReader);
 	}
 
-	private List<InStoreFile> addInStoreFiles(List<Integer> _LuceneIDs, DirectoryReader _DirectoryReader) throws IOException
+	private List<InStoreFile> addInStoreFiles(List<Integer> _LuceneIds, DirectoryReader _DirectoryReader) throws IOException
 	{
 		List<InStoreFile> _InStoreFiles = new ArrayList<InStoreFile>();
-		for (Integer _LuceneID : _LuceneIDs)
-			_InStoreFiles.add(this.addInStoreFile(_LuceneID, _DirectoryReader));
+		for (Integer _LuceneId : _LuceneIds)
+		{
+			_InStoreFiles.add(this.addInStoreFile(_LuceneId, _DirectoryReader));
+		}
 		return _InStoreFiles;
 	}
 
 	public List<InStoreFile> addInStoreFilesFromSearch(String _Query) throws IOException
 	{
 		DirectoryReader _DirectoryReader = this.getDirectoryReader();
-		List<Integer> _LuceneIDs = getLuceneIDsFromSearch(_Query, _DirectoryReader);
-		return this.addInStoreFiles(_LuceneIDs, _DirectoryReader);
+		List<Integer> _LuceneIds = getLuceneIdsFromSearch(_Query, _DirectoryReader);
+		return this.addInStoreFiles(_LuceneIds, _DirectoryReader);
 	}
 
-	public InStoreFile removeInStoreFile(Integer _LuceneID)
+	public InStoreFile removeInStoreFile(Integer _LuceneId)
 	{
-		InStoreFile _InStoreFile = this._InStoreFiles.remove(_LuceneID);
+		InStoreFile _InStoreFile = this._InStoreFiles.remove(_LuceneId);
 		if (_InStoreFile != null)
+		{
 			this.onUpdate().notifyListeners("RemoveInStoreFile", _InStoreFile);
+		}
 		return _InStoreFile;
 	}
 
@@ -117,9 +123,9 @@ public class InStoreFilesCollection implements Closeable
 		this.onUpdate().notifyListeners("RemoveAllInStoreFiles", null);
 	}
 
-	public InStoreFile getInStoreFile(Integer _LuceneID)
+	public InStoreFile getInStoreFile(Integer _LuceneId)
 	{
-		return this._InStoreFiles.get(_LuceneID);
+		return this._InStoreFiles.get(_LuceneId);
 	}
 
 	private DirectoryReader getDirectoryReader() throws IOException
@@ -188,15 +194,15 @@ public class InStoreFilesCollection implements Closeable
 				_Document.add(new TextField("Movie:Actors", Utils.join(_Actors, ", "), Field.Store.YES));
 		}
 		{
-			String _IMDbID = _MovieInfo.getIMDbID();
-			if (_IMDbID == null)
-				throw new IOException("Movie:IMDbID");
-			_Document.add(new StoredField("Movie:IMDbID", _IMDbID));
+			String _ImdbId = _MovieInfo.getImdbId();
+			if (_ImdbId == null)
+				throw new IOException("Movie:ImdbId");
+			_Document.add(new StoredField("Movie:ImdbId", _ImdbId));
 		}
 		{
-			Double _IMDbRating = _MovieInfo.getIMDbRating();
-			if (_IMDbRating != null)
-				_Document.add(new StoredField("Movie:IMDbRating", _IMDbRating));
+			Double _ImdbRating = _MovieInfo.getImdbRating();
+			if (_ImdbRating != null)
+				_Document.add(new StoredField("Movie:ImdbRating", _ImdbRating));
 		}
 		{
 			String _PosterSource = _MovieInfo.getPosterSource();
@@ -207,9 +213,9 @@ public class InStoreFilesCollection implements Closeable
 		this._IndexWriter.commit();
 	}
 
-	private static InStoreFile createInStoreFile(Integer _LuceneID, DirectoryReader _DirectoryReader) throws IOException
+	private static InStoreFile createInStoreFile(Integer _LuceneId, DirectoryReader _DirectoryReader) throws IOException
 	{
-		Document _Document = _DirectoryReader.document(_LuceneID);
+		Document _Document = _DirectoryReader.document(_LuceneId);
 		FileInfo _FileInfo;
 		{
 			String _Name;
@@ -301,12 +307,12 @@ public class InStoreFilesCollection implements Closeable
 					_Actors = null;
 				}
 			}
-			String _IMDbID = _Document.get("Movie:IMDbID");
+			String _IMDbID = _Document.get("Movie:ImdbId");
 			Double _IMDbRating;
 			{
 				try
 				{
-					_IMDbRating = Double.valueOf(_Document.get("Movie:IMDbRating"));
+					_IMDbRating = Double.valueOf(_Document.get("Movie:ImdbRating"));
 				}
 				catch (Exception e)
 				{
@@ -316,12 +322,12 @@ public class InStoreFilesCollection implements Closeable
 			String _PosterSource = _Document.get("Movie:PosterSource");
 			_MovieInfo = new MovieInfo(_Title, _Year, _Plot, _Genres, _Directors, _Writers, _Actors, _IMDbID, _IMDbRating, _PosterSource);
 		}
-		return new InStoreFile(_LuceneID, _FileInfo, _MovieInfo);
+		return new InStoreFile(_LuceneId, _FileInfo, _MovieInfo);
 	}
 
-	private static List<Integer> getLuceneIDsFromSearch(String _Query, DirectoryReader _DirectoryReader) throws IOException
+	private static List<Integer> getLuceneIdsFromSearch(String _Query, DirectoryReader _DirectoryReader) throws IOException
 	{
-		List<Integer> _LuceneIDs = new ArrayList<Integer>();
+		List<Integer> _LuceneIds = new ArrayList<Integer>();
 		if (!_Query.isEmpty())
 		{
 			Analyzer _Analyzer = new StandardAnalyzer(Version.LUCENE_46);
@@ -342,13 +348,15 @@ public class InStoreFilesCollection implements Closeable
 			{
 				ScoreDoc[] _ScoreDocs = _IndexSearcher.search(_Parser.parse(_Query), null, 100).scoreDocs;
 				for (int i = 0; i < _ScoreDocs.length; i++)
-					_LuceneIDs.add(_ScoreDocs[i].doc);
+				{
+					_LuceneIds.add(_ScoreDocs[i].doc);
+				}
 			}
 			catch (ParseException e)
 			{
 				throw new IOException(e.getMessage());
 			}
 		}
-		return _LuceneIDs;
+		return _LuceneIds;
 	}
 }

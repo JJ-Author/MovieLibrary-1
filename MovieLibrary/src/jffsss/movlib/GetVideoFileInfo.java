@@ -21,7 +21,7 @@ public class GetVideoFileInfo extends Task<VideoFileInfo>
 		}
 		catch (Exception e)
 		{
-			throw new TaskExecutionException(e);
+			throw new TaskExecutionException(e.getMessage());
 		}
 	}
 }

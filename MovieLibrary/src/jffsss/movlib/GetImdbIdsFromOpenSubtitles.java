@@ -4,20 +4,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import jffsss.api.OpenSubtitlesAPI;
+import jffsss.ParseException;
+import jffsss.api.OpenSubtitlesApi;
 import jffsss.util.concurrent.AbstractBufferedExecutor;
 import jffsss.util.d.DObject;
 
 import org.apache.pivot.util.concurrent.Task;
 import org.apache.pivot.util.concurrent.TaskExecutionException;
 
-public class GetIMDbIDsFromOpenSubtitles extends Task<Map<String, Double>>
+public class GetImdbIdsFromOpenSubtitles extends Task<Map<String, Double>>
 {
 	private static BufferedExecutor _BufferedExecutor = new BufferedExecutor();
 
 	private VideoFileInfo _VideoFileInfo;
 
-	public GetIMDbIDsFromOpenSubtitles(VideoFileInfo _VideoFileInfo)
+	public GetImdbIdsFromOpenSubtitles(VideoFileInfo _VideoFileInfo)
 	{
 		this._VideoFileInfo = _VideoFileInfo;
 	}
@@ -43,12 +44,12 @@ public class GetIMDbIDsFromOpenSubtitles extends Task<Map<String, Double>>
 				return;
 			try
 			{
-				OpenSubtitlesAPI _API = new OpenSubtitlesAPI();
-				String _Token = _API.requestLogIn("", "");
+				OpenSubtitlesApi _Api = new OpenSubtitlesApi();
+				String _Token = _Api.requestLogIn("", "");
 				try
 				{
-					DObject _Response = _API.requestCheckMovieHash2(_Token, _FileHashs);
-					Map<String, Map<String, Double>> _Results = parseResponse(_Response);
+					DObject _Response = _Api.requestCheckMovieHash2(_Token, _FileHashs);
+					Map<String, Map<String, Double>> _Results = parseResponse(_Response.asMap().get("Content"));
 					for (String _FileHash : _FileHashs)
 					{
 						Map<String, Double> _Result = _Results.get(_FileHash);
@@ -61,7 +62,7 @@ public class GetIMDbIDsFromOpenSubtitles extends Task<Map<String, Double>>
 				{
 					try
 					{
-						_API.requestLogOut(_Token);
+						_Api.requestLogOut(_Token);
 					}
 					catch (Exception e)
 					{}
@@ -69,14 +70,15 @@ public class GetIMDbIDsFromOpenSubtitles extends Task<Map<String, Double>>
 			}
 			catch (Exception e)
 			{
-				this.setFault(e);
+				this.setFault(e.getMessage());
 			}
 		}
 
-		private static Map<String, Map<String, Double>> parseResponse(DObject _Response)
+		private static Map<String, Map<String, Double>> parseResponse(DObject _Response) throws ParseException
 		{
 			Map<String, Map<String, Double>> _ResultMap = new HashMap<String, Map<String, Double>>();
 			if (_Response != null)
+			{
 				try
 				{
 					Map<String, DObject> _ResponseMap = _Response.asMap();
@@ -90,9 +92,9 @@ public class GetIMDbIDsFromOpenSubtitles extends Task<Map<String, Double>>
 							for (DObject _ResponseMapListElement : _ResponseMapList)
 							{
 								Map<String, DObject> _ResponseMapListMap = _ResponseMapListElement.asMap();
-								String _IMDbID = _ResponseMapListMap.get("MovieImdbID").asString();
+								String _ImdbId = _ResponseMapListMap.get("MovieImdbID").asString();
 								Double _Factor = _ResponseMapListMap.get("SeenCount").parseAsDouble(1.0);
-								_ResultMapMap.put(_IMDbID, _Factor);
+								_ResultMapMap.put(_ImdbId, _Factor);
 							}
 							_ResultMap.put(_ResultMapKey, _ResultMapMap);
 						}
@@ -102,8 +104,9 @@ public class GetIMDbIDsFromOpenSubtitles extends Task<Map<String, Double>>
 				}
 				catch (Exception e)
 				{
-					throw new RuntimeException("OpenSubtitlesParse");
+					throw new ParseException();
 				}
+			}
 			return _ResultMap;
 		}
 	}

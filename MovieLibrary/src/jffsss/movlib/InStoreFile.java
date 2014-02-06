@@ -2,20 +2,20 @@ package jffsss.movlib;
 
 public class InStoreFile
 {
-	private Integer _LuceneID;
+	private Integer _LuceneId;
 	private FileInfo _FileInfo;
 	private MovieInfo _MovieInfo;
 
-	public InStoreFile(Integer _LuceneID, FileInfo _FileInfo, MovieInfo _MovieInfo)
+	public InStoreFile(Integer _LuceneId, FileInfo _FileInfo, MovieInfo _MovieInfo)
 	{
-		this._LuceneID = _LuceneID;
+		this._LuceneId = _LuceneId;
 		this._FileInfo = _FileInfo;
 		this._MovieInfo = _MovieInfo;
 	}
 
-	public Integer getLuceneID()
+	public Integer getLuceneId()
 	{
-		return this._LuceneID;
+		return this._LuceneId;
 	}
 
 	public FileInfo getFileInfo()

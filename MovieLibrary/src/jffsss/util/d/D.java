@@ -1,5 +1,6 @@
 package jffsss.util.d;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -8,8 +9,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import jffsss.ParseException;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonIOException;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
@@ -19,7 +23,7 @@ public class D
 	private D()
 	{}
 
-	public static DObject fromXmlRpc(Object _Object)
+	public static DObject fromXmlRpc(Object _Object) throws ParseException
 	{
 		try
 		{
@@ -33,7 +37,7 @@ public class D
 				Map<String, DObject> _Result = new HashMap<String, DObject>();
 				for (Map.Entry<?, ?> _MapEntry : _Map.entrySet())
 				{
-					String _ResultKey = _MapEntry.getKey().toString();
+					String _ResultKey = String.valueOf(_MapEntry.getKey());
 					DObject _ResultValue = fromXmlRpc(_MapEntry.getValue());
 					_Result.put(_ResultKey, _ResultValue);
 				}
@@ -42,30 +46,32 @@ public class D
 			else if (_Object instanceof Object[])
 			{
 				Object[] _Array = (Object[]) _Object;
+				List<DObject> _Result = new ArrayList<DObject>();
 				if (_Array.length > 0)
 				{
-					List<DObject> _Result = new ArrayList<DObject>();
 					for (Object _ArrayElement : _Array)
+					{
 						_Result.add(fromXmlRpc(_ArrayElement));
-					return new DList(_Result);
+					}
 				}
+				return new DList(_Result);
 			}
 			else
 			{
-				return new DString(_Object.toString());
+				return new DString(String.valueOf(_Object));
 			}
 		}
 		catch (Exception e)
 		{}
-		throw new RuntimeException("Parse");
+		throw new ParseException();
 	}
 
-	public static DObject fromJson(InputStream _InputStream)
+	public static DObject fromJson(InputStream _InputStream) throws IOException, ParseException
 	{
 		return fromJson(new InputStreamReader(_InputStream));
 	}
 
-	public static DObject fromJson(Reader _Reader)
+	public static DObject fromJson(Reader _Reader) throws IOException, ParseException
 	{
 		JsonParser _JsonParser = new JsonParser();
 		JsonElement _JsonElement;
@@ -73,14 +79,18 @@ public class D
 		{
 			_JsonElement = _JsonParser.parse(_Reader);
 		}
+		catch (JsonIOException e)
+		{
+			throw new IOException(e.getMessage());
+		}
 		catch (Exception e)
 		{
-			throw new RuntimeException(e);
+			throw new ParseException(e.getMessage());
 		}
 		return fromJson(_JsonElement);
 	}
 
-	public static DObject fromJson(JsonElement _JsonElement)
+	public static DObject fromJson(JsonElement _JsonElement) throws ParseException
 	{
 		try
 		{
@@ -102,7 +112,9 @@ public class D
 				JsonArray _JsonArray = _JsonElement.getAsJsonArray();
 				List<DObject> _Result = new ArrayList<DObject>();
 				for (JsonElement _JsonArrayElement : _JsonArray)
+				{
 					_Result.add(fromJson(_JsonArrayElement));
+				}
 				return new DList(_Result);
 			}
 			else if (_JsonElement.isJsonObject())
@@ -120,6 +132,6 @@ public class D
 		}
 		catch (Exception e)
 		{}
-		throw new RuntimeException("Parse");
+		throw new ParseException();
 	}
 }

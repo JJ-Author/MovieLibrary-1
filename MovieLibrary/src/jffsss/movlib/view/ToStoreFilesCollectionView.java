@@ -58,9 +58,13 @@ public class ToStoreFilesCollectionView
 				{
 					FileBrowserSheet _FileBrowserSheet = new FileBrowserSheet();
 					if (_Button == ToStoreFilesCollectionView.this._ImportFilesButton)
+					{
 						_FileBrowserSheet.setMode(FileBrowserSheet.Mode.OPEN_MULTIPLE);
+					}
 					else
+					{
 						_FileBrowserSheet.setMode(FileBrowserSheet.Mode.SAVE_TO);
+					}
 					_FileBrowserSheet.setDisabledFileFilter(new VideoFileFilter());
 					_FileBrowserSheet.getStyles().put("hideDisabledFiles", true);
 					SheetCloseListener _Listener = new SheetCloseListener()
@@ -75,7 +79,9 @@ public class ToStoreFilesCollectionView
 									Sequence<File> _SelectedFiles = _FileBrowserSheet.getSelectedFiles();
 									List<File> _Files = new ArrayList<File>();
 									for (int i = 0; i < _SelectedFiles.getLength(); i++)
+									{
 										_Files.add(_SelectedFiles.get(i));
+									}
 									ToStoreFilesCollectionView.this._Model.addToStoreFilesFromImport(_Files);
 								}
 						}
@@ -138,6 +144,7 @@ public class ToStoreFilesCollectionView
 		public void on(Object _Source, String _Command, Object _Arg)
 		{
 			if (_Source == ToStoreFilesCollectionView.this._Model)
+			{
 				switch (_Command)
 				{
 					case "AddToStoreFile":
@@ -149,6 +156,7 @@ public class ToStoreFilesCollectionView
 							ToStoreFilesCollectionView.this.removeToStoreFileView((ToStoreFile) _Arg);
 						break;
 				}
+			}
 		}
 	}
 
@@ -170,10 +178,10 @@ public class ToStoreFilesCollectionView
 						if (_Arg instanceof ProbablyMovie)
 						{
 							ProbablyMovie _ProbablyMovieModel = (ProbablyMovie) _Arg;
-							String _IMDbID = _ProbablyMovieModel.getMovieInfo().getIMDbID();
+							String _ImdbId = _ProbablyMovieModel.getMovieInfo().getImdbId();
 							try
 							{
-								ToStoreFilesCollectionView.this._Model.indexFile(_FilePath, _IMDbID);
+								ToStoreFilesCollectionView.this._Model.indexFile(_FilePath, _ImdbId);
 								ToStoreFilesCollectionView.this._Model.removeToStoreFile(_FilePath);
 							}
 							catch (Exception e)

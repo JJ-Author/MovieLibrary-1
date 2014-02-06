@@ -27,9 +27,13 @@ public abstract class AbstractBufferedExecutor<A, B>
 		this._Buffer = new HashMap<A, List<Output>>();
 		this._Inputs = new LinkedList<A>();
 		if (_PoolSize == 1)
+		{
 			this._ExecutorService = Executors.newSingleThreadScheduledExecutor();
+		}
 		else
+		{
 			this._ExecutorService = Executors.newScheduledThreadPool(_PoolSize);
+		}
 		this._BaseDelay = _BaseDelay;
 		this._DiceDelay = _DiceDelay;
 		this._Runnable = new RunnableImpl();
@@ -50,7 +54,9 @@ public abstract class AbstractBufferedExecutor<A, B>
 			_Outputs.add(_Output);
 		}
 		if (this._BaseDelay == 0 && this._DiceDelay == 0)
+		{
 			this._ExecutorService.submit(this._Runnable);
+		}
 		else
 		{
 			Random _Random = new Random();
@@ -69,9 +75,13 @@ public abstract class AbstractBufferedExecutor<A, B>
 		{
 			A _Input = this.pollInput();
 			if (_Input == null)
+			{
 				break;
+			}
 			else
+			{
 				_Inputs.add(_Input);
+			}
 		}
 		return _Inputs;
 	}
@@ -94,19 +104,27 @@ public abstract class AbstractBufferedExecutor<A, B>
 			_Outputs = this._Buffer.remove(_Input);
 		}
 		if (_Outputs != null)
+		{
 			for (Output _Output : _Outputs)
+			{
 				_Output.setResult(_Result);
+			}
+		}
 	}
 
 	protected synchronized void setResult(B _Result)
 	{
 		for (List<Output> _Outputs : this._Buffer.values())
+		{
 			for (Output _Output : _Outputs)
+			{
 				_Output.setResult(_Result);
+			}
+		}
 		this._Buffer.clear();
 	}
 
-	protected void setFault(A _Input, Throwable _Fault)
+	protected void setFault(A _Input, String _Fault)
 	{
 		List<Output> _Outputs;
 		synchronized (this)
@@ -114,15 +132,23 @@ public abstract class AbstractBufferedExecutor<A, B>
 			_Outputs = this._Buffer.remove(_Input);
 		}
 		if (_Outputs != null)
+		{
 			for (Output _Output : _Outputs)
+			{
 				_Output.setFault(_Fault);
+			}
+		}
 	}
 
-	protected synchronized void setFault(Throwable _Fault)
+	protected synchronized void setFault(String _Fault)
 	{
 		for (List<Output> _Outputs : this._Buffer.values())
+		{
 			for (Output _Output : _Outputs)
+			{
 				_Output.setFault(_Fault);
+			}
+		}
 		this._Buffer.clear();
 	}
 
@@ -130,7 +156,7 @@ public abstract class AbstractBufferedExecutor<A, B>
 	{
 		private boolean _ValueSet;
 		private B _Result;
-		private Throwable _Fault;
+		private String _Fault;
 
 		public Output()
 		{
@@ -142,6 +168,7 @@ public abstract class AbstractBufferedExecutor<A, B>
 		public synchronized B getResult() throws TaskExecutionException
 		{
 			if (!this._ValueSet)
+			{
 				try
 				{
 					wait();
@@ -150,24 +177,31 @@ public abstract class AbstractBufferedExecutor<A, B>
 				{
 					e.printStackTrace();
 				}
+			}
 			if (this._Fault != null)
+			{
 				throw new TaskExecutionException(this._Fault);
+			}
 			return this._Result;
 		}
 
 		public synchronized void setResult(B _Result)
 		{
 			if (this._ValueSet)
+			{
 				return;
+			}
 			this._Result = _Result;
 			this._ValueSet = true;
 			notify();
 		}
 
-		public synchronized void setFault(Throwable _Fault)
+		public synchronized void setFault(String _Fault)
 		{
 			if (this._ValueSet)
+			{
 				return;
+			}
 			this._Fault = _Fault;
 			this._ValueSet = true;
 			notify();

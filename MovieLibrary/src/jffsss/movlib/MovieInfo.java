@@ -15,11 +15,11 @@ public class MovieInfo
 	private List<String> _Directors;
 	private List<String> _Writers;
 	private List<String> _Actors;
-	private String _IMDbID;
-	private Double _IMDbRating;
+	private String _ImdbId;
+	private Double _ImdbRating;
 	private String _PosterSource;
 
-	public MovieInfo(String _Title, String _Year, String _Plot, List<String> _Genres, List<String> _Directors, List<String> _Writers, List<String> _Actors, String _IMDbID, Double _IMDbRating, String _PosterSource)
+	public MovieInfo(String _Title, String _Year, String _Plot, List<String> _Genres, List<String> _Directors, List<String> _Writers, List<String> _Actors, String _ImdbId, Double _ImdbRating, String _PosterSource)
 	{
 		this._Title = _Title;
 		this._Year = _Year;
@@ -28,8 +28,8 @@ public class MovieInfo
 		this._Directors = (_Directors == null || _Directors.isEmpty()) ? null : new ArrayList<String>(_Directors);
 		this._Writers = (_Writers == null || _Writers.isEmpty()) ? null : new ArrayList<String>(_Writers);
 		this._Actors = (_Actors == null || _Actors.isEmpty()) ? null : new ArrayList<String>(_Actors);
-		this._IMDbID = _IMDbID;
-		this._IMDbRating = _IMDbRating;
+		this._ImdbId = _ImdbId;
+		this._ImdbRating = _ImdbRating;
 		this._PosterSource = _PosterSource;
 	}
 
@@ -68,19 +68,19 @@ public class MovieInfo
 		return (this._Actors == null) ? null : Collections.unmodifiableList(this._Actors);
 	}
 
-	public String getIMDbID()
+	public String getImdbId()
 	{
-		return this._IMDbID;
+		return this._ImdbId;
 	}
 
-	public String getIMDbURL()
+	public String getImdbUrl()
 	{
-		return (this._IMDbID == null) ? null : "http://www.imdb.com/title/tt" + this._IMDbID + "/";
+		return (this._ImdbId == null) ? null : "http://www.imdb.com/title/tt" + this._ImdbId + "/";
 	}
 
-	public Double getIMDbRating()
+	public Double getImdbRating()
 	{
-		return this._IMDbRating;
+		return this._ImdbRating;
 	}
 
 	public String getPosterSource()
@@ -88,8 +88,8 @@ public class MovieInfo
 		return this._PosterSource;
 	}
 
-	public static String extractIMDbIDFromURL(String _URL)
+	public static String extractImdbIdFromUrl(String _Url)
 	{
-		return Utils.findFirstPattern(_URL, "/tt([0-9]+)/");
+		return Utils.findFirstPattern(_Url, "/tt([0-9]+)/");
 	}
 }
