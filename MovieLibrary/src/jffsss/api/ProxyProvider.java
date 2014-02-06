@@ -1,4 +1,4 @@
-package jffsss.net;
+package jffsss.api;
 
 import java.net.Proxy;
 

@@ -2,6 +2,7 @@ package jffsss.api;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.Proxy;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,7 +13,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
 import jffsss.ParseException;
-import jffsss.util.RequestLimiter;
 import jffsss.util.Utils;
 import jffsss.util.d.DList;
 import jffsss.util.d.DMap;
@@ -21,10 +21,17 @@ import jffsss.util.d.DString;
 
 public class GoogleApi
 {
-	static RequestLimiter request_limiter = new RequestLimiter(1);
+	private Proxy _Proxy;
 
 	public GoogleApi()
-	{}
+	{
+		this(null);
+	}
+
+	public GoogleApi(Proxy _Proxy)
+	{
+		this._Proxy = _Proxy;
+	}
 
 	public DObject requestSearch(String _Query, Integer _Page, Integer _Count) throws IOException, ParseException
 	{
@@ -42,7 +49,15 @@ public class GoogleApi
 
 	private DObject executeAPI(String _Url) throws IOException, ParseException
 	{
-		HttpURLConnection _Connection = (HttpURLConnection) (new URL(_Url)).openConnection();
+		HttpURLConnection _Connection;
+		if (this._Proxy == null)
+		{
+			_Connection = (HttpURLConnection) (new URL(_Url)).openConnection();
+		}
+		else
+		{
+			_Connection = (HttpURLConnection) (new URL(_Url)).openConnection(this._Proxy);
+		}
 		try
 		{
 			_Connection.setDoOutput(false);

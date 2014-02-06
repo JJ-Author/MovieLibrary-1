@@ -70,7 +70,7 @@ public class GetImdbIdsFromOpenSubtitles extends Task<Map<String, Double>>
 			}
 			catch (Exception e)
 			{
-				this.setFault(e.getMessage());
+				this.setFault("GetImdbIdsFromOpenSubtitles:" + e.getMessage());
 			}
 		}
 

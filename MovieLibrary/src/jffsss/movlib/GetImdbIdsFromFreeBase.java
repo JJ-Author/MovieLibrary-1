@@ -46,7 +46,7 @@ public class GetImdbIdsFromFreeBase extends Task<Map<String, Double>>
 		}
 		catch (Exception e)
 		{
-			throw new TaskExecutionException(e.getMessage());
+			throw new TaskExecutionException("GetImdbIdsFromFreeBase:" + e.getMessage());
 		}
 	}
 

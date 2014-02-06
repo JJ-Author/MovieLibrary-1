@@ -1,11 +1,14 @@
 package jffsss.movlib;
 
+import java.net.Proxy;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import jffsss.ParseException;
 import jffsss.api.GoogleApi;
+import jffsss.api.HideMyAssProxyProvider;
+import jffsss.api.ProxyProvider;
 import jffsss.util.d.DObject;
 
 import org.apache.pivot.util.concurrent.Task;
@@ -13,6 +16,10 @@ import org.apache.pivot.util.concurrent.TaskExecutionException;
 
 public class GetImdbIdsFromGoogle extends Task<Map<String, Double>>
 {
+	@SuppressWarnings("unused")
+	private static ProxyProvider _ProxyProvider = new HideMyAssProxyProvider(5);
+	private static Proxy _CurrentProxy = null;
+
 	private VideoFileInfo _VideoFileInfo;
 
 	public GetImdbIdsFromGoogle(VideoFileInfo _FilePath)
@@ -25,13 +32,29 @@ public class GetImdbIdsFromGoogle extends Task<Map<String, Double>>
 	{
 		try
 		{
-			GoogleApi _Api = new GoogleApi();
-			DObject _Response = _Api.requestSearch(this._VideoFileInfo.getCleanedFileName() + " site:imdb.com", 0, 5);
-			return parseResponse(_Response.asMap().get("Content"));
+			while (true)
+			{
+				if (_CurrentProxy == null)
+				{
+					// _CurrentProxy = _ProxyProvider.provideProxy();
+				}
+				// GoogleApi _Api = new GoogleApi(_CurrentProxy);
+				GoogleApi _Api = new GoogleApi();
+				DObject _Response = _Api.requestSearch(this._VideoFileInfo.getCleanedFileName() + " site:imdb.com", 0, 5);
+				if (_Response.asMap().get("StatusCode").parseAsInteger() == 200)
+				{
+					return parseResponse(_Response.asMap().get("Content"));
+				}
+				else
+				{
+					// _CurrentProxy = null;
+					throw new TaskExecutionException("GOOGLE LIMIT ERREICHT");
+				}
+			}
 		}
 		catch (Exception e)
 		{
-			throw new TaskExecutionException(e.getMessage());
+			throw new TaskExecutionException("GetImdbIdsFromGoogle:" + e.getMessage());
 		}
 	}
 
