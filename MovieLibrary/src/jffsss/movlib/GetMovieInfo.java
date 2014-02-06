@@ -28,7 +28,7 @@ public class GetMovieInfo extends Task<MovieInfo>
 			OmdbApi _OmdbApi = new OmdbApi();
 			DObject _OmdbResponse = _OmdbApi.requestMovieById(this._ImdbId);
 			FreeBaseApi _FreeBaseApi = new FreeBaseApi();
-			DObject _FreeBaseResponse = _FreeBaseApi.requestSearch(true, "\"tt" + _ImdbId + "\"", "(all type:/film/film)", "(all)", 1, "de,en");
+			DObject _FreeBaseResponse = _FreeBaseApi.requestSearch2(true, "\"tt" + _ImdbId + "\"", "(all type:/film/film)", "(all)", 1, "de,en");
 			return parseResponse(_OmdbResponse.asMap().get("Content"), _FreeBaseResponse.asMap().get("Content"), this._ImdbId);
 		}
 		catch (Exception e)

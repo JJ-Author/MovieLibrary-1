@@ -14,10 +14,32 @@ import jffsss.util.RequestLimiter;
 
 public class FreeBaseApi
 {
-	static RequestLimiter _RequestLimiter = new RequestLimiter(30);
+	private static RequestLimiter _RequestLimiter = new RequestLimiter(30);
 
 	public FreeBaseApi()
 	{}
+
+	public DObject requestSearch2(Boolean _Ident, String _Query, String _Filter, String _Output, Integer _Limit, String _Lang) throws IOException, ParseException
+	{
+		for (int i = 0; i < 3; i++)
+		{
+			try
+			{
+				long _WaitTime = _RequestLimiter.getWaitTime();
+
+				Thread.sleep(_WaitTime);
+				DObject _Response = this.requestSearch(_Ident, _Query, _Filter, _Output, _Limit, _Lang);
+				if (_Response.asMap().get("StatusCode").parseAsInteger() != 200)
+					continue;
+				return _Response;
+			}
+			catch (InterruptedException e)
+			{
+				System.out.println("<<<<<<< Thread interrupted before end of sleep Freebase API>>>>>>>>>>>>>>>>");
+			}
+		}
+		throw new IOException("StatusCode != 200");
+	}
 
 	public DObject requestSearch(Boolean _Ident, String _Query, String _Filter, String _Output, Integer _Limit, String _Lang) throws IOException, ParseException
 	{
