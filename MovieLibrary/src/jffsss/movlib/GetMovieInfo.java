@@ -43,14 +43,15 @@ public class GetMovieInfo extends Task<MovieInfo>
 		{
 			Map<String, DObject> _OmdbResponseMap = _OmdbResponse.asMap();
 			Map<String, DObject> _FreeBaseResponseMap = _FreeBaseResponse.asMap();
-			String _Title;
+			String _Title = _OmdbResponseMap.get("Title").asString();
+			String _TitleDe;
 			try
 			{
-				_Title = _FreeBaseResponseMap.get("result").asList().get(0).asMap().get("name").asString();
+				_TitleDe = _FreeBaseResponseMap.get("result").asList().get(0).asMap().get("name").asString();
 			}
 			catch (Exception e)
 			{
-				_Title = _OmdbResponseMap.get("Title").asString();
+				_TitleDe = null;
 			}
 			String _Year = _OmdbResponseMap.get("Year").asString();
 			// Bindestrich im Jahr richtig parsen
@@ -118,7 +119,7 @@ public class GetMovieInfo extends Task<MovieInfo>
 			{
 				_PosterSource = null;
 			}
-			MovieInfo _MovieInfo = new MovieInfo(_Title, _Year, _Plot, _Genres, _Directors, _Writers, _Actors, _IMDbID, _IMDbRating, _PosterSource);
+			MovieInfo _MovieInfo = new MovieInfo(_Title, _TitleDe, _Year, _Plot, _Genres, _Directors, _Writers, _Actors, _IMDbID, _IMDbRating, _PosterSource);
 			return _MovieInfo;
 		}
 		catch (Exception e)

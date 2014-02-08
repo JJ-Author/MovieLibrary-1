@@ -100,7 +100,14 @@ public class MovieInfoView
 	private static String buildTextInfo(MovieInfo _MovieInfo)
 	{
 		StringBuilder _StringBuilder = new StringBuilder();
-		_StringBuilder.append(_MovieInfo.getTitle());
+		if (_MovieInfo.getTitleDe() != null)
+		{
+			_StringBuilder.append(_MovieInfo.getTitleDe());
+		}
+		else
+		{
+			_StringBuilder.append(_MovieInfo.getTitle());
+		}
 		_StringBuilder.append(" ");
 		_StringBuilder.append("(" + _MovieInfo.getYear() + ")");
 		{

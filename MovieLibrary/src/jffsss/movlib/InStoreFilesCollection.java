@@ -164,6 +164,12 @@ public class InStoreFilesCollection implements Closeable
 			_Document.add(new TextField("Movie:Title", _Title, Field.Store.YES));
 		}
 		{
+			String _TitleDe = _MovieInfo.getTitleDe();
+			if (_TitleDe == null)
+				throw new IOException("Movie:Title:De");
+			_Document.add(new TextField("Movie:Title:De", _TitleDe, Field.Store.YES));
+		}
+		{
 			String _Year = _MovieInfo.getYear();
 			if (_Year != null)
 				_Document.add(new TextField("Movie:Year", _Year, Field.Store.YES));
@@ -251,6 +257,12 @@ public class InStoreFilesCollection implements Closeable
 				if (_Title == null)
 					throw new IOException("Movie:Title");
 			}
+			String _TitleDe;
+			{
+				_TitleDe = _Document.get("Movie:Title:De");
+				if (_TitleDe == null)
+					throw new IOException("Movie:Title:De");
+			}
 			String _Year;
 			{
 				try
@@ -320,7 +332,7 @@ public class InStoreFilesCollection implements Closeable
 				}
 			}
 			String _PosterSource = _Document.get("Movie:PosterSource");
-			_MovieInfo = new MovieInfo(_Title, _Year, _Plot, _Genres, _Directors, _Writers, _Actors, _IMDbID, _IMDbRating, _PosterSource);
+			_MovieInfo = new MovieInfo(_Title, _TitleDe, _Year, _Plot, _Genres, _Directors, _Writers, _Actors, _IMDbID, _IMDbRating, _PosterSource);
 		}
 		return new InStoreFile(_LuceneId, _FileInfo, _MovieInfo);
 	}
@@ -334,9 +346,10 @@ public class InStoreFilesCollection implements Closeable
 			IndexSearcher _IndexSearcher = new IndexSearcher(_DirectoryReader);
 			Similarity _Similarity = new BM25Similarity();
 			_IndexSearcher.setSimilarity(_Similarity);
-			String[] _Fields = {"Movie:Title", "Movie:Year", "Movie:Plot", "Movie:Genres", "Movie:Directors", "Movie:Writers", "Movie:Actors"};
+			String[] _Fields = {"Movie:Title", "Movie:Title:De", "Movie:Year", "Movie:Plot", "Movie:Genres", "Movie:Directors", "Movie:Writers", "Movie:Actors"};
 			Map<String, Float> _Boosts = new HashMap<String, Float>();
 			_Boosts.put("Movie:Title", (float) 7.6);
+			_Boosts.put("Movie:Title:De", (float) 7.6);
 			_Boosts.put("Movie:Year", (float) 4.2);
 			_Boosts.put("Movie:Plot", (float) 0.8);
 			_Boosts.put("Movie:Genres", (float) 2.3);
