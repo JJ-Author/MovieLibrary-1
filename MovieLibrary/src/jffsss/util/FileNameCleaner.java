@@ -14,7 +14,8 @@ public class FileNameCleaner
 		_Result = _Result.replace('_', ' '); // use only blanks instead of underscore
 		_Result = _Result.replaceAll("5\\.1", "");
 		_Result = _Result.replaceAll("7\\.1", "");
-		_Result = _Result.replaceAll("(?i)([^\\.])(\\.)([^ ])", "$1 $3"); // if dots used as whitespace replace them with
+		//_Result = _Result.replaceAll("(?i)([^\\.])(\\.)([^ ])", "$1 $3"); // if dots used as whitespace replace them with
+		_Result = _Result.replaceAll("\\.([^\\. ])", " $1"); // if dots used as whitespace replace them with
 																	// whitespace
 
 		// remove some keywords indicating quality or format of the movie file
@@ -24,6 +25,7 @@ public class FileNameCleaner
 		_Result = _Result.replaceAll("(?i)DVD ?\\d\\d?", "");
 		_Result = _Result.replaceAll("(?i)part ?\\d\\d?", "");
 		_Result = _Result.replaceAll("(?i)bdrip.*$", "");
+		_Result = _Result.replaceAll("(?i)hdrip.*$", "");
 		_Result = _Result.replaceAll("(?i)dvdrip", "");
 		_Result = _Result.replaceAll("(?i)dubbed", "");
 		_Result = _Result.replaceAll("(?i)[xh]?264.*$", "");

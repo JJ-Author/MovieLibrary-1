@@ -8,6 +8,7 @@ import jffsss.api.OmdbApi;
 import jffsss.api.FreeBaseApi;
 import jffsss.util.Utils;
 import jffsss.util.d.DObject;
+import jffsss.movlib.GetMovieInfoFromOfdb;
 
 import org.apache.pivot.util.concurrent.Task;
 import org.apache.pivot.util.concurrent.TaskExecutionException;
@@ -113,10 +114,13 @@ public class GetMovieInfo extends Task<MovieInfo>
 			String _PosterSource;
 			try
 			{
-				_PosterSource = _OmdbResponseMap.get("Poster").asString();
+				GetMovieInfoFromOfdb g = new GetMovieInfoFromOfdb();
+				//_PosterSource = _OmdbResponseMap.get("Poster").asString();
+				_PosterSource = g.getPosterURL("tt"+this._ImdbId);
 			}
 			catch (Exception e)
 			{
+				System.out.println("Fehler beim Suchen des deutschen Posters: "+e.getMessage()); 
 				_PosterSource = null;
 			}
 			MovieInfo _MovieInfo = new MovieInfo(_Title, _TitleDe, _Year, _Plot, _Genres, _Directors, _Writers, _Actors, _IMDbID, _IMDbRating, _PosterSource);

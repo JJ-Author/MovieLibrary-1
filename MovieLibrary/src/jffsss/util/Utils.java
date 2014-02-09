@@ -46,6 +46,31 @@ public class Utils
 		}
 		return _BaseURL + _StringBuilder.toString();
 	}
+	
+	/**
+	 * url encodes every value in params and simply appends to unencoded base url
+	 * @param _BaseURL
+	 * @param _Params
+	 * @return
+	 */
+	public static String buildURL2(String _BaseURL, Map<String, Object> _Params)
+	{
+		StringBuilder _StringBuilder = new StringBuilder();
+		for (Map.Entry<String, Object> _Param : _Params.entrySet())
+		{
+			try
+			{
+				String _Value = URLEncoder.encode(_Param.getValue().toString(), "UTF-8");
+				if (_Value != null)
+				{
+					_StringBuilder.append(_Value);
+				}
+			}
+			catch (Exception e)
+			{}
+		}
+		return _BaseURL + _StringBuilder.toString();
+	}
 
 	public static String join(Collection<?> _Strings, String _Delimiter)
 	{
