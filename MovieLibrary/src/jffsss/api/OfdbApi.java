@@ -22,7 +22,7 @@ public class OfdbApi
 	public DObject requestSearch2(String _Base, String _Query) throws IOException, ParseException
 	{
 		int rcode = -1;
-		for (int i = 0; i < 5; i++)
+		for (int i = 0; i < 20; i++)
 		{
 			try
 			{
@@ -31,18 +31,27 @@ public class OfdbApi
 				Thread.sleep(_WaitTime);
 				DObject _Response = this.requestSearch(_Base, _Query);
 				rcode = _Response.asMap().get("Content").asMap().get("ofdbgw").asMap().get("status").asMap().get("rcode").parseAsInteger();
-				if (rcode != 0)
+				if (rcode != 0 && rcode != 4)
 					continue;
+				else if (rcode == 4) //imdb id is unknown
+				{
+					System.out.println("OFDB Lookup Failed for unknown ID - rcode: "+rcode+" for "+_Base+_Query);//throw new IOException("OFDB Lookup Failed for unknown ID - rcode: "+rcode+" for "+_Base+_Query);
+					break;
+				}
 				return _Response;
 			}
 			catch (InterruptedException e)
 			{
 				System.out.println("<<<<<<< Thread interrupted before end of sleep OFDB API>>>>>>>>>>>>>>>>");
 			}
+			catch (jffsss.ParseException e) {
+				//one server mixes html and json, so just try it once again
+			}
 			catch (Exception e) {
 				System.out.println("OFDB Lookup Problem rcode: "+rcode+" for "+_Base+_Query);
 				e.printStackTrace();
 			}
+			
 		}
 		throw new IOException("OFDB Lookup Failed rcode: "+rcode+" for "+_Base+_Query);
 	}

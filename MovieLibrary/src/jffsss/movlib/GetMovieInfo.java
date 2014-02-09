@@ -116,7 +116,10 @@ public class GetMovieInfo extends Task<MovieInfo>
 			{
 				GetMovieInfoFromOfdb g = new GetMovieInfoFromOfdb();
 				//_PosterSource = _OmdbResponseMap.get("Poster").asString();
-				_PosterSource = g.getPosterURL("tt"+this._ImdbId);
+				String url = g.getPosterURL("tt"+this._ImdbId);
+				if (url=="" || url == "http://img.ofdb.de/film/na.gif") // if ofdb lookup failed (unknown imdb-id) or the placeholder picture
+					;//url = _OmdbResponseMap.get("Poster").asString();
+				_PosterSource = url;
 			}
 			catch (Exception e)
 			{
