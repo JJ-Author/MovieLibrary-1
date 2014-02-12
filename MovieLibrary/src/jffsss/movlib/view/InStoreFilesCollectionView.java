@@ -1,5 +1,7 @@
 package jffsss.movlib.view;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,8 +12,11 @@ import jffsss.util.Listener;
 import org.apache.pivot.beans.BXMLSerializer;
 import org.apache.pivot.wtk.Button;
 import org.apache.pivot.wtk.ButtonPressListener;
+import org.apache.pivot.wtk.FileBrowserSheet;
 import org.apache.pivot.wtk.FlowPane;
 import org.apache.pivot.wtk.PushButton;
+import org.apache.pivot.wtk.Sheet;
+import org.apache.pivot.wtk.SheetCloseListener;
 import org.apache.pivot.wtk.TablePane;
 import org.apache.pivot.wtk.TextInput;
 
@@ -21,6 +26,7 @@ public class InStoreFilesCollectionView
 	private TablePane _Component;
 	private TextInput _SearchMoviesText;
 	private PushButton _SearchMoviesButton;
+	private PushButton _ExportAsJsonButton;
 	private FlowPane _InStoreFileViewsContainer;
 	private Map<InStoreFile, InStoreFileView> _InStoreFileViews;
 
@@ -33,6 +39,7 @@ public class InStoreFilesCollectionView
 			this._Component = (TablePane) _BXMLSerializer.readObject(InStoreFilesCollectionView.class, "InStoreFilesCollectionView.bxml");
 			this._SearchMoviesText = (TextInput) _BXMLSerializer.getNamespace().get("SearchMoviesText");
 			this._SearchMoviesButton = (PushButton) _BXMLSerializer.getNamespace().get("SearchMoviesButton");
+			this._ExportAsJsonButton = (PushButton) _BXMLSerializer.getNamespace().get("ExportAsJsonButton");
 			this._InStoreFileViewsContainer = (FlowPane) _BXMLSerializer.getNamespace().get("InStoreFileViewsContainer");
 			this._InStoreFileViews = new HashMap<InStoreFile, InStoreFileView>();
 		}
@@ -61,6 +68,42 @@ public class InStoreFilesCollectionView
 				}
 			};
 			this._SearchMoviesButton.getButtonPressListeners().add(_Listener);
+		}
+		{
+			ButtonPressListener _Listener = new ButtonPressListener()
+			{
+				@Override
+				public void buttonPressed(Button _Button)
+				{
+					FileBrowserSheet _FileBrowserSheet = new FileBrowserSheet();
+					_FileBrowserSheet.setMode(FileBrowserSheet.Mode.SAVE_AS);
+					SheetCloseListener _Listener = new SheetCloseListener()
+					{
+						@Override
+						public void sheetClosed(Sheet _Sheet)
+						{
+							if (_Sheet.getResult())
+							{
+								if (_Sheet instanceof FileBrowserSheet)
+								{
+									FileBrowserSheet _FileBrowserSheet = (FileBrowserSheet) _Sheet;
+									File _File = _FileBrowserSheet.getSelectedFile();
+									try
+									{
+										InStoreFilesCollectionView.this._Model.exportAsJson(_File);
+									}
+									catch (IOException e)
+									{
+										e.printStackTrace();
+									}
+								}
+							}
+						}
+					};
+					_FileBrowserSheet.open(InStoreFilesCollectionView.this._Component.getWindow(), _Listener);
+				}
+			};
+			this._ExportAsJsonButton.getButtonPressListeners().add(_Listener);
 		}
 	}
 

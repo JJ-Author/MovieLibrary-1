@@ -73,6 +73,7 @@ public class ToStoreFilesCollectionView
 						public void sheetClosed(Sheet _Sheet)
 						{
 							if (_Sheet.getResult())
+							{
 								if (_Sheet instanceof FileBrowserSheet)
 								{
 									FileBrowserSheet _FileBrowserSheet = (FileBrowserSheet) _Sheet;
@@ -84,6 +85,7 @@ public class ToStoreFilesCollectionView
 									}
 									ToStoreFilesCollectionView.this._Model.addToStoreFilesFromImport(_Files);
 								}
+							}
 						}
 					};
 					_FileBrowserSheet.open(ToStoreFilesCollectionView.this._Component.getWindow(), _Listener);

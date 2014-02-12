@@ -57,22 +57,22 @@ public class MovieInfo
 
 	public List<String> getGenres()
 	{
-		return (this._Genres == null) ? null : Collections.unmodifiableList(this._Genres);
+		return (this._Genres == null) ? Collections.<String>emptyList() : Collections.unmodifiableList(this._Genres);
 	}
 
 	public List<String> getDirectors()
 	{
-		return (this._Directors == null) ? null : Collections.unmodifiableList(this._Directors);
+		return (this._Directors == null) ? Collections.<String>emptyList() : Collections.unmodifiableList(this._Directors);
 	}
 
 	public List<String> getWriters()
 	{
-		return (this._Writers == null) ? null : Collections.unmodifiableList(this._Writers);
+		return (this._Writers == null) ? Collections.<String>emptyList() : Collections.unmodifiableList(this._Writers);
 	}
 
 	public List<String> getActors()
 	{
-		return (this._Actors == null) ? null : Collections.unmodifiableList(this._Actors);
+		return (this._Actors == null) ? Collections.<String>emptyList() : Collections.unmodifiableList(this._Actors);
 	}
 
 	public String getImdbId()

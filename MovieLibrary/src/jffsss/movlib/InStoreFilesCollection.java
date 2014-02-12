@@ -3,6 +3,7 @@ package jffsss.movlib;
 import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,6 +27,10 @@ import org.apache.lucene.search.similarities.Similarity;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 
 import jffsss.util.Listeners;
 import jffsss.util.Utils;
@@ -65,6 +70,73 @@ public class InStoreFilesCollection implements Closeable
 			this.onUpdate = new Listeners(this);
 		}
 		return this.onUpdate;
+	}
+	
+	public void exportAsJson(File _File) throws IOException
+	{
+		JsonArray _JsonArray = new JsonArray();
+		{
+			for (int i = 0; i < this.getInStoreFilesCount(); i++)
+			{
+				JsonObject _JsonArrayObject = new JsonObject();
+				InStoreFile _InStoreFile = createInStoreFile(i, this.getDirectoryReader());
+				_JsonArrayObject.addProperty("FilePath", _InStoreFile.getFileInfo().getPath());
+				_JsonArrayObject.addProperty("MovieTitle", _InStoreFile.getMovieInfo().getTitle());
+				_JsonArrayObject.addProperty("MovieTitleDE", _InStoreFile.getMovieInfo().getTitleDe());
+				_JsonArrayObject.addProperty("MovieYear", _InStoreFile.getMovieInfo().getYear());
+				_JsonArrayObject.addProperty("MoviePlot", _InStoreFile.getMovieInfo().getPlot());
+				{
+					JsonArray _JsonArrayObjectArray = new JsonArray();
+					for (String _Genre : _InStoreFile.getMovieInfo().getGenres())
+					{
+						_JsonArrayObjectArray.add(new JsonPrimitive(_Genre));
+					}
+					_JsonArrayObject.add("MovieGenres", _JsonArrayObjectArray);
+				}
+				{
+					JsonArray _JsonArrayObjectArray = new JsonArray();
+					for (String _Director : _InStoreFile.getMovieInfo().getDirectors())
+					{
+						_JsonArrayObjectArray.add(new JsonPrimitive(_Director));
+					}
+					_JsonArrayObject.add("MovieDirectors", _JsonArrayObjectArray);
+				}
+				{
+					JsonArray _JsonArrayObjectArray = new JsonArray();
+					for (String _Writer : _InStoreFile.getMovieInfo().getWriters())
+					{
+						_JsonArrayObjectArray.add(new JsonPrimitive(_Writer));
+					}
+					_JsonArrayObject.add("MovieWriters", _JsonArrayObjectArray);
+				}
+				{
+					JsonArray _JsonArrayObjectArray = new JsonArray();
+					for (String _Actor : _InStoreFile.getMovieInfo().getActors())
+					{
+						_JsonArrayObjectArray.add(new JsonPrimitive(_Actor));
+					}
+					_JsonArrayObject.add("MovieActors", _JsonArrayObjectArray);
+				}
+				_JsonArrayObject.addProperty("MovieImdbId", _InStoreFile.getMovieInfo().getImdbId());
+				_JsonArrayObject.addProperty("MovieImdbRating", _InStoreFile.getMovieInfo().getImdbRating());
+				_JsonArrayObject.addProperty("MoviePosterSource", _InStoreFile.getMovieInfo().getPosterSource());
+				_JsonArray.add(_JsonArrayObject);
+			}
+		}
+		PrintWriter _PrintWriter = new PrintWriter(_File);
+		try
+		{
+			_PrintWriter.println(_JsonArray.toString());
+		}
+		finally
+		{
+			try
+			{
+				_PrintWriter.close();
+			}
+			catch (Exception e)
+			{}
+		}
 	}
 
 	public InStoreFile addInStoreFile(Integer _LuceneId) throws IOException
@@ -127,12 +199,19 @@ public class InStoreFilesCollection implements Closeable
 	{
 		return this._InStoreFiles.get(_LuceneId);
 	}
+	
+	public int getInStoreFilesCount() throws IOException
+	{
+		return this.getDirectoryReader().numDocs();
+	}
 
 	private DirectoryReader getDirectoryReader() throws IOException
 	{
 		DirectoryReader _DirectoryReader = DirectoryReader.openIfChanged(this._DirectoryReader);
 		if (_DirectoryReader != null)
+		{
 			this._DirectoryReader = _DirectoryReader;
+		}
 		return this._DirectoryReader;
 	}
 
