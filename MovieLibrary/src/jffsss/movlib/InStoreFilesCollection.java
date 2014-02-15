@@ -83,6 +83,7 @@ public class InStoreFilesCollection implements Closeable
 				_JsonArrayObject.addProperty("FilePath", _InStoreFile.getFileInfo().getPath());
 				_JsonArrayObject.addProperty("MovieTitle", _InStoreFile.getMovieInfo().getTitle());
 				_JsonArrayObject.addProperty("MovieTitleDE", _InStoreFile.getMovieInfo().getTitleDe());
+				_JsonArrayObject.addProperty("MovieDuration", _InStoreFile.getMovieInfo().getDuration());
 				_JsonArrayObject.addProperty("MovieYear", _InStoreFile.getMovieInfo().getYear());
 				_JsonArrayObject.addProperty("MoviePlot", _InStoreFile.getMovieInfo().getPlot());
 				{
@@ -294,6 +295,11 @@ public class InStoreFilesCollection implements Closeable
 			if (_PosterSource != null)
 				_Document.add(new StoredField("Movie:PosterSource", _PosterSource));
 		}
+		{
+			Double _Duration = _MovieInfo.getDuration();
+			if (_Duration != null)
+				_Document.add(new StoredField("Movie:Duration", _Duration));
+		}
 		this._IndexWriter.addDocument(_Document);
 		this._IndexWriter.commit();
 	}
@@ -410,8 +416,19 @@ public class InStoreFilesCollection implements Closeable
 					_IMDbRating = null;
 				}
 			}
+			Double _Duration;
+			{
+				try
+				{
+					_Duration = Double.valueOf(_Document.get("Movie:Duration"));
+				}
+				catch (Exception e)
+				{
+					_Duration = null;
+				}
+			}
 			String _PosterSource = _Document.get("Movie:PosterSource");
-			_MovieInfo = new MovieInfo(_Title, _TitleDe, _Year, _Plot, _Genres, _Directors, _Writers, _Actors, _IMDbID, _IMDbRating, _PosterSource);
+			_MovieInfo = new MovieInfo(_Title, _TitleDe, _Year, _Plot, _Genres, _Directors, _Writers, _Actors, _IMDbID, _IMDbRating, _PosterSource, _Duration);
 		}
 		return new InStoreFile(_LuceneId, _FileInfo, _MovieInfo);
 	}

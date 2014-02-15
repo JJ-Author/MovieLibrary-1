@@ -128,6 +128,14 @@ public class MovieInfoView
 			}
 		}
 		{
+			Double _Duration = _MovieInfo.getDuration();
+			if (_Duration != null)
+			{
+				_StringBuilder.append(" - ");
+				_StringBuilder.append(_Duration+" min");
+			}
+		}
+		{
 			String _Plot = _MovieInfo.getPlot();
 			if (_Plot != null)
 			{

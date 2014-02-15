@@ -126,7 +126,17 @@ public class GetMovieInfo extends Task<MovieInfo>
 				System.out.println("Fehler beim Suchen des deutschen Posters: "+e.getMessage()); 
 				_PosterSource = null;
 			}
-			MovieInfo _MovieInfo = new MovieInfo(_Title, _TitleDe, _Year, _Plot, _Genres, _Directors, _Writers, _Actors, _IMDbID, _IMDbRating, _PosterSource);
+			Double _Duration;
+			try
+			{
+				_Duration = Double.valueOf(_OmdbResponseMap.get("Runtime").asString().replaceAll(" min", ""));
+			}
+			catch (Exception e)
+			{
+				System.out.println("parsing OMDB Duration failed");
+				_Duration = null;
+			}
+			MovieInfo _MovieInfo = new MovieInfo(_Title, _TitleDe, _Year, _Plot, _Genres, _Directors, _Writers, _Actors, _IMDbID, _IMDbRating, _PosterSource,_Duration);
 			return _MovieInfo;
 		}
 		catch (Exception e)

@@ -19,8 +19,9 @@ public class MovieInfo
 	private String _ImdbId;
 	private Double _ImdbRating;
 	private String _PosterSource;
+	private Double _Duration;
 
-	public MovieInfo(String _Title, String _TitleDe, String _Year, String _Plot, List<String> _Genres, List<String> _Directors, List<String> _Writers, List<String> _Actors, String _ImdbId, Double _ImdbRating, String _PosterSource)
+	public MovieInfo(String _Title, String _TitleDe, String _Year, String _Plot, List<String> _Genres, List<String> _Directors, List<String> _Writers, List<String> _Actors, String _ImdbId, Double _ImdbRating, String _PosterSource, Double _Duration)
 	{
 		this._Title = _Title;
 		this._TitleDe = _TitleDe;
@@ -33,6 +34,7 @@ public class MovieInfo
 		this._ImdbId = _ImdbId;
 		this._ImdbRating = _ImdbRating;
 		this._PosterSource = _PosterSource;
+		this._Duration = _Duration;
 	}
 
 	public String getTitle()
@@ -93,6 +95,11 @@ public class MovieInfo
 	public String getPosterSource()
 	{
 		return this._PosterSource;
+	}
+	
+	public Double getDuration()
+	{
+		return this._Duration;
 	}
 
 	public static String extractImdbIdFromUrl(String _Url)
