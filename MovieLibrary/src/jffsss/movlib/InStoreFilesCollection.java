@@ -27,6 +27,7 @@ import org.apache.lucene.search.similarities.Similarity;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
+import org.apache.lucene.search.MatchAllDocsQuery;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -176,7 +177,8 @@ public class InStoreFilesCollection implements Closeable
 	public List<InStoreFile> addInStoreFilesFromSearch(String _Query) throws IOException
 	{
 		DirectoryReader _DirectoryReader = this.getDirectoryReader();
-		List<Integer> _LuceneIds = getLuceneIdsFromSearch(_Query, _DirectoryReader);
+		List<Integer> _LuceneIds;
+			_LuceneIds = getLuceneIdsFromSearch(_Query, _DirectoryReader);
 		return this.addInStoreFiles(_LuceneIds, _DirectoryReader);
 	}
 
@@ -436,7 +438,7 @@ public class InStoreFilesCollection implements Closeable
 	private static List<Integer> getLuceneIdsFromSearch(String _Query, DirectoryReader _DirectoryReader) throws IOException
 	{
 		List<Integer> _LuceneIds = new ArrayList<Integer>();
-		if (!_Query.isEmpty())
+		if (true)
 		{
 			Analyzer _Analyzer = new StandardAnalyzer(Version.LUCENE_46);
 			IndexSearcher _IndexSearcher = new IndexSearcher(_DirectoryReader);
@@ -455,7 +457,14 @@ public class InStoreFilesCollection implements Closeable
 			MultiFieldQueryParser _Parser = new MultiFieldQueryParser(Version.LUCENE_46, _Fields, _Analyzer, _Boosts);
 			try
 			{
-				ScoreDoc[] _ScoreDocs = _IndexSearcher.search(_Parser.parse(_Query), null, 100).scoreDocs;
+				ScoreDoc[] _ScoreDocs;
+				if (_Query.length()==0)
+				{
+					MatchAllDocsQuery m = new MatchAllDocsQuery();
+					_ScoreDocs = _IndexSearcher.search(m, null, Integer.MAX_VALUE).scoreDocs;
+				}
+				else 
+					_ScoreDocs = _IndexSearcher.search(_Parser.parse(_Query), null, 100).scoreDocs;
 				for (int i = 0; i < _ScoreDocs.length; i++)
 				{
 					_LuceneIds.add(_ScoreDocs[i].doc);
