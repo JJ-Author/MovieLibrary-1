@@ -37,7 +37,14 @@ public class ToStoreFilesCollection
 		ToStoreFile _ToStoreFile = this._ToStoreFiles.get(_FilePath);
 		if (_ToStoreFile == null)
 		{
-			// if not in InStoreFilesCollection
+			// check if not in InStoreFilesCollection
+			try {
+				if (this._InStoreFilesCollection.filePathInStore(_FilePath))
+					return null;	
+				
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 			_ToStoreFile = new ToStoreFile();
 			this._ToStoreFiles.put(_FilePath, _ToStoreFile);
 			_ToStoreFile.startRetrieving(_FilePath);

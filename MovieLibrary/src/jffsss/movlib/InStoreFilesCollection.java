@@ -14,10 +14,12 @@ import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.StoredField;
+import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.index.Term;
 import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.search.IndexSearcher;
@@ -234,6 +236,12 @@ public class InStoreFilesCollection implements Closeable
 			_Document.add(new StoredField("File:Directory", _Directory));
 		}
 		{
+			String _Path = _FileInfo.getPath();
+			if (_Directory == null)
+				throw new IOException("File:Path");
+			_Document.add(new StringField("File:Path", _Path, Field.Store.YES)); //indexed but not tokenized/analyzed --> "as is" value
+		}
+		{
 			Long _Size = _FileInfo.getSize();
 			if (_Size == null)
 				throw new IOException("File:Size");
@@ -286,6 +294,8 @@ public class InStoreFilesCollection implements Closeable
 			if (_ImdbId == null)
 				throw new IOException("Movie:ImdbId");
 			_Document.add(new StoredField("Movie:ImdbId", _ImdbId));
+			//_Document.add(new StringField("Movie:ImdbId", _ImdbId, Field.Store.YES));
+
 		}
 		{
 			Double _ImdbRating = _MovieInfo.getImdbRating();
@@ -477,4 +487,16 @@ public class InStoreFilesCollection implements Closeable
 		}
 		return _LuceneIds;
 	}
+	
+	public boolean filePathInStore(String _FilePath) throws IOException 
+	{
+		Term indexTerm = new Term("File:Path", _FilePath);
+		int docs = this.getDirectoryReader().docFreq(indexTerm);
+		if (docs >0)
+			return true;
+		else
+			return false;
+	}
 }
+
+
