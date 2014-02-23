@@ -1,7 +1,9 @@
 package jffsss.movlib;
 
+import java.io.BufferedWriter;
 import java.io.Closeable;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -31,9 +33,11 @@ import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
 import org.apache.lucene.search.MatchAllDocsQuery;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import com.google.gson.stream.JsonWriter;
 
 import jffsss.util.Listeners;
 import jffsss.util.Utils;
@@ -77,6 +81,83 @@ public class InStoreFilesCollection implements Closeable
 	
 	public void exportAsJson(File _File) throws IOException
 	{
+		JsonArray _JsonArray = this.getMoviesAsJson(false);
+		PrintWriter _PrintWriter = new PrintWriter(_File);
+		try
+		{
+			_PrintWriter.println(_JsonArray.toString());
+		}
+		finally
+		{
+			try
+			{
+				_PrintWriter.close();
+			}
+			catch (Exception e)
+			{}
+		}
+	}
+
+	/**
+	 * writes movie index in exhibit jsonp format to file for exhibit faceted browsing
+	 * @param _File
+	 * @throws IOException
+	 */
+	public void writeExhibitJsonp(File _File) throws IOException 
+	{
+		/*BufferedWriter bw = new BufferedWriter(new FileWriter(_File));
+		Gson gson = new Gson();
+		gson.toJson(this.getExhibitJson(), new JsonWriter(bw));*/
+		
+		String _json = new Gson().toJson(this.getExhibitJson()); 
+		String _jsonp = "callback("+_json+");"; //convert json to jsonp for local use of exhibit
+		PrintWriter _PrintWriter = new PrintWriter(_File);
+		try
+		{
+			_PrintWriter.println(_jsonp);
+		}
+		finally
+		{
+			try
+			{
+				_PrintWriter.close();
+			}
+			catch (Exception e)
+			{}
+		}
+	}
+
+	
+	/**
+	 * returns the movie index in exhibit json format as JsonObject
+	 * @return
+	 * @throws IOException
+	 */
+	public JsonObject getExhibitJson() throws IOException 
+	{
+		JsonObject _top = new JsonObject();
+		JsonObject _properties = new JsonObject();
+			JsonObject _prop;
+			_prop = new JsonObject(); _prop.addProperty("valueType", "number");
+				_properties.add("MovieDuration", _prop);
+			_prop = new JsonObject(); _prop.addProperty("valueType", "number");
+				_properties.add("MovieImdbRating", _prop);
+			_prop = new JsonObject(); _prop.addProperty("valueType", "url");
+				_properties.add("MoviePosterSource", _prop);
+				
+		_top.add("properties", _properties);
+		_top.add("items", this.getMoviesAsJson(true));
+		return _top;
+	}
+	
+	/**
+	 * returns all movies in index with attributes as JsonArray
+	 * @param titleAttributeAsLabel if true the property name for German title is label (needed for exhibit json format)
+	 * @return 
+	 * @throws IOException
+	 */
+	public JsonArray getMoviesAsJson(boolean titleAttributeAsLabel) throws IOException
+	{
 		JsonArray _JsonArray = new JsonArray();
 		{
 			for (int i = 0; i < this.getInStoreFilesCount(); i++)
@@ -85,7 +166,8 @@ public class InStoreFilesCollection implements Closeable
 				InStoreFile _InStoreFile = createInStoreFile(i, this.getDirectoryReader());
 				_JsonArrayObject.addProperty("FilePath", _InStoreFile.getFileInfo().getPath());
 				_JsonArrayObject.addProperty("MovieTitle", _InStoreFile.getMovieInfo().getTitle());
-				_JsonArrayObject.addProperty("MovieTitleDE", _InStoreFile.getMovieInfo().getTitleDe());
+				String titleKeyName =  (titleAttributeAsLabel) ? "label" : "MovieTitleDE";
+				_JsonArrayObject.addProperty(titleKeyName, _InStoreFile.getMovieInfo().getTitleDe());
 				_JsonArrayObject.addProperty("MovieDuration", _InStoreFile.getMovieInfo().getDuration());
 				_JsonArrayObject.addProperty("MovieYear", _InStoreFile.getMovieInfo().getYear());
 				_JsonArrayObject.addProperty("MoviePlot", _InStoreFile.getMovieInfo().getPlot());
@@ -127,20 +209,7 @@ public class InStoreFilesCollection implements Closeable
 				_JsonArray.add(_JsonArrayObject);
 			}
 		}
-		PrintWriter _PrintWriter = new PrintWriter(_File);
-		try
-		{
-			_PrintWriter.println(_JsonArray.toString());
-		}
-		finally
-		{
-			try
-			{
-				_PrintWriter.close();
-			}
-			catch (Exception e)
-			{}
-		}
+		return _JsonArray;
 	}
 
 	public InStoreFile addInStoreFile(Integer _LuceneId) throws IOException

@@ -1,7 +1,9 @@
 package jffsss.movlib.view;
 
+import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,6 +29,7 @@ public class InStoreFilesCollectionView
 	private TextInput _SearchMoviesText;
 	private PushButton _SearchMoviesButton;
 	private PushButton _ExportAsJsonButton;
+	private PushButton _BrowserViewButton;
 	private FlowPane _InStoreFileViewsContainer;
 	private Map<InStoreFile, InStoreFileView> _InStoreFileViews;
 
@@ -40,6 +43,7 @@ public class InStoreFilesCollectionView
 			this._SearchMoviesText = (TextInput) _BXMLSerializer.getNamespace().get("SearchMoviesText");
 			this._SearchMoviesButton = (PushButton) _BXMLSerializer.getNamespace().get("SearchMoviesButton");
 			this._ExportAsJsonButton = (PushButton) _BXMLSerializer.getNamespace().get("ExportAsJsonButton");
+			this._BrowserViewButton = (PushButton) _BXMLSerializer.getNamespace().get("BrowserViewButton");
 			this._InStoreFileViewsContainer = (FlowPane) _BXMLSerializer.getNamespace().get("InStoreFileViewsContainer");
 			this._InStoreFileViews = new HashMap<InStoreFile, InStoreFileView>();
 		}
@@ -68,6 +72,34 @@ public class InStoreFilesCollectionView
 				}
 			};
 			this._SearchMoviesButton.getButtonPressListeners().add(_Listener);
+		}
+		{
+			ButtonPressListener _Listener = new ButtonPressListener()
+			{
+				
+				@Override
+				public void buttonPressed(Button _Button)
+				{
+					if (Desktop.isDesktopSupported())
+					{
+						try
+						{
+							//System.out.println(new File(".").getAbsolutePath());
+							//System.getProperty("user.dir");try
+							String _moviesDir = System.getProperty("user.dir");
+							File jsonpFile = new File(_moviesDir+"/src/jffsss/moviesview/movies.js");
+						    InStoreFilesCollectionView.this._Model.writeExhibitJsonp(jsonpFile);
+							File htmlFile = new File(_moviesDir+"/src/jffsss/moviesview/MovieViewer.html");
+							Desktop.getDesktop().browse(htmlFile.toURI());
+						}
+						catch (Exception e)
+						{
+							e.printStackTrace();
+						}
+					}
+				}
+			};
+			this._BrowserViewButton.getButtonPressListeners().add(_Listener);
 		}
 		{
 			ButtonPressListener _Listener = new ButtonPressListener()
