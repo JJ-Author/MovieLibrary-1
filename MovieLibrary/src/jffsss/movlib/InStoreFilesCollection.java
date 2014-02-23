@@ -78,7 +78,11 @@ public class InStoreFilesCollection implements Closeable
 		}
 		return this.onUpdate;
 	}
-	
+	/**
+	 * 
+	 * @param _File
+	 * @throws IOException
+	 */
 	public void exportAsJson(File _File) throws IOException
 	{
 		JsonArray _JsonArray = this.getMoviesAsJson(false);
@@ -111,9 +115,11 @@ public class InStoreFilesCollection implements Closeable
 		
 		String _json = new Gson().toJson(this.getExhibitJson()); 
 		String _jsonp = "callback("+_json+");"; //convert json to jsonp for local use of exhibit
-		PrintWriter _PrintWriter = new PrintWriter(_File);
+		PrintWriter _PrintWriter = new PrintWriter(_File,"UTF-8");
 		try
 		{
+			_PrintWriter.print('\ufeff'); //write UTF-8 with BOM, umlaute are only correct in exhibit if they are 
+										  //unicode escaped or in latin1, but BOM seems to help exhibit to understand utf8 without escaping
 			_PrintWriter.println(_jsonp);
 		}
 		finally
@@ -152,11 +158,11 @@ public class InStoreFilesCollection implements Closeable
 	
 	/**
 	 * returns all movies in index with attributes as JsonArray
-	 * @param titleAttributeAsLabel if true the property name for German title is label (needed for exhibit json format)
+	 * @param _exhibitMode if true the property name for German title is label and filepath id(needed for exhibit json format)
 	 * @return 
 	 * @throws IOException
 	 */
-	public JsonArray getMoviesAsJson(boolean titleAttributeAsLabel) throws IOException
+	public JsonArray getMoviesAsJson(boolean _exhibitMode) throws IOException
 	{
 		JsonArray _JsonArray = new JsonArray();
 		{
@@ -164,9 +170,10 @@ public class InStoreFilesCollection implements Closeable
 			{
 				JsonObject _JsonArrayObject = new JsonObject();
 				InStoreFile _InStoreFile = createInStoreFile(i, this.getDirectoryReader());
-				_JsonArrayObject.addProperty("FilePath", _InStoreFile.getFileInfo().getPath());
+				String FilepathName =  (_exhibitMode) ? "id" : "FilePath";
+				_JsonArrayObject.addProperty(FilepathName, _InStoreFile.getFileInfo().getPath());
 				_JsonArrayObject.addProperty("MovieTitle", _InStoreFile.getMovieInfo().getTitle());
-				String titleKeyName =  (titleAttributeAsLabel) ? "label" : "MovieTitleDE";
+				String titleKeyName =  (_exhibitMode) ? "label" : "MovieTitleDE";
 				_JsonArrayObject.addProperty(titleKeyName, _InStoreFile.getMovieInfo().getTitleDe());
 				_JsonArrayObject.addProperty("MovieDuration", _InStoreFile.getMovieInfo().getDuration());
 				_JsonArrayObject.addProperty("MovieYear", _InStoreFile.getMovieInfo().getYear());
