@@ -25,12 +25,6 @@ import com.osbcp.cssparser.Selector;
 
 public class HideMyAssApi
 {
-	public static void main(String[] _Args) throws IOException, ParseException
-	{
-		HideMyAssApi _Api = new HideMyAssApi();
-		System.out.println(_Api.requestProxies(1));
-	}
-
 	public HideMyAssApi()
 	{}
 
@@ -81,23 +75,23 @@ public class HideMyAssApi
 				Map<String, DObject> _ResultMap = new HashMap<String, DObject>();
 				{
 					Element _ResponseTagTag = _ResponseTag.child(1).clone();
-					for (Element element : _ResponseTagTag.getElementsByAttributeValue("style", "display:none"))
+					for (Element _Element : _ResponseTagTag.getElementsByAttributeValue("style", "display:none"))
 					{
-						element.remove();
+						_Element.remove();
 					}
-					List<Rule> rules = CSSParser.parse(_ResponseTagTag.child(0).child(0).html().replace("}", ";}"));
-					for (Rule rule : rules)
+					List<Rule> _Rules = CSSParser.parse(_ResponseTagTag.child(0).child(0).html().replace("}", ";}"));
+					for (Rule _Rule : _Rules)
 					{
-						List<PropertyValue> propertyValues = rule.getPropertyValues();
+						List<PropertyValue> propertyValues = _Rule.getPropertyValues();
 						for (PropertyValue propertyValue : propertyValues)
 						{
 							if (propertyValue.getProperty().equalsIgnoreCase("display") && propertyValue.getValue().equalsIgnoreCase("none"))
 							{
-								List<Selector> selectors = rule.getSelectors();
-								for (Selector selector : selectors)
+								List<Selector> _Selectors = _Rule.getSelectors();
+								for (Selector _Selector : _Selectors)
 								{
-									for (Element element : _ResponseTagTag.getElementsByClass(selector.toString().substring(1)))
-										element.remove();
+									for (Element _Element : _ResponseTagTag.getElementsByClass(_Selector.toString().substring(1)))
+										_Element.remove();
 								}
 								break;
 							}

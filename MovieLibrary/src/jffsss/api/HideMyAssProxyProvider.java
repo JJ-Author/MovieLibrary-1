@@ -23,7 +23,6 @@ public class HideMyAssProxyProvider implements ProxyProvider
 	{
 		if (this._Proxies.isEmpty())
 		{
-			System.out.println("this._Proxies.isEmpty()");
 			(new Thread(new RunnableImpl())).start();
 		}
 		try
@@ -47,7 +46,6 @@ public class HideMyAssProxyProvider implements ProxyProvider
 				{
 					HideMyAssApi _Api = new HideMyAssApi();
 					List<DObject> _ResponseMapList = _Api.requestProxies(i).asMap().get("Content").asList();
-					System.out.println(_ResponseMapList);
 					for (DObject _ResponseMapListElement : _ResponseMapList)
 					{
 						Map<String, DObject> _ResponseMapListMap = _ResponseMapListElement.asMap();

@@ -1,5 +1,6 @@
 package jffsss.movlib;
 
+import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.util.HashMap;
 import java.util.List;
@@ -16,7 +17,6 @@ import org.apache.pivot.util.concurrent.TaskExecutionException;
 
 public class GetImdbIdsFromGoogle extends Task<Map<String, Double>>
 {
-	@SuppressWarnings("unused")
 	private static ProxyProvider _ProxyProvider = new HideMyAssProxyProvider(5);
 	private static Proxy _CurrentProxy = null;
 
@@ -34,27 +34,42 @@ public class GetImdbIdsFromGoogle extends Task<Map<String, Double>>
 		{
 			while (true)
 			{
-				if (_CurrentProxy == null)
+				synchronized (_ProxyProvider)
 				{
-					// _CurrentProxy = _ProxyProvider.provideProxy();
+					if (_CurrentProxy == null)
+					{
+						_CurrentProxy = _ProxyProvider.provideProxy();
+						if (_CurrentProxy == null)
+						{
+							throw new Exception("Keine Proxies mehr");
+						}
+					}
 				}
-				// GoogleApi _Api = new GoogleApi(_CurrentProxy);
-				GoogleApi _Api = new GoogleApi();
-				DObject _Response = _Api.requestSearch(this._VideoFileInfo.getCleanedFileName() + " site:imdb.com", 0, 5);
-				if (_Response.asMap().get("StatusCode").parseAsInteger() == 200)
+				GoogleApi _Api = new GoogleApi(_CurrentProxy);
+				try
 				{
-					return parseResponse(_Response.asMap().get("Content"));
+					System.out.println(">> USING PROXY " + _CurrentProxy + " FOR GOOGLE SEARCH");
+					DObject _Response = _Api.requestSearch(this._VideoFileInfo.getCleanedFileName() + " site:imdb.com", 0, 5);
+					if (_Response.asMap().get("StatusCode").parseAsInteger() == 200)
+					{
+						System.out.println(">> PROXY " + _CurrentProxy + " SUCEED FOR " + this._VideoFileInfo.getCleanedFileName());
+						return parseResponse(_Response.asMap().get("Content"));
+					}
+					else
+					{
+						throw new Exception();
+					}
 				}
-				else
+				catch (Exception e)
 				{
-					// _CurrentProxy = null;
-					throw new TaskExecutionException("GOOGLE LIMIT ERREICHT");
+					System.out.println(">> PROXY " + _CurrentProxy + " FAILED");
+					_CurrentProxy = null;
 				}
 			}
 		}
 		catch (Exception e)
 		{
-			throw new TaskExecutionException("GetImdbIdsFromGoogle:" + e.getMessage());
+			throw new TaskExecutionException("GetImdbIdsFromGoogle: " + e.getMessage());
 		}
 	}
 
