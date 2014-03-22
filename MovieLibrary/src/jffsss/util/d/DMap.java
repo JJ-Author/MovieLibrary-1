@@ -3,15 +3,27 @@ package jffsss.util.d;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Die Map-Implementation der dynamischen Struktur.
+ */
 public class DMap extends DAbstractObject
 {
 	private Map<String, DObject> _Value;
 
+	/**
+	 * Konstruiert eine leere Map.
+	 */
 	public DMap()
 	{
 		this._Value = new HashMap<String, DObject>();
 	}
 
+	/**
+	 * Konstruiert eine Map mit dem Vorgabe-Wert.
+	 * 
+	 * @param _Value
+	 *            ein Vorgabe-Wert
+	 */
 	public DMap(Map<String, DObject> _Value)
 	{
 		this();

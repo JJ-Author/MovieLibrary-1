@@ -5,6 +5,9 @@ import java.util.Map;
 
 import jffsss.ParseException;
 
+/**
+ * Die Interface-Methoden erhalten eine Default-Implementierung. In Unterklassen werden dann die benötigten Methoden überschrieben.
+ */
 public class DAbstractObject implements DObject
 {
 	public DAbstractObject()

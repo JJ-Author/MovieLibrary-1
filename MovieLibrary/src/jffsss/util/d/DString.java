@@ -2,15 +2,30 @@ package jffsss.util.d;
 
 import jffsss.ParseException;
 
+/**
+ * Die String-Implementation der dynamischen Struktur.
+ */
 public class DString extends DAbstractObject
 {
 	private String _Value;
 
+	/**
+	 * Konstruiert einen String.
+	 * 
+	 * @param _Value
+	 *            ein Vorgabe-Wert
+	 */
 	public DString(String _Value)
 	{
 		this._Value = _Value;
 	}
-	
+
+	/**
+	 * Konstruiert einen String aus dem Integer-Wert.
+	 * 
+	 * @param _Value
+	 *            ein Vorgabe-Wert
+	 */
 	public DString(int _Value)
 	{
 		this(String.valueOf(_Value));

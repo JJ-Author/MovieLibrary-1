@@ -13,6 +13,15 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.pivot.util.concurrent.TaskExecutionException;
 
+/**
+ * AbstractBufferedExecutor ist eine Thread-sichere Puffer-Klasse. Es puffert die Eingabewerte für Requests mit einem
+ * Delay, um sie dann gemeinsam zu beantworten.
+ * 
+ * @param <A>
+ *            die Klasse des Eingabewertes
+ * @param <B>
+ *            die Klasse des Asugabewertes
+ */
 public abstract class AbstractBufferedExecutor<A, B>
 {
 	private Map<A, List<Output>> _Buffer;
@@ -22,6 +31,17 @@ public abstract class AbstractBufferedExecutor<A, B>
 	private long _DiceDelay;
 	private RunnableImpl _Runnable;
 
+	/**
+	 * Konstruiert das AbstractBufferedExecutor-Objekt. Beim Abklingeln der Delay-Zeit, werden die Requests gemeinsam
+	 * ausgeführt.
+	 * 
+	 * @param _PoolSize
+	 *            die maximale Thread-Größe
+	 * @param _BaseDelay
+	 *            die mindeste Delay-Länge
+	 * @param _DiceDelay
+	 *            die zusätzliche zufällige Delay-Länge
+	 */
 	public AbstractBufferedExecutor(int _PoolSize, long _BaseDelay, long _DiceDelay)
 	{
 		this._Buffer = new HashMap<A, List<Output>>();
@@ -39,6 +59,16 @@ public abstract class AbstractBufferedExecutor<A, B>
 		this._Runnable = new RunnableImpl();
 	}
 
+	/**
+	 * Statt das Ergebnis gleich zu berechnen und zurückzugeben, wird der Eingabewert gepuffert und es wird auf andere
+	 * Anfragen gewartet.
+	 * 
+	 * @param _Input
+	 *            ein Eingabewert
+	 * @return der berechnente Ausgabewert
+	 * @throws TaskExecutionException
+	 *             beim jeden Fehler
+	 */
 	public B execute(A _Input) throws TaskExecutionException
 	{
 		Output _Output = new Output();
@@ -66,8 +96,19 @@ public abstract class AbstractBufferedExecutor<A, B>
 		return _Output.getResult();
 	}
 
+	/**
+	 * Diese Methode soll implementiert werden, um die gepufferten Requests zu beantworten. Die Eingabewerte sollen
+	 * durch die <CODE>pollInputs</CODE>-Methode geholt werden.
+	 */
 	protected abstract void execute();
 
+	/**
+	 * Gibt die gepufferten Eingabewerte zurück.
+	 * 
+	 * @param _Count
+	 *            die maximale Anzahl der angefragten Eingabewerte
+	 * @return die Eingabewerte
+	 */
 	protected synchronized List<A> pollInputs(int _Count)
 	{
 		List<A> _Inputs = new ArrayList<A>();
@@ -86,16 +127,34 @@ public abstract class AbstractBufferedExecutor<A, B>
 		return _Inputs;
 	}
 
+	/**
+	 * Gibt den ersten gepufferten Eingabewert zurück.
+	 * 
+	 * @return der Eingabewerte
+	 */
 	protected synchronized A pollInput()
 	{
 		return _Inputs.poll();
 	}
 
+	/**
+	 * Überprüft, ob der Puffer leer ist.
+	 * 
+	 * @return <CODE>wahr</CODE>, falls der Puffer leer ist
+	 */
 	protected synchronized boolean isEmpty()
 	{
 		return this._Buffer.isEmpty();
 	}
 
+	/**
+	 * Setzt den Ausgabewert für den Eingabewart fest.
+	 * 
+	 * @param _Input
+	 *            ein Eingabewert
+	 * @param _Result
+	 *            der berechnente Ausgabewert
+	 */
 	protected void setResult(A _Input, B _Result)
 	{
 		List<Output> _Outputs;
@@ -112,6 +171,12 @@ public abstract class AbstractBufferedExecutor<A, B>
 		}
 	}
 
+	/**
+	 * Setzt den Ausgabewert für alle zuletzt rausgeholte Eingabewarte fest.
+	 * 
+	 * @param _Result
+	 *            der berechnente Ausgabewert
+	 */
 	protected synchronized void setResult(B _Result)
 	{
 		for (List<Output> _Outputs : this._Buffer.values())
@@ -124,6 +189,14 @@ public abstract class AbstractBufferedExecutor<A, B>
 		this._Buffer.clear();
 	}
 
+	/**
+	 * Setzt die Exception für den Eingabewart fest.
+	 * 
+	 * @param _Input
+	 *            ein Eingabewert
+	 * @param _Fault
+	 *            die Exception-Nachricht
+	 */
 	protected void setFault(A _Input, String _Fault)
 	{
 		List<Output> _Outputs;
@@ -140,6 +213,12 @@ public abstract class AbstractBufferedExecutor<A, B>
 		}
 	}
 
+	/**
+	 * Setzt die Exception für alle zuletzt rausgeholte Eingabewarte fest.
+	 * 
+	 * @param _Fault
+	 *            die Exception-Nachricht
+	 */
 	protected synchronized void setFault(String _Fault)
 	{
 		for (List<Output> _Outputs : this._Buffer.values())
@@ -152,6 +231,9 @@ public abstract class AbstractBufferedExecutor<A, B>
 		this._Buffer.clear();
 	}
 
+	/**
+	 * Private Klasse für das Sammeln der Eingabe- und Ausgabe-Werte.
+	 */
 	private class Output
 	{
 		private boolean _ValueSet;

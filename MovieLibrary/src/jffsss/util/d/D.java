@@ -18,11 +18,23 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 
+/**
+ * D ist eine Parser-Klasse, um dynamische Strukturen zu erstellen.
+ */
 public class D
 {
 	private D()
 	{}
 
+	/**
+	 * Parst die dynamische Struktur aus einem XML-Objekt.
+	 * 
+	 * @param _Object
+	 *            ein XML-Objekt
+	 * @return die dynamische Struktur
+	 * @throws ParseException
+	 *             falls das Parsen gescheitert ist
+	 */
 	public static DObject fromXmlRpc(Object _Object) throws ParseException
 	{
 		try
@@ -66,6 +78,17 @@ public class D
 		throw new ParseException();
 	}
 
+	/**
+	 * Parst die dynamische Struktur aus einem Eingabe-Stream.
+	 * 
+	 * @param _InputStream
+	 *            ein Eingabe-Stream
+	 * @return die dynamische Struktur
+	 * @throws IOException
+	 *             falls eine IO-Fehler auftrat
+	 * @throws ParseException
+	 *             falls das Parsen gescheitert ist
+	 */
 	public static DObject fromJson(InputStream _InputStream) throws IOException, ParseException
 	{
 		return fromJson(new InputStreamReader(_InputStream));
@@ -90,6 +113,15 @@ public class D
 		return fromJson(_JsonElement);
 	}
 
+	/**
+	 * Parst die dynamische Struktur aus einem JSON-Element.
+	 * 
+	 * @param _JsonElement
+	 *            ein JSON-Element
+	 * @return die dynamische Struktur
+	 * @throws ParseException
+	 *             falls das Parsen gescheitert ist
+	 */
 	public static DObject fromJson(JsonElement _JsonElement) throws ParseException
 	{
 		try
