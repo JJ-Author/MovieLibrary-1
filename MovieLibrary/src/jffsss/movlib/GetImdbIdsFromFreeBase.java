@@ -11,10 +11,20 @@ import jffsss.util.d.DObject;
 import org.apache.pivot.util.concurrent.Task;
 import org.apache.pivot.util.concurrent.TaskExecutionException;
 
+/**
+ * GetImdbIdsFromFreeBase ist eine Task-Klasse für das asynchrone Finden der IMDb-IDs der Filme mit Hilfe von
+ * FreeBase-Seite.
+ */
 public class GetImdbIdsFromFreeBase extends Task<Map<String, Double>>
 {
 	private VideoFileInfo _VideoFileInfo;
 
+	/**
+	 * Konstruiert ein GetImdbIdsFromFreeBase-Objekt.
+	 * 
+	 * @param _VideoFileInfo
+	 *            das VideoFileInfo-Objekt
+	 */
 	public GetImdbIdsFromFreeBase(VideoFileInfo _VideoFileInfo)
 	{
 		this._VideoFileInfo = _VideoFileInfo;

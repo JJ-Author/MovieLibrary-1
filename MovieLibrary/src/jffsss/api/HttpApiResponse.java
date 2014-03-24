@@ -13,9 +13,9 @@ public class HttpApiResponse extends DMap
 	 * Konstruiert ein HttpApiResponse-Objekt mit einem Statuscode und einem Inhalt.
 	 * 
 	 * @param _StatusCode
-	 *            ein Statuscode
+	 *            der Statuscode
 	 * @param _Content
-	 *            ein Inhalt
+	 *            der Inhalt
 	 */
 	public HttpApiResponse(int _StatusCode, DObject _Content)
 	{
@@ -27,7 +27,7 @@ public class HttpApiResponse extends DMap
 	 * Konstruiert ein HttpApiResponse-Objekt nur mit einem Statuscode.
 	 * 
 	 * @param _StatusCode
-	 *            ein Statuscode
+	 *            der Statuscode
 	 */
 	public HttpApiResponse(int _StatusCode)
 	{

@@ -47,12 +47,18 @@ public class GoogleApi
 
 	/**
 	 * Sendet eine Suchanfrage.
-	 * @param _Query ein Text für die Anfrage
-	 * @param _Page eine Nummer der Seite
-	 * @param _Count eine Anzahl der angezeigten Ergebnisse pro Seite
+	 * 
+	 * @param _Query
+	 *            der Text für die Anfrage
+	 * @param _Page
+	 *            die Nummer der Seite
+	 * @param _Count
+	 *            die Anzahl der angezeigten Ergebnisse pro Seite
 	 * @return das Response-Objekt
-	 * @throws IOException falls ein IO-Fehler auftrat
-	 * @throws ParseException falls das Parsen gescheitert ist
+	 * @throws IOException
+	 *             falls ein IO-Fehler auftrat
+	 * @throws ParseException
+	 *             falls das Parsen gescheitert ist
 	 */
 	public DObject requestSearch(String _Query, Integer _Page, Integer _Count) throws IOException, ParseException
 	{
@@ -64,12 +70,18 @@ public class GoogleApi
 	}
 
 	/**
-	 * Erstellt eine URL für die Anfrage, sendet die Anfrage an die Google-Suchmaschine und erhält das Response-Objekt zurück.
-	 * @param _BaseUrl eine Basis-URL
-	 * @param _Params die URL-Parameter
+	 * Erstellt eine URL für die Anfrage, sendet die Anfrage an die Google-Suchmaschine und erhält das Response-Objekt
+	 * zurück.
+	 * 
+	 * @param _BaseUrl
+	 *            die Basis-URL
+	 * @param _Params
+	 *            die URL-Parameter
 	 * @return das Response-Objekt
-	 * @throws IOException falls ein IO-Fehler auftrat
-	 * @throws ParseException falls das Parsen gescheitert ist
+	 * @throws IOException
+	 *             falls ein IO-Fehler auftrat
+	 * @throws ParseException
+	 *             falls das Parsen gescheitert ist
 	 */
 	private DObject executeAPI(String _BaseUrl, Map<String, Object> _Params) throws IOException, ParseException
 	{
@@ -78,10 +90,14 @@ public class GoogleApi
 
 	/**
 	 * Sendet eine Get-Anfrage an die Google-Suchmaschine und erhält das Response-Objekt zurück.
-	 * @param _Url eine angefragte URL
+	 * 
+	 * @param _Url
+	 *            die angefragte URL
 	 * @return das Response-Objekt
-	 * @throws IOException falls ein IO-Fehler auftrat
-	 * @throws ParseException falls das Parsen gescheitert ist
+	 * @throws IOException
+	 *             falls ein IO-Fehler auftrat
+	 * @throws ParseException
+	 *             falls das Parsen gescheitert ist
 	 */
 	private DObject executeAPI(String _Url) throws IOException, ParseException
 	{
@@ -125,7 +141,9 @@ public class GoogleApi
 
 	/**
 	 * Parst den Inhalt der HTML-Seite, um das Response-Objekt zu erstellen.
-	 * @param _Response eine HTML-Seite
+	 * 
+	 * @param _Response
+	 *            die HTML-Seite
 	 * @return das Response-Objekt
 	 */
 	private static DObject parseResponse(Document _Response)

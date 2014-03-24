@@ -11,9 +11,9 @@ public interface Listener
 	 * @param _Source
 	 *            das beobachtete Objekt, in dem eine Änderung auftrat
 	 * @param _Command
-	 *            benannte Änderung, die aufgetreten ist
+	 *            die benannte Änderung, die aufgetreten ist
 	 * @param _Arg
-	 *            optionales Argument
+	 *            ein optionales Argument
 	 */
 	public void on(Object _Source, String _Command, Object _Arg);
 }

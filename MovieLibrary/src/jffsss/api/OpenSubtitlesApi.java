@@ -42,9 +42,9 @@ public class OpenSubtitlesApi
 	 * auszuführen.
 	 * 
 	 * @param _Username
-	 *            ein Benutzername
+	 *            der Benutzername
 	 * @param _Password
-	 *            ein Passwort
+	 *            das Passwort
 	 * @return der Session-Token
 	 * @throws IOException
 	 *             falls ein IO-Fehler auftrat
@@ -73,7 +73,7 @@ public class OpenSubtitlesApi
 	 * Sendet eine LogOut-Anfrage, um die Session zu beendet.
 	 * 
 	 * @param _Token
-	 *            ein Session-Token
+	 *            der Session-Token
 	 * @throws IOException
 	 *             falls ein IO-Fehler auftrat
 	 * @throws ParseException
@@ -90,7 +90,7 @@ public class OpenSubtitlesApi
 	 * Sendet eine CheckMovieHash2-Anfrage, um die Informationen über die Filme anhand der Haschsummen der Videodateien.
 	 * 
 	 * @param _Token
-	 *            ein Session-Token
+	 *            der Session-Token
 	 * @param _Hashes
 	 *            die Haschsummen der Videodateien
 	 * @return das Response-Objekt
@@ -120,7 +120,7 @@ public class OpenSubtitlesApi
 	 * Sendet eine Post-Anfrage an die OpenSubtitles-Seite und erhält das Response-Objekt zurück.
 	 * 
 	 * @param _Method
-	 *            der Name einer Request-Methode
+	 *            der Name der Request-Methode
 	 * @param _Params
 	 *            die Parameter der Request-Methode
 	 * @return das Response-Objekt
@@ -145,7 +145,7 @@ public class OpenSubtitlesApi
 	 * Extrahiert den Statuscode aus der Response-Status-Line.
 	 * 
 	 * @param _String
-	 *            eine Response-Status-Line
+	 *            die Response-Status-Line
 	 * @return der extrahierte Statuscode
 	 * @throws ParseException
 	 *             falls das Parsen gescheitert ist

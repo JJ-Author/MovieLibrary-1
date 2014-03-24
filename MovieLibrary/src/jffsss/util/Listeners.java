@@ -15,7 +15,7 @@ public class Listeners
 	 * Konstruiert ein Listeners-Objekt mit der gegebenen Quelle, die als das beobachtete Objekt fungiert.
 	 * 
 	 * @param _Source
-	 *            eine Quelle
+	 *            die Quelle
 	 */
 	public Listeners(Object _Source)
 	{
@@ -27,7 +27,7 @@ public class Listeners
 	 * Fügt einen neuen Listener hinzu.
 	 * 
 	 * @param _Listener
-	 *            ein Listener, der eingefügt werden soll
+	 *            der Listener, der eingefügt werden soll
 	 */
 	public synchronized void addListener(Listener _Listener)
 	{
@@ -38,7 +38,7 @@ public class Listeners
 	 * Entfernt einen Listener.
 	 * 
 	 * @param _Listener
-	 *            ein Listener, der entfernt werden soll
+	 *            der Listener, der entfernt werden soll
 	 */
 	public synchronized void removeListener(Listener _Listener)
 	{
@@ -67,9 +67,9 @@ public class Listeners
 	 * Benachrichtigt alle eingefügten Listener über die Änderung des Quellobjekts.
 	 * 
 	 * @param _Command
-	 *            benannte Änderung, die aufgetreten ist
+	 *            die benannte Änderung, die aufgetreten ist
 	 * @param _Arg
-	 *            optionales Argument
+	 *            ein optionales Argument
 	 */
 	public void notifyListeners(String _Command, Object _Arg)
 	{

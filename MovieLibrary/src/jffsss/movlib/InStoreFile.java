@@ -1,11 +1,20 @@
 package jffsss.movlib;
 
+/**
+ * InStoreFile beinhalten die Informationen des bereits in der Datenbank gespeicherten Films.
+ */
 public class InStoreFile
 {
 	private Integer _LuceneId;
 	private FileInfo _FileInfo;
 	private MovieInfo _MovieInfo;
 
+	/**
+	 * Konstruiert ein InStoreFile-Objekt.
+	 * @param _LuceneId
+	 * @param _FileInfo
+	 * @param _MovieInfo
+	 */
 	public InStoreFile(Integer _LuceneId, FileInfo _FileInfo, MovieInfo _MovieInfo)
 	{
 		this._LuceneId = _LuceneId;

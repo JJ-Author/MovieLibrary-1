@@ -26,7 +26,7 @@ public class OpenSubtitlesHasher
 	 * Berechnet die Hashsumme einer Datei.
 	 * 
 	 * @param _File
-	 *            eine Film-Datei
+	 *            die Film-Datei
 	 * @return die berechnete Hashsumme
 	 * @throws IOException
 	 *             falls ein IO-Fehler auftrat
@@ -77,7 +77,7 @@ public class OpenSubtitlesHasher
 	 * Berechnet die Hashsumme einer Bytefolge.
 	 * 
 	 * @param _ByteBuffer
-	 *            ein Byte-Puffer
+	 *            der Byte-Puffer
 	 * @return die berechnete Hashsumme
 	 */
 	private static long computeHashForChunk(ByteBuffer _ByteBuffer)

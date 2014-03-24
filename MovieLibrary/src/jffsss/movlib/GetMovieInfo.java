@@ -13,15 +13,25 @@ import jffsss.movlib.GetMovieInfoFromOfdb;
 import org.apache.pivot.util.concurrent.Task;
 import org.apache.pivot.util.concurrent.TaskExecutionException;
 
+/**
+ * GetMovieInfo ist eine Task-Klasse für das asynchrone Finden der Film-Informationen mit Hilfe von OMDb-Seite.
+ */
 public class GetMovieInfo extends Task<MovieInfo>
 {
 	private String _ImdbId;
 
+	/**
+	 * Konstruiert ein GetMovieInfo-Objekt.
+	 * 
+	 * @param _ImdbId
+	 *            die IMDb-ID
+	 */
 	public GetMovieInfo(String _ImdbId)
 	{
 		this._ImdbId = _ImdbId;
 	}
 
+	@Override
 	public MovieInfo execute() throws TaskExecutionException
 	{
 		try
@@ -116,14 +126,14 @@ public class GetMovieInfo extends Task<MovieInfo>
 			{
 				GetMovieInfoFromOfdb g = new GetMovieInfoFromOfdb();
 				//_PosterSource = _OmdbResponseMap.get("Poster").asString();
-				String url = g.getPosterURL("tt"+this._ImdbId);
-				if (url=="" || url == "http://img.ofdb.de/film/na.gif") // if ofdb lookup failed (unknown imdb-id) or the placeholder picture
+				String url = g.getPosterURL("tt" + this._ImdbId);
+				if (url == "" || url == "http://img.ofdb.de/film/na.gif") // if ofdb lookup failed (unknown imdb-id) or the placeholder picture
 					;//url = _OmdbResponseMap.get("Poster").asString();
 				_PosterSource = url;
 			}
 			catch (Exception e)
 			{
-				System.out.println("Fehler beim Suchen des deutschen Posters: "+e.getMessage()); 
+				System.out.println("Fehler beim Suchen des deutschen Posters: " + e.getMessage());
 				_PosterSource = null;
 			}
 			Double _Duration;
@@ -136,7 +146,7 @@ public class GetMovieInfo extends Task<MovieInfo>
 				System.out.println("parsing OMDB Duration failed");
 				_Duration = null;
 			}
-			MovieInfo _MovieInfo = new MovieInfo(_Title, _TitleDe, _Year, _Plot, _Genres, _Directors, _Writers, _Actors, _IMDbID, _IMDbRating, _PosterSource,_Duration);
+			MovieInfo _MovieInfo = new MovieInfo(_Title, _TitleDe, _Year, _Plot, _Genres, _Directors, _Writers, _Actors, _IMDbID, _IMDbRating, _PosterSource, _Duration);
 			return _MovieInfo;
 		}
 		catch (Exception e)

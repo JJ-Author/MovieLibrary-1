@@ -11,11 +11,17 @@ import org.apache.pivot.wtk.TaskAdapter;
 
 import jffsss.util.Listeners;
 
+/**
+ * ToStoreFile beinhalten die Informationen des in der Datenbank zu speichernden Films.
+ */
 public class ToStoreFile
 {
 	private VideoFileInfo _VideoFileInfo;
 	private Map<Object, ProbablyMovie> _ProbablyMovies;
 
+	/**
+	 * Konstruiert ein ToStoreFile-Objekt.
+	 */
 	public ToStoreFile()
 	{
 		this._VideoFileInfo = null;
@@ -24,6 +30,11 @@ public class ToStoreFile
 
 	private Listeners onUpdate = null;
 
+	/**
+	 * Gibt die Listener zurück.
+	 * 
+	 * @return die Listener
+	 */
 	public Listeners onUpdate()
 	{
 		if (this.onUpdate == null)

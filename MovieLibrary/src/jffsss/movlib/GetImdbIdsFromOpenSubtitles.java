@@ -12,12 +12,22 @@ import jffsss.util.d.DObject;
 import org.apache.pivot.util.concurrent.Task;
 import org.apache.pivot.util.concurrent.TaskExecutionException;
 
+/**
+ * GetImdbIdsFromOpenSubtitles ist eine Task-Klasse für das asynchrone Finden der IMDb-IDs der Filme mit Hilfe von
+ * OpenSubtitles-Seite.
+ */
 public class GetImdbIdsFromOpenSubtitles extends Task<Map<String, Double>>
 {
 	private static BufferedExecutor _BufferedExecutor = new BufferedExecutor();
 
 	private VideoFileInfo _VideoFileInfo;
 
+	/**
+	 * Konstruiert ein GetImdbIdsFromOpenSubtitles-Objekt.
+	 * 
+	 * @param _VideoFileInfo
+	 *            das VideoFileInfo-Objekt
+	 */
 	public GetImdbIdsFromOpenSubtitles(VideoFileInfo _VideoFileInfo)
 	{
 		this._VideoFileInfo = _VideoFileInfo;

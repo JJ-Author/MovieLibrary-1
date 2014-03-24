@@ -23,6 +23,11 @@ public class ToStoreFilesCollection
 
 	private Listeners onUpdate = null;
 
+	/**
+	 * Gibt die Listener zurück.
+	 * 
+	 * @return die Listener
+	 */
 	public Listeners onUpdate()
 	{
 		if (this.onUpdate == null)

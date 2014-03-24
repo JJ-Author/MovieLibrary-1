@@ -27,16 +27,17 @@ public class FreeBaseApi
 
 	/**
 	 * 
-	 * @param _Ident das Output-Format
+	 * @param _Ident
+	 *            das Output-Format
 	 * @param _Query
-	 *            ein Text für die Anfrage
+	 *            der Text für die Anfrage
 	 * @param _Filter
-	 *            ein Filter
+	 *            der Filter
 	 * @param _Output
 	 * @param _Limit
-	 *            eine maximale Anzahl der Ergebnisse
+	 *            die maximale Anzahl der Ergebnisse
 	 * @param _Lang
-	 *            eine Sprache, in der die Ergebnisse anzeigt werden sollen
+	 *            die Sprache, in der die Ergebnisse anzeigt werden sollen
 	 * @return das Response-Objekt
 	 * @throws IOException
 	 *             falls ein IO-Fehler auftrat
@@ -70,14 +71,15 @@ public class FreeBaseApi
 	 * 
 	 * @param _Ident
 	 * @param _Query
-	 *            ein Text für die Anfrage
+	 *            der Text für die Anfrage
 	 * @param _Filter
-	 *            ein Filter
-	 * @param _Output das Output-Format
+	 *            der Filter
+	 * @param _Output
+	 *            das Output-Format
 	 * @param _Limit
-	 *            eine maximale Anzahl der Ergebnisse
+	 *            die maximale Anzahl der Ergebnisse
 	 * @param _Lang
-	 *            eine Sprache, in der die Ergebnisse anzeigt werden sollen
+	 *            die Sprache, in der die Ergebnisse anzeigt werden sollen
 	 * @return das Response-Objekt
 	 * @throws IOException
 	 *             falls ein IO-Fehler auftrat
@@ -102,7 +104,7 @@ public class FreeBaseApi
 	 * zurück.
 	 * 
 	 * @param _BaseUrl
-	 *            eine Basis-URL
+	 *            die Basis-URL
 	 * @param _Params
 	 *            die URL-Parameter
 	 * @return das Response-Objekt
@@ -120,7 +122,7 @@ public class FreeBaseApi
 	 * Sendet eine Get-Anfrage an die FreeBase-Seite und erhält das Response-Objekt zurück.
 	 * 
 	 * @param _Url
-	 *            eine angefragte URL
+	 *            die angefragte URL
 	 * @return das Response-Objekt
 	 * @throws IOException
 	 *             falls ein IO-Fehler auftrat

@@ -11,13 +11,23 @@ import jffsss.util.d.DObject;
 import org.apache.pivot.util.concurrent.Task;
 import org.apache.pivot.util.concurrent.TaskExecutionException;
 
+/**
+ * GetImdbIdsFromGoogle ist eine Task-Klasse für das asynchrone Finden der IMDb-IDs der Filme mit Hilfe von
+ * Google-Suchmaschine.
+ */
 public class GetImdbIdsFromGoogle extends Task<Map<String, Double>>
 {
 	private VideoFileInfo _VideoFileInfo;
 
-	public GetImdbIdsFromGoogle(VideoFileInfo _FilePath)
+	/**
+	 * Konstruiert ein GetImdbIdsFromGoogle-Objekt.
+	 * 
+	 * @param _VideoFileInfo
+	 *            das VideoFileInfo-Objekt
+	 */
+	public GetImdbIdsFromGoogle(VideoFileInfo _VideoFileInfo)
 	{
-		this._VideoFileInfo = _FilePath;
+		this._VideoFileInfo = _VideoFileInfo;
 	}
 
 	@Override
