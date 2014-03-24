@@ -23,6 +23,9 @@ import com.osbcp.cssparser.PropertyValue;
 import com.osbcp.cssparser.Rule;
 import com.osbcp.cssparser.Selector;
 
+/**
+ * Wird nicht mehr benutzt.
+ */
 public class HideMyAssApi
 {
 	public HideMyAssApi()

@@ -1,5 +1,9 @@
 package jffsss;
 
+/**
+ * ParseException ist eine Exception, die dann aufritt, wenn das Parsen aufgrund des fehlerhaften Formats des zu
+ * parsenden Inhalts gescheitert ist.
+ */
 public class ParseException extends Exception
 {
 	private static final long serialVersionUID = 1L;

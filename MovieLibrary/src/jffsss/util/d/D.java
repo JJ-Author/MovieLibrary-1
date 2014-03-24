@@ -85,7 +85,7 @@ public class D
 	 *            ein Eingabe-Stream
 	 * @return die dynamische Struktur
 	 * @throws IOException
-	 *             falls eine IO-Fehler auftrat
+	 *             falls ein IO-Fehler auftrat
 	 * @throws ParseException
 	 *             falls das Parsen gescheitert ist
 	 */

@@ -9,6 +9,9 @@ import java.util.concurrent.TimeUnit;
 
 import jffsss.util.d.DObject;
 
+/**
+ * Wird nicht mehr benutzt.
+ */
 public class HideMyAssProxyProvider implements ProxyProvider
 {
 	private LinkedBlockingDeque<Proxy> _Proxies = new LinkedBlockingDeque<Proxy>();

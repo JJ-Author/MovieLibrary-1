@@ -12,13 +12,37 @@ import jffsss.util.d.D;
 import jffsss.util.d.DObject;
 import jffsss.util.RequestLimiter;
 
+/**
+ * FreeBaseApi ist eine Schnittstelle für die Anfragen an die FreeBase-Seite.
+ */
 public class FreeBaseApi
 {
 	private static RequestLimiter _RequestLimiter = new RequestLimiter(30);
 
+	/**
+	 * Konstruiert eine direkte FreeBase-Schnittstelle.
+	 */
 	public FreeBaseApi()
 	{}
 
+	/**
+	 * 
+	 * @param _Ident das Output-Format
+	 * @param _Query
+	 *            ein Text für die Anfrage
+	 * @param _Filter
+	 *            ein Filter
+	 * @param _Output
+	 * @param _Limit
+	 *            eine maximale Anzahl der Ergebnisse
+	 * @param _Lang
+	 *            eine Sprache, in der die Ergebnisse anzeigt werden sollen
+	 * @return das Response-Objekt
+	 * @throws IOException
+	 *             falls ein IO-Fehler auftrat
+	 * @throws ParseException
+	 *             falls das Parsen gescheitert ist
+	 */
 	public DObject requestSearch2(Boolean _Ident, String _Query, String _Filter, String _Output, Integer _Limit, String _Lang) throws IOException, ParseException
 	{
 		for (int i = 0; i < 3; i++)
@@ -41,6 +65,25 @@ public class FreeBaseApi
 		throw new IOException("StatusCode != 200");
 	}
 
+	/**
+	 * Sendet eine Suchanfrage
+	 * 
+	 * @param _Ident
+	 * @param _Query
+	 *            ein Text für die Anfrage
+	 * @param _Filter
+	 *            ein Filter
+	 * @param _Output das Output-Format
+	 * @param _Limit
+	 *            eine maximale Anzahl der Ergebnisse
+	 * @param _Lang
+	 *            eine Sprache, in der die Ergebnisse anzeigt werden sollen
+	 * @return das Response-Objekt
+	 * @throws IOException
+	 *             falls ein IO-Fehler auftrat
+	 * @throws ParseException
+	 *             falls das Parsen gescheitert ist
+	 */
 	public DObject requestSearch(Boolean _Ident, String _Query, String _Filter, String _Output, Integer _Limit, String _Lang) throws IOException, ParseException
 	{
 		Map<String, Object> _Params = new HashMap<String, Object>();
@@ -54,11 +97,36 @@ public class FreeBaseApi
 		return this.executeAPI("https://www.googleapis.com/freebase/v1/search", _Params);
 	}
 
+	/**
+	 * Erstellt eine URL für die Anfrage, sendet die Anfrage an die FreeBase-Seite und erhält das Response-Objekt
+	 * zurück.
+	 * 
+	 * @param _BaseUrl
+	 *            eine Basis-URL
+	 * @param _Params
+	 *            die URL-Parameter
+	 * @return das Response-Objekt
+	 * @throws IOException
+	 *             falls ein IO-Fehler auftrat
+	 * @throws ParseException
+	 *             falls das Parsen gescheitert ist
+	 */
 	private DObject executeAPI(String _BaseUrl, Map<String, Object> _Params) throws IOException, ParseException
 	{
 		return this.executeAPI(Utils.buildURL(_BaseUrl, _Params));
 	}
 
+	/**
+	 * Sendet eine Get-Anfrage an die FreeBase-Seite und erhält das Response-Objekt zurück.
+	 * 
+	 * @param _Url
+	 *            eine angefragte URL
+	 * @return das Response-Objekt
+	 * @throws IOException
+	 *             falls ein IO-Fehler auftrat
+	 * @throws ParseException
+	 *             falls das Parsen gescheitert ist
+	 */
 	private DObject executeAPI(String _Url) throws IOException, ParseException
 	{
 		HttpURLConnection _Connection = (HttpURLConnection) (new URL(_Url)).openConnection();

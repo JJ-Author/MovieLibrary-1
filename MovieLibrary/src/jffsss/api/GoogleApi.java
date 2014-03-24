@@ -19,20 +19,41 @@ import jffsss.util.d.DMap;
 import jffsss.util.d.DObject;
 import jffsss.util.d.DString;
 
+/**
+ * GoogleApi ist eine Schnittstelle für die Anfragen an die Google-Suchmaschine.
+ */
 public class GoogleApi
 {
 	private Proxy _Proxy;
 
+	/**
+	 * Konstruiert eine direkte Google-Schnittstelle.
+	 */
 	public GoogleApi()
 	{
 		this(null);
 	}
 
+	/**
+	 * Konstruiert eine Google-Schnittstelle, dessen Anfragen über eine Proxy laufen.
+	 * 
+	 * @param _Proxy
+	 *            eine Proxy
+	 */
 	public GoogleApi(Proxy _Proxy)
 	{
 		this._Proxy = _Proxy;
 	}
 
+	/**
+	 * Sendet eine Suchanfrage.
+	 * @param _Query ein Text für die Anfrage
+	 * @param _Page eine Nummer der Seite
+	 * @param _Count eine Anzahl der angezeigten Ergebnisse pro Seite
+	 * @return das Response-Objekt
+	 * @throws IOException falls ein IO-Fehler auftrat
+	 * @throws ParseException falls das Parsen gescheitert ist
+	 */
 	public DObject requestSearch(String _Query, Integer _Page, Integer _Count) throws IOException, ParseException
 	{
 		Map<String, Object> _Params = new HashMap<String, Object>();
@@ -42,11 +63,26 @@ public class GoogleApi
 		return this.executeAPI("https://www.google.com/search", _Params);
 	}
 
+	/**
+	 * Erstellt eine URL für die Anfrage, sendet die Anfrage an die Google-Suchmaschine und erhält das Response-Objekt zurück.
+	 * @param _BaseUrl eine Basis-URL
+	 * @param _Params die URL-Parameter
+	 * @return das Response-Objekt
+	 * @throws IOException falls ein IO-Fehler auftrat
+	 * @throws ParseException falls das Parsen gescheitert ist
+	 */
 	private DObject executeAPI(String _BaseUrl, Map<String, Object> _Params) throws IOException, ParseException
 	{
 		return this.executeAPI(Utils.buildURL(_BaseUrl, _Params));
 	}
 
+	/**
+	 * Sendet eine Get-Anfrage an die Google-Suchmaschine und erhält das Response-Objekt zurück.
+	 * @param _Url eine angefragte URL
+	 * @return das Response-Objekt
+	 * @throws IOException falls ein IO-Fehler auftrat
+	 * @throws ParseException falls das Parsen gescheitert ist
+	 */
 	private DObject executeAPI(String _Url) throws IOException, ParseException
 	{
 		HttpURLConnection _Connection;
@@ -87,6 +123,11 @@ public class GoogleApi
 		}
 	}
 
+	/**
+	 * Parst den Inhalt der HTML-Seite, um das Response-Objekt zu erstellen.
+	 * @param _Response eine HTML-Seite
+	 * @return das Response-Objekt
+	 */
 	private static DObject parseResponse(Document _Response)
 	{
 		List<DObject> _ResultList = new ArrayList<DObject>();

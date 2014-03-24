@@ -14,10 +14,16 @@ import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.client.XmlRpcClient;
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
 
+/**
+ * OpenSubtitlesApi ist eine Schnittstelle für die Anfragen an die OpenSubtitles-Seite.
+ */
 public class OpenSubtitlesApi
 {
 	private XmlRpcClient _Client;
 
+	/**
+	 * Konstruiert eine direkte OpenSubtitles-Schnittstelle.
+	 */
 	public OpenSubtitlesApi()
 	{
 		this._Client = new XmlRpcClient();
@@ -31,6 +37,20 @@ public class OpenSubtitlesApi
 		this._Client.setConfig(_Config);
 	}
 
+	/**
+	 * Sendet eine LogIn-Anfrage, um einen Session-Token zu erhalten. Der Token wird gebraucht, um andere Anfragen
+	 * auszuführen.
+	 * 
+	 * @param _Username
+	 *            ein Benutzername
+	 * @param _Password
+	 *            ein Passwort
+	 * @return der Session-Token
+	 * @throws IOException
+	 *             falls ein IO-Fehler auftrat
+	 * @throws ParseException
+	 *             falls das Parsen gescheitert ist
+	 */
 	public String requestLogIn(String _Username, String _Password) throws IOException, ParseException
 	{
 		List<String> _Params = new ArrayList<String>();
@@ -49,6 +69,16 @@ public class OpenSubtitlesApi
 		}
 	}
 
+	/**
+	 * Sendet eine LogOut-Anfrage, um die Session zu beendet.
+	 * 
+	 * @param _Token
+	 *            ein Session-Token
+	 * @throws IOException
+	 *             falls ein IO-Fehler auftrat
+	 * @throws ParseException
+	 *             falls das Parsen gescheitert ist
+	 */
 	public void requestLogOut(String _Token) throws IOException, ParseException
 	{
 		List<String> _Params = new ArrayList<String>();
@@ -56,6 +86,19 @@ public class OpenSubtitlesApi
 		this.executeApi("LogOut", _Params);
 	}
 
+	/**
+	 * Sendet eine CheckMovieHash2-Anfrage, um die Informationen über die Filme anhand der Haschsummen der Videodateien.
+	 * 
+	 * @param _Token
+	 *            ein Session-Token
+	 * @param _Hashes
+	 *            die Haschsummen der Videodateien
+	 * @return das Response-Objekt
+	 * @throws IOException
+	 *             falls ein IO-Fehler auftrat
+	 * @throws ParseException
+	 *             falls das Parsen gescheitert ist
+	 */
 	public DObject requestCheckMovieHash2(String _Token, List<String> _Hashes) throws IOException, ParseException
 	{
 		List<Object> _Params = new ArrayList<Object>();
@@ -73,6 +116,19 @@ public class OpenSubtitlesApi
 		}
 	}
 
+	/**
+	 * Sendet eine Post-Anfrage an die OpenSubtitles-Seite und erhält das Response-Objekt zurück.
+	 * 
+	 * @param _Method
+	 *            der Name einer Request-Methode
+	 * @param _Params
+	 *            die Parameter der Request-Methode
+	 * @return das Response-Objekt
+	 * @throws IOException
+	 *             falls ein IO-Fehler auftrat
+	 * @throws ParseException
+	 *             falls das Parsen gescheitert ist
+	 */
 	private DObject executeApi(String _Method, List<?> _Params) throws IOException, ParseException
 	{
 		try
@@ -85,6 +141,15 @@ public class OpenSubtitlesApi
 		}
 	}
 
+	/**
+	 * Extrahiert den Statuscode aus der Response-Status-Line.
+	 * 
+	 * @param _String
+	 *            eine Response-Status-Line
+	 * @return der extrahierte Statuscode
+	 * @throws ParseException
+	 *             falls das Parsen gescheitert ist
+	 */
 	private static int getStatusCode(String _String) throws ParseException
 	{
 		try

@@ -8,6 +8,9 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Die String-Utils-Klasse beinhaltet eine Sammlung von Funktionen, die das Bearbeiten von Strings erleichtern.
+ */
 public class Utils
 {
 	private Utils()

@@ -11,6 +11,10 @@ import java.nio.LongBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileChannel.MapMode;
 
+/**
+ * OpenSubtitlesHasher berechnet die Hashsumme der Dateien, um die Filme zu identifizieren und bei der
+ * OpenSubtitles-Anfragen zu benutzen.
+ */
 public class OpenSubtitlesHasher
 {
 	private OpenSubtitlesHasher()
@@ -18,6 +22,15 @@ public class OpenSubtitlesHasher
 
 	private static final int HashChunkSize = 64 * 1024;
 
+	/**
+	 * Berechnet die Hashsumme einer Datei.
+	 * 
+	 * @param _File
+	 *            eine Film-Datei
+	 * @return die berechnete Hashsumme
+	 * @throws IOException
+	 *             falls ein IO-Fehler auftrat
+	 */
 	public static String computeHash(File _File) throws IOException
 	{
 		FileInputStream _FileInputStream = new FileInputStream(_File);
@@ -41,6 +54,9 @@ public class OpenSubtitlesHasher
 		}
 	}
 
+	/**
+	 * Wird nicht benutzt.
+	 */
 	public static String computeHash(InputStream _InputStream, long _Length) throws IOException
 	{
 		int _ChunkSizeForFile = (int) Math.min(HashChunkSize, _Length);
@@ -57,6 +73,13 @@ public class OpenSubtitlesHasher
 		return String.format("%016x", _Length + _Head + _Tail);
 	}
 
+	/**
+	 * Berechnet die Hashsumme einer Bytefolge.
+	 * 
+	 * @param _ByteBuffer
+	 *            ein Byte-Puffer
+	 * @return die berechnete Hashsumme
+	 */
 	private static long computeHashForChunk(ByteBuffer _ByteBuffer)
 	{
 		LongBuffer _LongBuffer = _ByteBuffer.order(ByteOrder.LITTLE_ENDIAN).asLongBuffer();
