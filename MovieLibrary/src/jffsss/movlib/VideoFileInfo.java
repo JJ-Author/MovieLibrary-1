@@ -36,7 +36,7 @@ public class VideoFileInfo
 	 * Erstellt das VideoFileInfo-Objekt direkt aus einer Video-Datei.
 	 * 
 	 * @param _FilePath
-	 *            der Pfad zu der Datei
+	 *            der Pfad zur Datei
 	 * @return das erstellte VideoFileInfo-Objekt
 	 * @throws IOException
 	 *             falls ein IO-Fehler auftrat

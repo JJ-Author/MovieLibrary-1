@@ -1,9 +1,7 @@
 package jffsss.movlib;
 
-import java.io.BufferedWriter;
 import java.io.Closeable;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -37,11 +35,14 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import com.google.gson.stream.JsonWriter;
 
 import jffsss.util.Listeners;
 import jffsss.util.Utils;
 
+/**
+ * InStoreFilesCollectionbeinhaltet eine Menge von InStoreFile-Objekte und stellt die Methoden zum Export von diesen
+ * Objekten aus dem Lucene-Index bereit.
+ */
 public class InStoreFilesCollection implements Closeable
 {
 	private Directory _Directory;
@@ -49,6 +50,14 @@ public class InStoreFilesCollection implements Closeable
 	private DirectoryReader _DirectoryReader;
 	private Map<Object, InStoreFile> _InStoreFiles;
 
+	/**
+	 * Konstruiert ein InStoreFilesCollection-Objekt.
+	 * 
+	 * @param _Directory
+	 *            das Verzeichnis für den Lucene-Index
+	 * @throws IOException
+	 *             falls ein IO-Fehler auftrat
+	 */
 	public InStoreFilesCollection(File _Directory) throws IOException
 	{
 		_Directory.mkdir();
@@ -61,6 +70,12 @@ public class InStoreFilesCollection implements Closeable
 		this._InStoreFiles = new HashMap<Object, InStoreFile>();
 	}
 
+	/**
+	 * Schließt alle Streams.
+	 * 
+	 * @throws IOException
+	 *             falls ein IO-Fehler auftrat
+	 */
 	public void close() throws IOException
 	{
 		this._IndexWriter.close();
@@ -83,10 +98,14 @@ public class InStoreFilesCollection implements Closeable
 		}
 		return this.onUpdate;
 	}
+
 	/**
+	 * Exportiert alle indexierten Filme aus dem Lucene-Index und speichert diese im JSON-Format in die gegebenen Datei.
 	 * 
 	 * @param _File
+	 *            die Datei, wohin die Filme gespeicht werden
 	 * @throws IOException
+	 *             falls ein IO-Fehler auftrat
 	 */
 	public void exportAsJson(File _File) throws IOException
 	{
@@ -109,22 +128,25 @@ public class InStoreFilesCollection implements Closeable
 
 	/**
 	 * writes movie index in exhibit jsonp format to file for exhibit faceted browsing
+	 * 
 	 * @param _File
 	 * @throws IOException
+	 *             falls ein IO-Fehler auftrat
 	 */
-	public void writeExhibitJsonp(File _File) throws IOException 
+	public void writeExhibitJsonp(File _File) throws IOException
 	{
-		/*BufferedWriter bw = new BufferedWriter(new FileWriter(_File));
-		Gson gson = new Gson();
-		gson.toJson(this.getExhibitJson(), new JsonWriter(bw));*/
-		
-		String _json = new Gson().toJson(this.getExhibitJson()); 
-		String _jsonp = "callback("+_json+");"; //convert json to jsonp for local use of exhibit
-		PrintWriter _PrintWriter = new PrintWriter(_File,"UTF-8");
+		/*
+		 * BufferedWriter bw = new BufferedWriter(new FileWriter(_File)); Gson gson = new Gson();
+		 * gson.toJson(this.getExhibitJson(), new JsonWriter(bw));
+		 */
+
+		String _json = new Gson().toJson(this.getExhibitJson());
+		String _jsonp = "callback(" + _json + ");"; //convert json to jsonp for local use of exhibit
+		PrintWriter _PrintWriter = new PrintWriter(_File, "UTF-8");
 		try
 		{
 			_PrintWriter.print('\ufeff'); //write UTF-8 with BOM, umlaute are only correct in exhibit if they are 
-										  //unicode escaped or in latin1, but BOM seems to help exhibit to understand utf8 without escaping
+											//unicode escaped or in latin1, but BOM seems to help exhibit to understand utf8 without escaping
 			_PrintWriter.println(_jsonp);
 		}
 		finally
@@ -138,34 +160,41 @@ public class InStoreFilesCollection implements Closeable
 		}
 	}
 
-	
 	/**
 	 * returns the movie index in exhibit json format as JsonObject
+	 * 
 	 * @return
 	 * @throws IOException
+	 *             falls ein IO-Fehler auftrat
 	 */
-	public JsonObject getExhibitJson() throws IOException 
+	public JsonObject getExhibitJson() throws IOException
 	{
 		JsonObject _top = new JsonObject();
 		JsonObject _properties = new JsonObject();
-			JsonObject _prop;
-			_prop = new JsonObject(); _prop.addProperty("valueType", "number");
-				_properties.add("MovieDuration", _prop);
-			_prop = new JsonObject(); _prop.addProperty("valueType", "number");
-				_properties.add("MovieImdbRating", _prop);
-			_prop = new JsonObject(); _prop.addProperty("valueType", "url");
-				_properties.add("MoviePosterSource", _prop);
-				
+		JsonObject _prop;
+		_prop = new JsonObject();
+		_prop.addProperty("valueType", "number");
+		_properties.add("MovieDuration", _prop);
+		_prop = new JsonObject();
+		_prop.addProperty("valueType", "number");
+		_properties.add("MovieImdbRating", _prop);
+		_prop = new JsonObject();
+		_prop.addProperty("valueType", "url");
+		_properties.add("MoviePosterSource", _prop);
+
 		_top.add("properties", _properties);
 		_top.add("items", this.getMoviesAsJson(true));
 		return _top;
 	}
-	
+
 	/**
 	 * returns all movies in index with attributes as JsonArray
-	 * @param _exhibitMode if true the property name for German title is label and filepath id(needed for exhibit json format)
-	 * @return 
+	 * 
+	 * @param _exhibitMode
+	 *            if true the property name for German title is label and filepath id(needed for exhibit json format)
+	 * @return
 	 * @throws IOException
+	 *             falls ein IO-Fehler auftrat
 	 */
 	public JsonArray getMoviesAsJson(boolean _exhibitMode) throws IOException
 	{
@@ -175,10 +204,10 @@ public class InStoreFilesCollection implements Closeable
 			{
 				JsonObject _JsonArrayObject = new JsonObject();
 				InStoreFile _InStoreFile = createInStoreFile(i, this.getDirectoryReader());
-				String FilepathName =  (_exhibitMode) ? "id" : "FilePath";
+				String FilepathName = (_exhibitMode) ? "id" : "FilePath";
 				_JsonArrayObject.addProperty(FilepathName, _InStoreFile.getFileInfo().getPath());
 				_JsonArrayObject.addProperty("MovieTitle", _InStoreFile.getMovieInfo().getTitle());
-				String titleKeyName =  (_exhibitMode) ? "label" : "MovieTitleDE";
+				String titleKeyName = (_exhibitMode) ? "label" : "MovieTitleDE";
 				_JsonArrayObject.addProperty(titleKeyName, _InStoreFile.getMovieInfo().getTitleDe());
 				_JsonArrayObject.addProperty("MovieDuration", _InStoreFile.getMovieInfo().getDuration());
 				_JsonArrayObject.addProperty("MovieYear", _InStoreFile.getMovieInfo().getYear());
@@ -224,12 +253,34 @@ public class InStoreFilesCollection implements Closeable
 		return _JsonArray;
 	}
 
+	/**
+	 * Erstellt ein neues InStoreFile-Objekt, falls keins mit dieser Lucene-ID bereits existierte und fügt es in die
+	 * Liste ein.
+	 * 
+	 * @param _LuceneId
+	 *            die Lucene-ID als Schlüssel
+	 * @return neu erstelltes oder bereits vorhandenes InStoreFile-Objekt
+	 * @throws IOException
+	 *             falls ein IO-Fehler auftrat
+	 */
 	public InStoreFile addInStoreFile(Integer _LuceneId) throws IOException
 	{
 		DirectoryReader _DirectoryReader = this.getDirectoryReader();
 		return this.addInStoreFile(_LuceneId, _DirectoryReader);
 	}
 
+	/**
+	 * Erstellt ein neues InStoreFile-Objekt, falls keins mit dieser Lucene-ID bereits existierte und fügt es in die
+	 * Liste ein.
+	 * 
+	 * @param _LuceneId
+	 *            die Lucene-ID als Schlüssel
+	 * @param _DirectoryReader
+	 *            die Quelle des Lucene-Indexes
+	 * @return neu erstelltes oder bereits vorhandenes InStoreFile-Objekt
+	 * @throws IOException
+	 *             falls ein IO-Fehler auftrat
+	 */
 	private InStoreFile addInStoreFile(Integer _LuceneId, DirectoryReader _DirectoryReader) throws IOException
 	{
 		InStoreFile _InStoreFile = this._InStoreFiles.get(_LuceneId);
@@ -241,12 +292,34 @@ public class InStoreFilesCollection implements Closeable
 		return _InStoreFile;
 	}
 
+	/**
+	 * Erstellt neue InStoreFile-Objekte, falls keine mit diesen Lucene-IDs bereits existierten und fügt sie in die
+	 * Liste ein.
+	 * 
+	 * @param _LuceneIds
+	 *            die Lucene-IDs als Schlüssel
+	 * @return neu erstellte oder bereits vorhandene InStoreFile-Objekte
+	 * @throws IOException
+	 *             falls ein IO-Fehler auftrat
+	 */
 	public List<InStoreFile> addInStoreFiles(List<Integer> _LuceneIds) throws IOException
 	{
 		DirectoryReader _DirectoryReader = this.getDirectoryReader();
 		return this.addInStoreFiles(_LuceneIds, _DirectoryReader);
 	}
 
+	/**
+	 * Erstellt neue InStoreFile-Objekte, falls keine mit diesen Lucene-IDs bereits existierten und fügt sie in die
+	 * Liste ein.
+	 * 
+	 * @param _LuceneIds
+	 *            die Lucene-IDs als Schlüssel
+	 * @param _DirectoryReader
+	 *            die Quelle des Lucene-Indexes
+	 * @return neu erstellte oder bereits vorhandene InStoreFile-Objekte
+	 * @throws IOException
+	 *             falls ein IO-Fehler auftrat
+	 */
 	private List<InStoreFile> addInStoreFiles(List<Integer> _LuceneIds, DirectoryReader _DirectoryReader) throws IOException
 	{
 		List<InStoreFile> _InStoreFiles = new ArrayList<InStoreFile>();
@@ -257,14 +330,30 @@ public class InStoreFilesCollection implements Closeable
 		return _InStoreFiles;
 	}
 
+	/**
+	 * Stellt eine Abfrage an den Lucene-Index, fügt die gefundenen InStoreFile-Objekte in die Liste und gibt diese
+	 * InStoreFile-Objekte zurück.
+	 * 
+	 * @param _Query
+	 *            die Abfrage
+	 * @return die gefundenen InStoreFile-Objekte
+	 * @throws IOException
+	 *             falls ein IO-Fehler auftrat
+	 */
 	public List<InStoreFile> addInStoreFilesFromSearch(String _Query) throws IOException
 	{
 		DirectoryReader _DirectoryReader = this.getDirectoryReader();
-		List<Integer> _LuceneIds;
-			_LuceneIds = getLuceneIdsFromSearch(_Query, _DirectoryReader);
+		List<Integer> _LuceneIds = getLuceneIdsFromSearch(_Query, _DirectoryReader);
 		return this.addInStoreFiles(_LuceneIds, _DirectoryReader);
 	}
 
+	/**
+	 * Entfernt das InStoreFile-Objekt zur gegebenen Lucene-ID aus der Liste.
+	 * 
+	 * @param _LuceneId
+	 *            die Lucene-ID als Schlüssel
+	 * @return das ToStoreFile-Objekt oder <CODE>null</CODE> falls kein Eintrag zur gegebenen Lucene-ID existiert
+	 */
 	public InStoreFile removeInStoreFile(Integer _LuceneId)
 	{
 		InStoreFile _InStoreFile = this._InStoreFiles.remove(_LuceneId);
@@ -275,22 +364,46 @@ public class InStoreFilesCollection implements Closeable
 		return _InStoreFile;
 	}
 
+	/**
+	 * Entfernt alle InStoreFile-Objekte aus der Liste.
+	 */
 	public void removeAllInStoreFiles()
 	{
 		this._InStoreFiles.clear();
 		this.onUpdate().notifyListeners("RemoveAllInStoreFiles", null);
 	}
 
+	/**
+	 * Gibt das InStoreFile-Objekt zur gegebenen Lucene-ID aus der Liste zurück.
+	 * 
+	 * @param _LuceneId
+	 *            die Lucene-ID als Schlüssel
+	 * @return das InStoreFile-Objekt oder <CODE>null</CODE> falls kein Eintrag zur gegebenen Lucene-ID existiert
+	 */
 	public InStoreFile getInStoreFile(Integer _LuceneId)
 	{
 		return this._InStoreFiles.get(_LuceneId);
 	}
-	
+
+	/**
+	 * Gibt die Gesamtanzahl der indexierten Filme zurück.
+	 * 
+	 * @return die Gesamtanzahl der indexierten Filme
+	 * @throws IOException
+	 *             falls ein IO-Fehler auftrat
+	 */
 	public int getInStoreFilesCount() throws IOException
 	{
 		return this.getDirectoryReader().numDocs();
 	}
 
+	/**
+	 * Gibt das aktuelle DirectoryReader-Objekt zurück.
+	 * 
+	 * @return das aktuelle DirectoryReader-Objekt
+	 * @throws IOException
+	 *             falls ein IO-Fehler auftrat
+	 */
 	private DirectoryReader getDirectoryReader() throws IOException
 	{
 		DirectoryReader _DirectoryReader = DirectoryReader.openIfChanged(this._DirectoryReader);
@@ -301,6 +414,16 @@ public class InStoreFilesCollection implements Closeable
 		return this._DirectoryReader;
 	}
 
+	/**
+	 * Indexiert die Datei-Informationen und die Film-Informationen in Lucene.
+	 * 
+	 * @param _FileInfo
+	 *            die Datei-Informationen
+	 * @param _MovieInfo
+	 *            die Film-Informationen
+	 * @throws IOException
+	 *             falls ein IO-Fehler auftrat
+	 */
 	public void indexFile(FileInfo _FileInfo, MovieInfo _MovieInfo) throws IOException
 	{
 		Document _Document = new Document();
@@ -397,6 +520,17 @@ public class InStoreFilesCollection implements Closeable
 		this._IndexWriter.commit();
 	}
 
+	/**
+	 * Erstellt ein neues InStoreFile-Objekt, dessen Informationen aus dem Lucene-Index geladen werden.
+	 * 
+	 * @param _LuceneId
+	 *            die Lucene-ID als Schlüssel
+	 * @param _DirectoryReader
+	 *            das Verzeichnis für den Lucene-Index
+	 * @return ein neues InStoreFile-Objekt
+	 * @throws IOException
+	 *             falls ein IO-Fehler auftrat
+	 */
 	private static InStoreFile createInStoreFile(Integer _LuceneId, DirectoryReader _DirectoryReader) throws IOException
 	{
 		Document _Document = _DirectoryReader.document(_LuceneId);
@@ -526,6 +660,17 @@ public class InStoreFilesCollection implements Closeable
 		return new InStoreFile(_LuceneId, _FileInfo, _MovieInfo);
 	}
 
+	/**
+	 * Stellt eine Abfrage an den Lucene-Index und gibt die gefundenen Lucene-IDs zurück.
+	 * 
+	 * @param _Query
+	 *            die Abfrage
+	 * @param _DirectoryReader
+	 *            das Verzeichnis für den Lucene-Index
+	 * @return die gefundenen Lucene-IDs
+	 * @throws IOException
+	 *             falls ein IO-Fehler auftrat
+	 */
 	private static List<Integer> getLuceneIdsFromSearch(String _Query, DirectoryReader _DirectoryReader) throws IOException
 	{
 		List<Integer> _LuceneIds = new ArrayList<Integer>();
@@ -549,12 +694,12 @@ public class InStoreFilesCollection implements Closeable
 			try
 			{
 				ScoreDoc[] _ScoreDocs;
-				if (_Query.length()==0)
+				if (_Query.length() == 0)
 				{
 					MatchAllDocsQuery m = new MatchAllDocsQuery();
 					_ScoreDocs = _IndexSearcher.search(m, null, Integer.MAX_VALUE).scoreDocs;
 				}
-				else 
+				else
 					_ScoreDocs = _IndexSearcher.search(_Parser.parse(_Query), null, 100).scoreDocs;
 				for (int i = 0; i < _ScoreDocs.length; i++)
 				{
@@ -568,16 +713,21 @@ public class InStoreFilesCollection implements Closeable
 		}
 		return _LuceneIds;
 	}
-	
-	public boolean filePathInStore(String _FilePath) throws IOException 
+
+	/**
+	 * 
+	 * @param _FilePath
+	 * @return
+	 * @throws IOException
+	 *             falls ein IO-Fehler auftrat
+	 */
+	public boolean filePathInStore(String _FilePath) throws IOException
 	{
 		Term indexTerm = new Term("File:Path", _FilePath);
 		int docs = this.getDirectoryReader().docFreq(indexTerm);
-		if (docs >0)
+		if (docs > 0)
 			return true;
 		else
 			return false;
 	}
 }
-
-

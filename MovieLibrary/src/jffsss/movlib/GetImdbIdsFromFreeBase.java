@@ -81,6 +81,7 @@ public class GetImdbIdsFromFreeBase extends Task<Map<String, Double>>
 
 	private static Map<String, Double> parseResponse(DObject _Response) throws ParseException
 	{
+		System.out.println(_Response);
 		Map<String, Double> _ResultMap = new HashMap<String, Double>();
 		if (_Response != null)
 		{

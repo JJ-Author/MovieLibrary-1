@@ -15,7 +15,7 @@ public class FileInfo
 	 * Konstruiert ein FileInfo-Objekt.
 	 * 
 	 * @param _Path
-	 *            der Pfad zu der Datei
+	 *            der Pfad zur Datei
 	 * @param _Size
 	 *            die Größe der Datei
 	 */
@@ -29,7 +29,7 @@ public class FileInfo
 	 * Erstellt das FileInfo-Objekt direkt aus einer Datei.
 	 * 
 	 * @param _FilePath
-	 *            der Pfad zu der Datei
+	 *            der Pfad zur Datei
 	 * @return das erstellte FileInfo-Objekt
 	 * @throws IOException
 	 *             falls ein IO-Fehler auftrat
@@ -51,7 +51,7 @@ public class FileInfo
 	/**
 	 * Gibt den Pfad zu der Datei zurück.
 	 * 
-	 * @return der Pfad zu der Datei
+	 * @return der Pfad zur Datei
 	 */
 	public String getPath()
 	{

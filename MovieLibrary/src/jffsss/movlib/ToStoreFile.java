@@ -44,6 +44,13 @@ public class ToStoreFile
 		return this.onUpdate;
 	}
 
+	/**
+	 * Versucht die Informationen zur Video-Datei asynchron zu extrahieren und danach die zur Video-Datei passende Filme
+	 * im Web.
+	 * 
+	 * @param _FilePath
+	 *            der Pfad zur Datei
+	 */
 	public void startRetrieving(String _FilePath)
 	{
 		Task<VideoFileInfo> _Task = new GetVideoFileInfo(_FilePath);
@@ -51,6 +58,10 @@ public class ToStoreFile
 		_Task.execute(new TaskAdapter<VideoFileInfo>(_TaskListener));
 	}
 
+	/**
+	 * GetVideoFileInfoListener ist die Callback-Klasse zur startRetrieving-Methode. Beim Erfolg wird die Methode
+	 * <CODE>startRetrievingProbablyMovies</CODE> aufgerufen.
+	 */
 	private class GetVideoFileInfoListener implements TaskListener<VideoFileInfo>
 	{
 		@Override
@@ -68,17 +79,31 @@ public class ToStoreFile
 		}
 	}
 
+	/**
+	 * Legt das VideoFileInfo-Objekt fest.
+	 * 
+	 * @param _VideoFileInfo
+	 *            das VideoFileInfo-Objekt
+	 */
 	public void setVideoFileInfo(VideoFileInfo _VideoFileInfo)
 	{
 		this._VideoFileInfo = _VideoFileInfo;
 		this.onUpdate().notifyListeners("SetVideoFileInfo", null);
 	}
 
+	/**
+	 * Gibt das VideoFileInfo-Objekt zurück.
+	 * 
+	 * @return das VideoFileInfo-Objekt
+	 */
 	public VideoFileInfo getVideoFileInfo()
 	{
 		return this._VideoFileInfo;
 	}
 
+	/**
+	 * Versucht die zur Video-Datei passende Filme im Web asynchron zu finden.
+	 */
 	public void startRetrievingProbablyMovies()
 	{
 		{
@@ -98,6 +123,14 @@ public class ToStoreFile
 		}
 	}
 
+	/**
+	 * Erstellt ein neues ProbablyMovie-Objekt, falls keins mit dieser IMDb-ID bereits existierte, fügt es in die Liste
+	 * ein und führt dessen Methode <CODE>startRetrieving</CODE> aus.
+	 * 
+	 * @param _ImdbId
+	 *            die IMDb-ID als Schlüssel
+	 * @return neu erstelltes oder bereits vorhandenes ProbablyMovie-Objekt
+	 */
 	public ProbablyMovie addProbablyMovie(String _ImdbId)
 	{
 		ProbablyMovie _ProbablyMovieModel = this._ProbablyMovies.get(_ImdbId);
@@ -111,23 +144,38 @@ public class ToStoreFile
 		return _ProbablyMovieModel;
 	}
 
+	/**
+	 * Gibt das ProbablyMovie-Objekt zur gegebenen IMDb-ID aus der Liste zurück.
+	 * 
+	 * @param _ImdbId
+	 *            die IMDb-ID als Schlüssel
+	 * @return das ProbablyMovie-Objekt oder <CODE>null</CODE> falls kein Eintrag zur gegebenen IMDb-ID existiert
+	 */
 	public ProbablyMovie getProbablyMovie(String _ImdbId)
 	{
 		return this._ProbablyMovies.get(_ImdbId);
 	}
 
+	/**
+	 * Gibt die Liste aller ProbablyMovie-Objekte zurück.
+	 * 
+	 * @return die Liste aller ProbablyMovie-Objekte
+	 */
 	public List<ProbablyMovie> getAllProbablyMovies()
 	{
 		return new ArrayList<ProbablyMovie>(this._ProbablyMovies.values());
 	}
 
+	/**
+	 * GetImdbIdsListener ist die Callback-Klasse zur startRetrievingProbablyMovies-Methode.
+	 */
 	private class GetImdbIdsListener implements TaskListener<Map<String, Double>>
 	{
-		private double _Weight ;
+		private double _Weight;
 
 		public GetImdbIdsListener(double _Weight)
 		{
-			this._Weight  = _Weight;
+			this._Weight = _Weight;
 		}
 
 		@Override
@@ -144,7 +192,7 @@ public class ToStoreFile
 				String _ImdbId = _Result.getKey();
 				double _Factor = _MaxCount > 0 ? _Result.getValue() / _MaxCount : 0;
 				ProbablyMovie _ProbablyMovie = ToStoreFile.this.addProbablyMovie(_ImdbId);
-				_ProbablyMovie.incProbability(_Factor * this._Weight );
+				_ProbablyMovie.incProbability(_Factor * this._Weight);
 			}
 		}
 
