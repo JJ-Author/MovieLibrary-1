@@ -6,6 +6,9 @@ import java.util.List;
 
 import jffsss.util.Utils;
 
+/**
+ * MovieInfo beinhaltet die Basisinformationen eines beliebigen Films.
+ */
 public class MovieInfo
 {
 	private String _Title;
@@ -21,6 +24,34 @@ public class MovieInfo
 	private String _PosterSource;
 	private Double _Duration;
 
+	/**
+	 * Konstruiert ein MovieInfo-Objekt.
+	 * 
+	 * @param _Title
+	 *            der Titel
+	 * @param _TitleDe
+	 *            der deutsche Titel
+	 * @param _Year
+	 *            das Release-Jahr
+	 * @param _Plot
+	 *            die Kurzbeschreibung des Plots
+	 * @param _Genres
+	 *            die Genres
+	 * @param _Directors
+	 *            die Liste der Regisseure
+	 * @param _Writers
+	 *            die Liste der Drehbuchautoren
+	 * @param _Actors
+	 *            die Liste der Schauspieler
+	 * @param _ImdbId
+	 *            die IMDb-ID
+	 * @param _ImdbRating
+	 *            der Rating
+	 * @param _PosterSource
+	 *            die Quell-URL des Posters
+	 * @param _Duration
+	 *            die Länge des Films in Minuten
+	 */
 	public MovieInfo(String _Title, String _TitleDe, String _Year, String _Plot, List<String> _Genres, List<String> _Directors, List<String> _Writers, List<String> _Actors, String _ImdbId, Double _ImdbRating, String _PosterSource, Double _Duration)
 	{
 		this._Title = _Title;
@@ -37,71 +68,141 @@ public class MovieInfo
 		this._Duration = _Duration;
 	}
 
+	/**
+	 * Gibt den Titel zurück.
+	 * 
+	 * @return der Titel
+	 */
 	public String getTitle()
 	{
 		return this._Title;
 	}
-	
+
+	/**
+	 * Gibt den deutschen Titel zurück.
+	 * 
+	 * @return der deutsche Titel
+	 */
 	public String getTitleDe()
 	{
 		return this._TitleDe;
 	}
 
+	/**
+	 * Gibt das Release-Jahr des Plots zurück.
+	 * 
+	 * @return das Release-Jahr
+	 */
 	public String getYear()
 	{
 		return this._Year;
 	}
 
+	/**
+	 * Gibt die Kurzbeschreibung des Plots zurück.
+	 * 
+	 * @return die Kurzbeschreibung des Plots
+	 */
 	public String getPlot()
 	{
 		return this._Plot;
 	}
 
+	/**
+	 * Gibt die Genres zurück.
+	 * 
+	 * @return die Genres
+	 */
 	public List<String> getGenres()
 	{
-		return (this._Genres == null) ? Collections.<String>emptyList() : Collections.unmodifiableList(this._Genres);
+		return (this._Genres == null) ? Collections.<String> emptyList() : Collections.unmodifiableList(this._Genres);
 	}
 
+	/**
+	 * Gibt die Liste der Regisseure zurück.
+	 * 
+	 * @return die Liste der Regisseure
+	 */
 	public List<String> getDirectors()
 	{
-		return (this._Directors == null) ? Collections.<String>emptyList() : Collections.unmodifiableList(this._Directors);
+		return (this._Directors == null) ? Collections.<String> emptyList() : Collections.unmodifiableList(this._Directors);
 	}
 
+	/**
+	 * Gibt die Liste der Drehbuchautoren zurück.
+	 * 
+	 * @return die Liste der Drehbuchautoren
+	 */
 	public List<String> getWriters()
 	{
-		return (this._Writers == null) ? Collections.<String>emptyList() : Collections.unmodifiableList(this._Writers);
+		return (this._Writers == null) ? Collections.<String> emptyList() : Collections.unmodifiableList(this._Writers);
 	}
 
+	/**
+	 * Gibt die Liste der Schauspieler zurück.
+	 * 
+	 * @return die Liste der Schauspieler
+	 */
 	public List<String> getActors()
 	{
-		return (this._Actors == null) ? Collections.<String>emptyList() : Collections.unmodifiableList(this._Actors);
+		return (this._Actors == null) ? Collections.<String> emptyList() : Collections.unmodifiableList(this._Actors);
 	}
 
+	/**
+	 * Gibt die IMDb-ID zurück.
+	 * 
+	 * @return die IMDb-ID
+	 */
 	public String getImdbId()
 	{
 		return this._ImdbId;
 	}
 
+	/**
+	 * Gibt die URL zur Seite des Films auf IMDb zurück.
+	 * 
+	 * @return die URL zur Seite des Films auf IMDb
+	 */
 	public String getImdbUrl()
 	{
 		return (this._ImdbId == null) ? null : "http://www.imdb.com/title/tt" + this._ImdbId + "/";
 	}
 
+	/**
+	 * Gibt den Rating zurück.
+	 * 
+	 * @return der Rating
+	 */
 	public Double getImdbRating()
 	{
 		return this._ImdbRating;
 	}
 
+	/**
+	 * Gibt die Quell-URL des Posters zurück.
+	 * 
+	 * @return die Quell-URL des Posters
+	 */
 	public String getPosterSource()
 	{
 		return this._PosterSource;
 	}
-	
+
+	/**
+	 * Gibt die Länge in Minuten zurück.
+	 * 
+	 * @return die Länge in Minuten
+	 */
 	public Double getDuration()
 	{
 		return this._Duration;
 	}
 
+	/**
+	 * Extrahiert die IMDb-ID des Films aus der URL.
+	 * 
+	 * @return die extrahierte URL
+	 */
 	public static String extractImdbIdFromUrl(String _Url)
 	{
 		return Utils.findFirstPattern(_Url, "/tt([0-9]+)/");

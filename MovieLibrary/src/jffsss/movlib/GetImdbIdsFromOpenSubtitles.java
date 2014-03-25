@@ -86,6 +86,7 @@ public class GetImdbIdsFromOpenSubtitles extends Task<Map<String, Double>>
 
 		private static Map<String, Map<String, Double>> parseResponse(DObject _Response) throws ParseException
 		{
+			System.out.println(_Response);
 			Map<String, Map<String, Double>> _ResultMap = new HashMap<String, Map<String, Double>>();
 			if (_Response != null && _Response.isMap())
 			{

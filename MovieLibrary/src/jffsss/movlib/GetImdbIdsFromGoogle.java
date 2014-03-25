@@ -60,13 +60,14 @@ public class GetImdbIdsFromGoogle extends Task<Map<String, Double>>
 			try
 			{
 				List<DObject> _ResponseList = _Response.asList();
+				Double _Factor = 0.0;
 				for (DObject _ResponseListElement : _ResponseList)
 				{
 					try
 					{
 						Map<String, DObject> _ResponseListMap = _ResponseListElement.asMap();
 						String _ImdbId = MovieInfo.extractImdbIdFromUrl(_ResponseListMap.get("Link").asString());
-						Double _Factor = 1.0;
+						_Factor = (_Factor == 0) ? 2.0 : 1.0;
 						_ResultMap.put(_ImdbId, _Factor);
 					}
 					catch (Exception e)

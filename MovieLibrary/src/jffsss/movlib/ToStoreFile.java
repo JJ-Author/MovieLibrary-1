@@ -49,7 +49,6 @@ public class ToStoreFile
 		Task<VideoFileInfo> _Task = new GetVideoFileInfo(_FilePath);
 		TaskListener<VideoFileInfo> _TaskListener = new GetVideoFileInfoListener();
 		_Task.execute(new TaskAdapter<VideoFileInfo>(_TaskListener));
-
 	}
 
 	private class GetVideoFileInfoListener implements TaskListener<VideoFileInfo>
@@ -88,12 +87,12 @@ public class ToStoreFile
 			_Task.execute(new TaskAdapter<Map<String, Double>>(_TaskListener));
 		}
 		{
-			Task<Map<String, Double>> _Task = new GetImdbIdsFromGoogle(this._VideoFileInfo);
-			TaskListener<Map<String, Double>> _TaskListener = new GetImdbIdsListener(1);
+			Task<Map<String, Double>> _Task = new GetImdbIdsFromFreeBase(this._VideoFileInfo);
+			TaskListener<Map<String, Double>> _TaskListener = new GetImdbIdsListener(2);
 			_Task.execute(new TaskAdapter<Map<String, Double>>(_TaskListener));
 		}
 		{
-			Task<Map<String, Double>> _Task = new GetImdbIdsFromFreeBase(this._VideoFileInfo);
+			Task<Map<String, Double>> _Task = new GetImdbIdsFromGoogle(this._VideoFileInfo);
 			TaskListener<Map<String, Double>> _TaskListener = new GetImdbIdsListener(1);
 			_Task.execute(new TaskAdapter<Map<String, Double>>(_TaskListener));
 		}
@@ -124,28 +123,28 @@ public class ToStoreFile
 
 	private class GetImdbIdsListener implements TaskListener<Map<String, Double>>
 	{
-		private double _AdditionalFactor;
+		private double _Weight ;
 
-		public GetImdbIdsListener(double _AdditionalFactor)
+		public GetImdbIdsListener(double _Weight)
 		{
-			this._AdditionalFactor = _AdditionalFactor;
+			this._Weight  = _Weight;
 		}
 
 		@Override
 		public void taskExecuted(Task<Map<String, Double>> _Task)
 		{
 			Map<String, Double> _Results = _Task.getResult();
-			double _TotalCount = 0;
+			double _MaxCount = 0;
 			for (Map.Entry<String, Double> _Result : _Results.entrySet())
 			{
-				_TotalCount += _Result.getValue();
+				_MaxCount = Math.max(_MaxCount, _Result.getValue());
 			}
 			for (Map.Entry<String, Double> _Result : _Results.entrySet())
 			{
 				String _ImdbId = _Result.getKey();
-				double _Factor = _TotalCount > 0 ? _Result.getValue() / _TotalCount : 0;
+				double _Factor = _MaxCount > 0 ? _Result.getValue() / _MaxCount : 0;
 				ProbablyMovie _ProbablyMovie = ToStoreFile.this.addProbablyMovie(_ImdbId);
-				_ProbablyMovie.incProbability(_Factor + this._AdditionalFactor);
+				_ProbablyMovie.incProbability(_Factor * this._Weight );
 			}
 		}
 
