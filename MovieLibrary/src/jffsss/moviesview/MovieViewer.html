@@ -4,13 +4,14 @@
     
     <link href="movies.js" type="application/jsonp" rel="exhibit/data"  ex:jsonp-callback="callback"/>
 	<!-- importing Exhibit Main -->
-    <script src="http://api.simile-widgets.org/exhibit/2.2.0/exhibit-api.js" type="text/javascript"></script>
+    <script src="http://api.simile-widgets.org/exhibit/2.2.0/exhibit-api.js" type="text/javascript"></script> 
 	<!-- importing Date Picker -->
     <script src="http://api.simile-widgets.org/exhibit/2.2.0/extensions/time/time-extension.js" type="text/javascript"></script>
 	<!-- importing Calendar View -->
 	<script src="http://api.simile-widgets.org/exhibit/2.2.0/extensions/calendar/calendar-extension.js"></script>
     
-    <script src="copyright.js" type="text/javascript"></script>
+    
+
     <link rel='stylesheet' href='styles.css' type='text/css' />
 </head> 
 <body>
@@ -28,14 +29,41 @@
                 <td>
                     <div ex:role="viewPanel">
                         <div ex:role="lens" class="item" style="display: none;">
-                            <table cellspacing="5">
+                            <table cellspacing="5" width="580px">
                                 <tr>
-                                    <td style="position: relative"><div class="itemThumbnail-blocker"></div><img ex:src-content=".MoviePosterSource" /></td>
+                                    <td style="position: relative"></div><a ex:href-content="concat('http://www.imdb.com/title/tt', .MovieImdbId)" target="_blank"><img ex:src-content=".MoviePosterSource" /></a></td>
                                     <td>
-                                        <h1><span ex:content=".label" /></h1>
-                                        <h2><span ex:content=".brand"></span> <span ex:content=".cereal"></span></h2>
-                                        <p ex:content=".text"></p>
-                                        <center><a ex:href-content=".url" target="new">More...</a></center>
+                                        <h1><span ex:content=".label"></span> (<span ex:content=".MovieYear"></span>) </h1>
+
+                                        <h2><span ex:content=".MovieDuration"></span> min <span ex:content=".MovieGenres"></span></h2>
+										<table>
+										<tr class="exhibit-lens-property" ex:if-exists=".MovieTitle">
+											<td class="exhibit-lens-property-name">Engl. Titel: </td>
+											<td class="exhibit-lens-property-values"><span class="exhibit-value" ex:content=".MovieTitle"></span></td>
+										</tr>
+										<tr class="exhibit-lens-property" ex:if-exists=".MovieImdbRating">
+											<td class="exhibit-lens-property-name">IMDB Rating: </td>
+											<td class="exhibit-lens-property-values"><span class="exhibit-value" ex:content=".MovieImdbRating"></span></td>
+										</tr>
+										<tr class="exhibit-lens-property" ex:if-exists=".MoviePlot">
+											<td class="exhibit-lens-property-name">Beschreibung: </td>
+											<td class="exhibit-lens-property-values"><span class="exhibit-value" ex:content=".MoviePlot"></span></td>
+										</tr>
+										<tr class="exhibit-lens-property" ex:if-exists=".MovieDirectors">
+											<td class="exhibit-lens-property-name">Regisseur: </td>
+											<td class="exhibit-lens-property-values"><span class="exhibit-value" ex:content=".MovieDirectors"></span></td>
+										</tr>
+										<tr class="exhibit-lens-property" ex:if-exists=".MovieActors">
+											<td class="exhibit-lens-property-name">Schauspieler: </td>
+											<td class="exhibit-lens-property-values"><span class="exhibit-value" ex:content=".MovieActors"></span></td>
+										</tr>
+										<tr class="exhibit-lens-property" ex:if-exists=".MovieWriters">
+											<td class="exhibit-lens-property-name">Autoren: </td>
+											<td class="exhibit-lens-property-values"><span class="exhibit-value" ex:content=".MovieWriters"></span></td>
+										</tr>
+										</table>
+
+
                                     </td>
                                 </tr>
                             </table>
@@ -43,7 +71,7 @@
                         <div role="view" 
                             ex:viewClass="Thumbnail"
                             ex:showAll="true"
-                            ex:possibleOrders=".label, .MovieYear, .MovieGenres, .MovieDuration">
+                            ex:possibleOrders=".label, .MovieYear, .MovieGenres, .MovieDuration, .MovieImdbRating, .MovieActors">
                             
                             <table ex:role="lens" class="itemThumbnail" style="display: none;">
                                 <tr>
@@ -68,7 +96,8 @@
                             ex:bubbleHeight="250">
                         </div>
 						<div ex:role="view" ex:viewClass="Tabular"
-							ex:columns=".label, .job-position, .salary">
+							ex:columns=".label, .MovieYear, .MovieDuration, .MovieImdbRating">
+
 						</div>
                     </div>
                 </td>
@@ -78,20 +107,27 @@
 					   ex:facetClass="Slider" 
 					   ex:horizontal="true"
 					   ex:precision="0.1"
+					   ex:facetLabel="IMDB Rating"
 					   ex:histogram="true">
 					</div>
 					<div ex:role="facet" 
 					   ex:facetClass="NumericRange"
 					   ex:expression=".MovieDuration" 
+					   ex:facetLabel="Duration"
 					   ex:interval="10">
 					</div>
 					<div ex:role="facet" 
 					   ex:facetClass="Cloud"
 					   ex:expression=".MovieGenres"
+					   ex:facetLabel="Genre"
 					   ex:showMissing="true"> 
 					</div>
                     <div ex:role="facet" ex:expression=".MovieYear" ex:facetLabel="Year" ex:height="15em"></div>
-                    <div ex:role="facet" ex:expression=".form" ex:facetLabel="Forms" ex:height="20em"></div>
+					 <div ex:role="facet"
+   ex:facetClass="Exhibit.HierarchicalFacet"
+   ex:expression=".MovieActors"
+   ex:uniformGrouping=".letter">
+ </div>
                 </td>
             </tr>
         </table>
