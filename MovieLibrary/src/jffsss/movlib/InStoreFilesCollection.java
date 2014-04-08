@@ -16,6 +16,7 @@ import org.apache.lucene.document.Field;
 import org.apache.lucene.document.StoredField;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
+import org.apache.lucene.document.IntField;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
@@ -40,7 +41,7 @@ import jffsss.util.Listeners;
 import jffsss.util.Utils;
 
 /**
- * InStoreFilesCollectionbeinhaltet eine Menge von InStoreFile-Objekte und stellt die Methoden zum Export von diesen
+ * InStoreFilesCollectionbeinhaltet eine Menge von InStoreFile-Objekte und stellt die Methoden zum Export und zur Manipulation von diesen
  * Objekten aus dem Lucene-Index bereit.
  */
 public class InStoreFilesCollection implements Closeable
@@ -54,7 +55,7 @@ public class InStoreFilesCollection implements Closeable
 	 * Konstruiert ein InStoreFilesCollection-Objekt.
 	 * 
 	 * @param _Directory
-	 *            das Verzeichnis fï¿½r den Lucene-Index
+	 *            das Verzeichnis für den Lucene-Index
 	 * @throws IOException
 	 *             falls ein IO-Fehler auftrat
 	 */
@@ -71,7 +72,7 @@ public class InStoreFilesCollection implements Closeable
 	}
 
 	/**
-	 * Schlieï¿½t alle Streams.
+	 * Schließt alle Streams.
 	 * 
 	 * @throws IOException
 	 *             falls ein IO-Fehler auftrat
@@ -86,7 +87,7 @@ public class InStoreFilesCollection implements Closeable
 	private Listeners onUpdate = null;
 
 	/**
-	 * Gibt die Listener zurï¿½ck.
+	 * Gibt die Listener zurück.
 	 * 
 	 * @return die Listener
 	 */
@@ -255,11 +256,11 @@ public class InStoreFilesCollection implements Closeable
 	}
 
 	/**
-	 * Erstellt ein neues InStoreFile-Objekt, falls keins mit dieser Lucene-ID bereits existierte und fï¿½gt es in die
+	 * Erstellt ein neues InStoreFile-Objekt, falls keins mit dieser Lucene-ID bereits existierte und fügt es in die
 	 * Liste ein.
 	 * 
 	 * @param _LuceneId
-	 *            die Lucene-ID als Schlï¿½ssel
+	 *            die Lucene-ID als Schlüssel
 	 * @return neu erstelltes oder bereits vorhandenes InStoreFile-Objekt
 	 * @throws IOException
 	 *             falls ein IO-Fehler auftrat
@@ -271,7 +272,7 @@ public class InStoreFilesCollection implements Closeable
 	}
 
 	/**
-	 * Erstellt ein neues InStoreFile-Objekt, falls keins mit dieser Lucene-ID bereits existierte und fï¿½gt es in die
+	 * Erstellt ein neues InStoreFile-Objekt, falls keins mit dieser Lucene-ID bereits existierte und fügt es in die
 	 * Liste ein.
 	 * 
 	 * @param _LuceneId
@@ -294,7 +295,7 @@ public class InStoreFilesCollection implements Closeable
 	}
 
 	/**
-	 * Erstellt neue InStoreFile-Objekte, falls keine mit diesen Lucene-IDs bereits existierten und fï¿½gt sie in die
+	 * Erstellt neue InStoreFile-Objekte, falls keine mit diesen Lucene-IDs bereits existierten und fügt sie in die
 	 * Liste ein.
 	 * 
 	 * @param _LuceneIds
@@ -310,7 +311,7 @@ public class InStoreFilesCollection implements Closeable
 	}
 
 	/**
-	 * Erstellt neue InStoreFile-Objekte, falls keine mit diesen Lucene-IDs bereits existierten und fï¿½gt sie in die
+	 * Erstellt neue InStoreFile-Objekte, falls keine mit diesen Lucene-IDs bereits existierten und fügt sie in die
 	 * Liste ein.
 	 * 
 	 * @param _LuceneIds
@@ -332,8 +333,8 @@ public class InStoreFilesCollection implements Closeable
 	}
 
 	/**
-	 * Stellt eine Abfrage an den Lucene-Index, fï¿½gt die gefundenen InStoreFile-Objekte in die Liste und gibt diese
-	 * InStoreFile-Objekte zurï¿½ck.
+	 * Stellt eine Abfrage an den Lucene-Index, fügt die gefundenen InStoreFile-Objekte in die Liste und gibt diese
+	 * InStoreFile-Objekte zurück.
 	 * 
 	 * @param _Query
 	 *            die Abfrage
@@ -375,7 +376,7 @@ public class InStoreFilesCollection implements Closeable
 	}
 
 	/**
-	 * Gibt das InStoreFile-Objekt zur gegebenen Lucene-ID aus der Liste zurï¿½ck.
+	 * Gibt das InStoreFile-Objekt zur gegebenen Lucene-ID aus der Liste zurück.
 	 * 
 	 * @param _LuceneId
 	 *            die Lucene-ID als Schlï¿½ssel
@@ -387,7 +388,7 @@ public class InStoreFilesCollection implements Closeable
 	}
 
 	/**
-	 * Gibt die Gesamtanzahl der indexierten Filme zurï¿½ck.
+	 * Gibt die Gesamtanzahl der indexierten Filme zurück.
 	 * 
 	 * @return die Gesamtanzahl der indexierten Filme
 	 * @throws IOException
@@ -399,7 +400,7 @@ public class InStoreFilesCollection implements Closeable
 	}
 
 	/**
-	 * Gibt das aktuelle DirectoryReader-Objekt zurï¿½ck.
+	 * Gibt das aktuelle DirectoryReader-Objekt zurück.
 	 * 
 	 * @return das aktuelle DirectoryReader-Objekt
 	 * @throws IOException
@@ -414,9 +415,9 @@ public class InStoreFilesCollection implements Closeable
 		}
 		return this._DirectoryReader;
 	}
-
+	
 	/**
-	 * Indexiert die Datei-Informationen und die Film-Informationen in Lucene.
+	 * Erstellt ein Document für Lucene aus den Datei-Informationen und den Film-Informationen.
 	 * 
 	 * @param _FileInfo
 	 *            die Datei-Informationen
@@ -425,7 +426,7 @@ public class InStoreFilesCollection implements Closeable
 	 * @throws IOException
 	 *             falls ein IO-Fehler auftrat
 	 */
-	public void indexFile(FileInfo _FileInfo, MovieInfo _MovieInfo) throws IOException
+	public Document createDocument(FileInfo _FileInfo, MovieInfo _MovieInfo) throws IOException
 	{
 		Document _Document = new Document();
 		{
@@ -517,6 +518,23 @@ public class InStoreFilesCollection implements Closeable
 			if (_Duration != null)
 				_Document.add(new StoredField("Movie:Duration", _Duration));
 		}
+		return _Document;
+	}
+	
+	/**
+	 * Indexiert die Datei-Informationen und die Film-Informationen in Lucene.
+	 * 
+	 * @param _FileInfo
+	 *            die Datei-Informationen
+	 * @param _MovieInfo
+	 *            die Film-Informationen
+	 * @throws IOException
+	 *             falls ein IO-Fehler auftrat
+	 */
+	public void indexFile(FileInfo _FileInfo, MovieInfo _MovieInfo) throws IOException
+	{
+		Document _Document = createDocument(_FileInfo, _MovieInfo);
+		_Document.add(new IntField("Movie:Rating", -1, Field.Store.YES));
 		this._IndexWriter.addDocument(_Document);
 		this._IndexWriter.commit();
 	}
@@ -525,9 +543,9 @@ public class InStoreFilesCollection implements Closeable
 	 * Erstellt ein neues InStoreFile-Objekt, dessen Informationen aus dem Lucene-Index geladen werden.
 	 * 
 	 * @param _LuceneId
-	 *            die Lucene-ID als Schlï¿½ssel
+	 *            die Lucene-ID als Schlüssel
 	 * @param _DirectoryReader
-	 *            das Verzeichnis fï¿½r den Lucene-Index
+	 *            das Verzeichnis für den Lucene-Index
 	 * @return ein neues InStoreFile-Objekt
 	 * @throws IOException
 	 *             falls ein IO-Fehler auftrat
@@ -662,12 +680,12 @@ public class InStoreFilesCollection implements Closeable
 	}
 
 	/**
-	 * Stellt eine Abfrage an den Lucene-Index und gibt die gefundenen Lucene-IDs zurï¿½ck.
+	 * Stellt eine Abfrage an den Lucene-Index und gibt die gefundenen Lucene-IDs zurück.
 	 * 
 	 * @param _Query
 	 *            die Abfrage
 	 * @param _DirectoryReader
-	 *            das Verzeichnis fï¿½r den Lucene-Index
+	 *            das Verzeichnis für den Lucene-Index
 	 * @return die gefundenen Lucene-IDs
 	 * @throws IOException
 	 *             falls ein IO-Fehler auftrat
@@ -731,4 +749,46 @@ public class InStoreFilesCollection implements Closeable
 		else
 			return false;
 	}
+	
+	/**
+	 * Ändert das MovieLibraryRating für einen Film
+	 * @param _newRating	Neue Bewertung
+	 * @param _LuceneId		Id des Films dessen Bewertung geändert wird
+	 */
+	public void updateMovieLibraryRating(int _NewRating, InStoreFile _InStoreFile)
+	{
+		try
+		{
+			Document _Document = createDocument(_InStoreFile.getFileInfo(), _InStoreFile.getMovieInfo());
+			_Document.add(new IntField("Movie:Rating", _NewRating, Field.Store.YES));
+			this._IndexWriter.updateDocument(new Term("File:Path", _InStoreFile.getFileInfo().getPath()), _Document);
+			this._IndexWriter.commit();
+		}
+		catch(IOException ex)
+		{	
+			System.out.println("Error updating the Movie Library Rating");
+			ex.printStackTrace();
+		} 
+	}
+	
+	/**
+	 * Liest die Movie Library Rating aus Lucene aus.
+	 * @param _LuceneId	Id des Films
+	 * @return Movie Library Rating
+	 */
+	public int readMovieLibraryRating(Integer _LuceneId)
+	{
+		try
+		{
+			Document _Document = this._DirectoryReader.document(_LuceneId);
+			return Integer.parseInt(_Document.get("Movie:Rating"));
+		}
+		catch(IOException ex)
+		{
+			System.out.println("Error reading the Movie Library Rating");
+			ex.printStackTrace();
+		}
+		return -1;
+	}
+	
 }

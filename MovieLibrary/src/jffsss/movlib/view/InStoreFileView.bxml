@@ -9,5 +9,14 @@
 		<TablePane.Row height="1*">
 			<Border bxml:id="MovieInfoViewContainer" styles="{padding:4, thickness:0}"></Border>
 		</TablePane.Row>
+		<TablePane.Row height="-1">
+			<BoxPane orientation="horizontal" styles="{verticalAlignment:'center', padding:2}">
+				<Separator heading="Actions   "/>
+				<Label text="Rating:"/>
+                <ListButton bxml:id="RatingButton" listData="['none', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10']"/>
+                <Label text="                             "/>
+                <!-- <PushButton bxml:id="deleteButton" buttonData="  Delete Movie  "/> -->
+			</BoxPane>
+		</TablePane.Row>
 	</TablePane>
 </Border>

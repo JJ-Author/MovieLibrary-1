@@ -154,7 +154,7 @@ public class InStoreFilesCollectionView
 		InStoreFileView _InStoreFileView = this._InStoreFileViews.get(_InStoreFileModel);
 		if (_InStoreFileView == null)
 		{
-			_InStoreFileView = new InStoreFileView(_InStoreFileModel);
+			_InStoreFileView = new InStoreFileView(_InStoreFileModel, _Model);
 			this._InStoreFileViewsContainer.add(_InStoreFileView.getComponent());
 			this._InStoreFileViews.put(_InStoreFileModel, _InStoreFileView);
 		}
