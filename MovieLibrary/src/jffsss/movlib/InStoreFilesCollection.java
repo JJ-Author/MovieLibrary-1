@@ -791,4 +791,22 @@ public class InStoreFilesCollection implements Closeable
 		return -1;
 	}
 	
+	/**
+	 * Löscht einen Eintrag in Lucene.
+	 * @param _InStoreFile Eintrag der gelöscht wird.
+	 */
+	public void deleteInStoreFile(InStoreFile _InStoreFile)
+	{
+		try
+		{
+			this._IndexWriter.deleteDocuments(new Term("File:Path", _InStoreFile.getFileInfo().getPath()));
+			this._IndexWriter.commit();
+		}
+		catch(IOException ex)
+		{	
+			System.out.println("Error deleting the Lucene Entry");
+			ex.printStackTrace();
+		} 
+	}
+	
 }

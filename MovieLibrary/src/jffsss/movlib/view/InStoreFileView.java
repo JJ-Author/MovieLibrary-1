@@ -17,6 +17,10 @@ import org.apache.pivot.wtk.Label;
 import org.apache.pivot.wtk.Mouse;
 import org.apache.pivot.wtk.ListButton;
 import org.apache.pivot.wtk.ListButtonSelectionListener;
+import org.apache.pivot.wtk.Button;
+import org.apache.pivot.wtk.ButtonPressListener;
+import org.apache.pivot.wtk.PushButton;
+
 
 public class InStoreFileView
 {
@@ -26,6 +30,7 @@ public class InStoreFileView
 	private Label _FilePathText;
 	private Border _MovieInfoViewContainer;
 	private MovieInfoView _MovieInfoView;
+	private PushButton _DeleteButton;
 	private ListButton _RatingButton = null;
 
 	public InStoreFileView(InStoreFile _Model, InStoreFilesCollection _InStoreFiles)
@@ -39,6 +44,7 @@ public class InStoreFileView
 			this._FilePathText = (Label) _BXMLSerializer.getNamespace().get("FilePathText");
 			this._MovieInfoViewContainer = (Border) _BXMLSerializer.getNamespace().get("MovieInfoViewContainer");
 			this._MovieInfoView = null;
+			this._DeleteButton = (PushButton)_BXMLSerializer.getNamespace().get("DeleteButton");
 			this._RatingButton = (ListButton)_BXMLSerializer.getNamespace().get("RatingButton");
 		}
 		catch (Exception e)
@@ -104,6 +110,17 @@ public class InStoreFileView
 				} 
 			};
 			this._RatingButton.getListButtonSelectionListeners().add(_ListListener);
+		}
+		{
+			this._DeleteButton.getButtonPressListeners().add(new ButtonPressListener() 
+			{
+		        @Override
+		        public void buttonPressed(Button button) 
+				{
+		        	InStoreFileView.this._InStoreFiles.deleteInStoreFile(InStoreFileView.this._Model);
+		        	InStoreFileView.this._Component.setVisible(false);
+		        }
+		    });
 		}
 		this.updateFileInfo();
 		this.updateMovieInfo();
