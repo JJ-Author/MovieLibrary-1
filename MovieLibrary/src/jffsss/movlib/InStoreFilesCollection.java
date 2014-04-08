@@ -27,10 +27,13 @@ import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.similarities.BM25Similarity;
 import org.apache.lucene.search.similarities.Similarity;
+import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
 import org.apache.lucene.search.MatchAllDocsQuery;
+import org.apache.lucene.search.TermQuery;
+import org.apache.lucene.search.TopDocs;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -39,6 +42,8 @@ import com.google.gson.JsonPrimitive;
 
 import jffsss.util.Listeners;
 import jffsss.util.Utils;
+
+import jffsss.api.OpenSubtitlesHasher;
 
 /**
  * InStoreFilesCollectionbeinhaltet eine Menge von InStoreFile-Objekte und stellt die Methoden zum Export und zur Manipulation von diesen
@@ -454,6 +459,20 @@ public class InStoreFilesCollection implements Closeable
 			_Document.add(new StoredField("File:Size", _Size));
 		}
 		{
+			String _OSHash = null;
+			try
+			{
+				_OSHash = OpenSubtitlesHasher.computeHash(new File(_FileInfo.getPath()));
+			}
+			catch(IOException e)
+			{
+				e.printStackTrace();
+			}
+			if(_OSHash == null)
+				throw new IOException("File:OSHash");
+			_Document.add(new StringField("File:OSHash", _OSHash, Field.Store.YES));
+		}
+		{
 			String _Title = _MovieInfo.getTitle();
 			if (_Title == null)
 				throw new IOException("Movie:Title");
@@ -734,9 +753,9 @@ public class InStoreFilesCollection implements Closeable
 	}
 
 	/**
-	 * 
-	 * @param _FilePath
-	 * @return
+	 * Prüft, ob ein Dateipfad in Lucene vorhanden ist.
+	 * @param _FilePath Dateipfad
+	 * @return True wenn Dateipfad gefunden, sonst false.
 	 * @throws IOException
 	 *             falls ein IO-Fehler auftrat
 	 */
@@ -751,6 +770,78 @@ public class InStoreFilesCollection implements Closeable
 	}
 	
 	/**
+	 * Prüft, ob ein Open Subtitles Hash in Lucene vorhanden ist.
+	 * @param _OSHash Hash
+	 * @return True wenn Hash gefunden, sonst false.
+	 * @throws IOException
+	 *             falls ein IO-Fehler auftrat
+	 */
+	public boolean osHashInStore(String _OSHash) throws IOException
+	{
+		int docs = this.getDirectoryReader().docFreq(new Term("File:OSHash", _OSHash));
+		if (docs > 0)
+			return true;
+		else
+			return false;
+	}
+	
+	/**
+	 * Aktualisiert die Dateiinformationen eines Films der bereits in Lucene ist.
+	 * @param _FilePath	Pfad zur Filmdatei
+	 * @throws IOException	falls ein IO-Fehler auftrat
+	 */
+	public void updateFileInformation(String _FilePath) throws IOException
+	{
+		TopDocs topdocs = null;
+		//suche lucene id für die datei mit dem hash von _FilePath
+		IndexSearcher searcher = new IndexSearcher(this.getDirectoryReader());
+		TermQuery query = new TermQuery(new Term("File:OSHash", OpenSubtitlesHasher.computeHash(new File(_FilePath))));
+		topdocs = searcher.search(query, 1);
+		
+		if (topdocs != null)
+		{
+			Document _Document = this._DirectoryReader.document(topdocs.scoreDocs[0].doc);
+			if(!_Document.get("File:Path").equals(_FilePath)) //wenn sich der pfad geändert hat, aktualisiere lucene eintrag
+			{
+				FileInfo _FileInfo = FileInfo.getFromFile(_FilePath);
+								
+				{
+					String _Name = _FileInfo.getName();
+					_Document.removeField("File:Name");
+					if (_Name == null)
+						throw new IOException("File:Name");
+					_Document.add(new TextField("File:Name", _Name, Field.Store.YES));
+				}
+				{
+					String _Directory = _FileInfo.getDirectory();
+					_Document.removeField("File:Directory");
+					if (_Directory == null)
+						throw new IOException("File:Directory");
+					_Document.add(new StoredField("File:Directory", _Directory));
+				}
+				{
+					String _Path = _FileInfo.getPath();
+					_Document.removeField("File:Path");
+					if (_Directory == null)
+						throw new IOException("File:Path");
+					_Document.add(new StringField("File:Path", _Path, Field.Store.YES)); //indexed but not tokenized/analyzed --> "as is" value
+				}
+				{
+					Long _Size = _FileInfo.getSize();
+					_Document.removeField("File:Size");
+					if (_Size == null)
+						throw new IOException("File:Size");
+					_Document.add(new StoredField("File:Size", _Size));
+				}
+				
+				this._IndexWriter.updateDocument(new Term("File:OSHash", OpenSubtitlesHasher.computeHash(new File(_FilePath))), _Document);
+				this._IndexWriter.commit();				
+			}
+			
+		}
+	}
+
+	/**
 	 * Ändert das MovieLibraryRating für einen Film
 	 * @param _newRating	Neue Bewertung
 	 * @param _LuceneId		Id des Films dessen Bewertung geändert wird
@@ -761,7 +852,7 @@ public class InStoreFilesCollection implements Closeable
 		{
 			Document _Document = createDocument(_InStoreFile.getFileInfo(), _InStoreFile.getMovieInfo());
 			_Document.add(new IntField("Movie:Rating", _NewRating, Field.Store.YES));
-			this._IndexWriter.updateDocument(new Term("File:Path", _InStoreFile.getFileInfo().getPath()), _Document);
+			this._IndexWriter.updateDocument(new Term("File:OSHash", _InStoreFile.getFileInfo().getOSHash()), _Document);
 			this._IndexWriter.commit();
 		}
 		catch(IOException ex)

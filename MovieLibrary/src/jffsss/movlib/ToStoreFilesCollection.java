@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import jffsss.api.OpenSubtitlesHasher;
 import jffsss.util.Listeners;
 
 /**
@@ -62,8 +63,10 @@ public class ToStoreFilesCollection
 			// check if not in InStoreFilesCollection
 			try
 			{
-				if (this._InStoreFilesCollection.filePathInStore(_FilePath))
+				//if (this._InStoreFilesCollection.filePathInStore(_FilePath))
+				if (this._InStoreFilesCollection.osHashInStore(OpenSubtitlesHasher.computeHash(new File(_FilePath))))
 				{
+					this._InStoreFilesCollection.updateFileInformation(_FilePath);
 					return null;
 				}
 

@@ -3,6 +3,8 @@ package jffsss.movlib;
 import java.io.File;
 import java.io.IOException;
 
+import jffsss.api.OpenSubtitlesHasher;
+
 /**
  * FileInfo beinhaltet die Basisinformationen einer beliebigen Datei.
  */
@@ -86,5 +88,10 @@ public class FileInfo
 	public Long getSize()
 	{
 		return this._Size;
+	}
+	
+	public String getOSHash() throws IOException
+	{
+			return OpenSubtitlesHasher.computeHash(new File(this._Path));
 	}
 }
