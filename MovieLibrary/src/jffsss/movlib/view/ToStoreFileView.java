@@ -162,6 +162,9 @@ public class ToStoreFileView
 						if (_Arg instanceof ProbablyMovie)
 							ToStoreFileView.this.addProbablyMovieView((ProbablyMovie) _Arg);
 						break;
+					case "DeleteProbablyMovies":
+						ToStoreFileView.this.clearProbablyMovieViews();
+						break;
 				}
 			}
 		}

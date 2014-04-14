@@ -16,6 +16,7 @@ public class ProbablyMovie
 {
 	private MovieInfo _MovieInfo;
 	private double _ProbabilityCount;
+	private boolean _RetrievingStarted; 
 	private Collection<ProbablyMovie> _ProbablyMovies;
 
 	/**
@@ -31,6 +32,7 @@ public class ProbablyMovie
 		this._MovieInfo = null;
 		this._ProbabilityCount = 0;
 		this._ProbablyMovies = _ProbablyMovies;
+		this._RetrievingStarted = false;
 	}
 
 	private Listeners onUpdate = null;
@@ -57,9 +59,13 @@ public class ProbablyMovie
 	 */
 	public void startRetrieving(String _ImdbId)
 	{
-		Task<MovieInfo> _Task = new GetMovieInfo(_ImdbId);
-		TaskListener<MovieInfo> _TaskListener = new GetMovieInfoListener();
-		_Task.execute(new TaskAdapter<MovieInfo>(_TaskListener));
+		if(this._RetrievingStarted == false)
+		{
+			this._RetrievingStarted = true;
+			Task<MovieInfo> _Task = new GetMovieInfo(_ImdbId);
+			TaskListener<MovieInfo> _TaskListener = new GetMovieInfoListener();
+			_Task.execute(new TaskAdapter<MovieInfo>(_TaskListener));
+		}
 	}
 
 	/**
@@ -149,4 +155,6 @@ public class ProbablyMovie
 		}
 		return _TotalCount;
 	}
+	
+	
 }

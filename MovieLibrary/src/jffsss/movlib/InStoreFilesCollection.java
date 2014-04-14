@@ -728,6 +728,7 @@ public class InStoreFilesCollection implements Closeable
 			_Boosts.put("Movie:Directors", (float) 4.1);
 			_Boosts.put("Movie:Writers", (float) 1.7);
 			_Boosts.put("Movie:Actors", (float) 3.8);
+			_Boosts.put("Movie:Rating", (float) 1.0);
 			MultiFieldQueryParser _Parser = new MultiFieldQueryParser(Version.LUCENE_46, _Fields, _Analyzer, _Boosts);
 			try
 			{
@@ -792,13 +793,12 @@ public class InStoreFilesCollection implements Closeable
 	 */
 	public void updateFileInformation(String _FilePath) throws IOException
 	{
-		TopDocs topdocs = null;
 		//suche lucene id für die datei mit dem hash von _FilePath
 		IndexSearcher searcher = new IndexSearcher(this.getDirectoryReader());
 		TermQuery query = new TermQuery(new Term("File:OSHash", OpenSubtitlesHasher.computeHash(new File(_FilePath))));
-		topdocs = searcher.search(query, 1);
+		TopDocs topdocs = searcher.search(query, 1);
 		
-		if (topdocs != null)
+		if (topdocs.totalHits > 0)
 		{
 			Document _Document = this._DirectoryReader.document(topdocs.scoreDocs[0].doc);
 			if(!_Document.get("File:Path").equals(_FilePath)) //wenn sich der pfad geändert hat, aktualisiere lucene eintrag
@@ -890,6 +890,7 @@ public class InStoreFilesCollection implements Closeable
 	{
 		try
 		{
+			this.removeInStoreFile(_InStoreFile.getLuceneId());
 			this._IndexWriter.deleteDocuments(new Term("File:Path", _InStoreFile.getFileInfo().getPath()));
 			this._IndexWriter.commit();
 		}

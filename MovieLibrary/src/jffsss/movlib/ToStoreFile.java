@@ -2,8 +2,11 @@ package jffsss.movlib;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.pivot.util.concurrent.Task;
 import org.apache.pivot.util.concurrent.TaskListener;
@@ -136,10 +139,34 @@ public class ToStoreFile
 		ProbablyMovie _ProbablyMovieModel = this._ProbablyMovies.get(_ImdbId);
 		if (_ProbablyMovieModel == null)
 		{
-			_ProbablyMovieModel = new ProbablyMovie(this._ProbablyMovies.values());
+			_ProbablyMovieModel = new ProbablyMovie(this._ProbablyMovies.values());			
 			this._ProbablyMovies.put(_ImdbId, _ProbablyMovieModel);
-			this.onUpdate().notifyListeners("AddProbablyMovie", _ProbablyMovieModel);
-			_ProbablyMovieModel.startRetrieving(_ImdbId);
+			this.onUpdate().notifyListeners("DeleteProbablyMovies", null);
+			
+			Set<Object> added = new HashSet<Object>();
+			added.addAll(this._ProbablyMovies.keySet());
+			
+			for(int i=0; i < this._ProbablyMovies.size(); i++)
+			{
+				double highestRating = Integer.MIN_VALUE;
+				Object ImdbId = null;
+								
+				for (Map.Entry<Object, ProbablyMovie> movie : this._ProbablyMovies.entrySet())
+				{
+					if(added.contains(movie.getKey()) && (movie.getValue().getProbabilityCount() > highestRating && movie.getValue().getProbabilityCount() > -1))
+					{
+						highestRating = movie.getValue().getProbabilityCount();
+						ImdbId = movie.getKey();
+					}
+				}
+				
+				if(highestRating != Integer.MIN_VALUE & ImdbId != null)
+				{
+					this.onUpdate().notifyListeners("AddProbablyMovie", this._ProbablyMovies.get(ImdbId));
+					this._ProbablyMovies.get(ImdbId).startRetrieving(ImdbId.toString());
+					added.remove(ImdbId);
+				}
+			}
 		}
 		return _ProbablyMovieModel;
 	}

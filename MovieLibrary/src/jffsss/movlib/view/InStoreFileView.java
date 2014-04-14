@@ -118,6 +118,7 @@ public class InStoreFileView
 		        public void buttonPressed(Button button) 
 				{
 		        	InStoreFileView.this._InStoreFiles.deleteInStoreFile(InStoreFileView.this._Model);
+		        	
 		        	InStoreFileView.this._Component.setVisible(false);
 		        }
 		    });
