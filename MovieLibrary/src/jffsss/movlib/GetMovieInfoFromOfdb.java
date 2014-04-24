@@ -28,7 +28,7 @@ public class GetMovieInfoFromOfdb
 			String OfdbId = getOfdbIdByImdbId(_ImdbId);
 			if (OfdbId!="")
 			{
-				DObject _Response = _Api.requestSearch2("http://ofdbgw.org/movie_json/",OfdbId);
+				DObject _Response = _Api.requestSearch2("http://ofdbgw.home-of-root.de/movie_json/",OfdbId);
 				System.out.println("get Poster for OFDB-ID"+OfdbId+" "+_ImdbId+" "+_Response.toString());
 				URL = parseResultProperty(_Response.asMap().get("Content"),"bild");
 				System.out.println("received Poster for OFDB-ID"+OfdbId+" "+_ImdbId+" "+URL);
@@ -49,7 +49,7 @@ public class GetMovieInfoFromOfdb
 		try
 		{
 			OfdbApi _Api = new OfdbApi();
-			DObject _Response = _Api.requestSearch2("http://ofdbgw.org/imdb2ofdb_json/", _ImdbId);
+			DObject _Response = _Api.requestSearch2("http://ofdbgw.home-of-root.de/imdb2ofdb_json/", _ImdbId);
 			System.out.println("get OFDB-ID for "+_ImdbId+" : "+_Response.toString());
 			return parseResultProperty(_Response.asMap().get("Content"),"ofdbid");
 		}
