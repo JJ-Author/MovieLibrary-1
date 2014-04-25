@@ -88,7 +88,7 @@ public class InStoreFileView
 			this._FilePathText.getComponentMouseButtonListeners().add(_Listener);
 		}	
 		{
-			if(InStoreFileView.this._InStoreFiles.readMovieLibraryRating(this._Model.getLuceneId()) == -1)
+			if(InStoreFileView.this._InStoreFiles.readMovieLibraryRating(this._Model.getLuceneId()) == 0)
 				this._RatingButton.setSelectedIndex(0);
 			else
 				this._RatingButton.setSelectedIndex(InStoreFileView.this._InStoreFiles.readMovieLibraryRating(this._Model.getLuceneId()));
@@ -103,7 +103,7 @@ public class InStoreFileView
 					 if (selectedRating != null)
 					 {
 						if(selectedRating.equals("none"))
-							InStoreFileView.this._InStoreFiles.updateMovieLibraryRating(-1, InStoreFileView.this._Model);
+							InStoreFileView.this._InStoreFiles.updateMovieLibraryRating(0, InStoreFileView.this._Model);
 						else
 							InStoreFileView.this._InStoreFiles.updateMovieLibraryRating(Integer.parseInt(selectedRating.toString()), InStoreFileView.this._Model);
 					 }

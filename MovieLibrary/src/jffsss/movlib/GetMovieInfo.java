@@ -14,7 +14,7 @@ import org.apache.pivot.util.concurrent.Task;
 import org.apache.pivot.util.concurrent.TaskExecutionException;
 
 /**
- * GetMovieInfo ist eine Task-Klasse für das asynchrone Finden der Film-Informationen mit Hilfe von OMDb-Seite.
+ * GetMovieInfo ist eine Task-Klasse fï¿½r das asynchrone Finden der Film-Informationen mit Hilfe von OMDb-Seite.
  */
 public class GetMovieInfo extends Task<MovieInfo>
 {
@@ -146,7 +146,7 @@ public class GetMovieInfo extends Task<MovieInfo>
 				System.out.println("parsing OMDB Duration failed");
 				_Duration = null;
 			}
-			MovieInfo _MovieInfo = new MovieInfo(_Title, _TitleDe, _Year, _Plot, _Genres, _Directors, _Writers, _Actors, _IMDbID, _IMDbRating, _PosterSource, _Duration);
+			MovieInfo _MovieInfo = new MovieInfo(_Title, _TitleDe, _Year, _Plot, _Genres, _Directors, _Writers, _Actors, _IMDbID, _IMDbRating, _PosterSource, _Duration,0);
 			return _MovieInfo;
 		}
 		catch (Exception e)

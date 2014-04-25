@@ -33,6 +33,14 @@
                     <div ex:role="facet" ex:facetClass="TextSearch"></div>
                     <hr/>
                     <div ex:role="facet" ex:expression=".MovieActors" ex:facetLabel="Actors" ex:height="25em"></div>
+                    <div ex:role="facet" 
+					   ex:expression=".MovieRating"
+					   ex:facetClass="Slider" 
+					   ex:horizontal="true"
+					   ex:precision="1.0"
+					   ex:facetLabel="Rating"
+					   ex:histogram="true">
+					</div>
                     <div ex:role="facet" ex:expression=".MovieDirectors" ex:facetLabel="Directors" ex:height="10em"></div>
                 </td>
                 <td>
@@ -53,6 +61,10 @@
 										<tr class="exhibit-lens-property" ex:if-exists=".MovieImdbRating">
 											<td class="exhibit-lens-property-name">IMDB Rating: </td>
 											<td class="exhibit-lens-property-values"><span class="exhibit-value" ex:content=".MovieImdbRating"></span></td>
+										</tr>
+										<tr class="exhibit-lens-property" ex:if-exists=".MovieRating">
+											<td class="exhibit-lens-property-name">pers. Rating: </td>
+											<td class="exhibit-lens-property-values"><span class="exhibit-value" ex:content=".MovieRating"></span></td>
 										</tr>
 										<tr class="exhibit-lens-property" ex:if-exists=".MoviePlot">
 											<td class="exhibit-lens-property-name">Beschreibung: </td>

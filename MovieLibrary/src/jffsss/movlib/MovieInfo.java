@@ -21,6 +21,7 @@ public class MovieInfo
 	private List<String> _Actors;
 	private String _ImdbId;
 	private Double _ImdbRating;
+	private Integer _Rating;
 	private String _PosterSource;
 	private Double _Duration;
 
@@ -50,9 +51,9 @@ public class MovieInfo
 	 * @param _PosterSource
 	 *            die Quell-URL des Posters
 	 * @param _Duration
-	 *            die Länge des Films in Minuten
+	 *            die Lï¿½nge des Films in Minuten
 	 */
-	public MovieInfo(String _Title, String _TitleDe, String _Year, String _Plot, List<String> _Genres, List<String> _Directors, List<String> _Writers, List<String> _Actors, String _ImdbId, Double _ImdbRating, String _PosterSource, Double _Duration)
+	public MovieInfo(String _Title, String _TitleDe, String _Year, String _Plot, List<String> _Genres, List<String> _Directors, List<String> _Writers, List<String> _Actors, String _ImdbId, Double _ImdbRating, String _PosterSource, Double _Duration,Integer _Rating)
 	{
 		this._Title = _Title;
 		this._TitleDe = _TitleDe;
@@ -64,12 +65,13 @@ public class MovieInfo
 		this._Actors = (_Actors == null || _Actors.isEmpty()) ? null : new ArrayList<String>(_Actors);
 		this._ImdbId = _ImdbId;
 		this._ImdbRating = _ImdbRating;
+		this._Rating = _Rating;
 		this._PosterSource = _PosterSource;
 		this._Duration = _Duration;
 	}
 
 	/**
-	 * Gibt den Titel zurück.
+	 * Gibt den Titel zurï¿½ck.
 	 * 
 	 * @return der Titel
 	 */
@@ -79,7 +81,7 @@ public class MovieInfo
 	}
 
 	/**
-	 * Gibt den deutschen Titel zurück.
+	 * Gibt den deutschen Titel zurï¿½ck.
 	 * 
 	 * @return der deutsche Titel
 	 */
@@ -89,7 +91,7 @@ public class MovieInfo
 	}
 
 	/**
-	 * Gibt das Release-Jahr des Plots zurück.
+	 * Gibt das Release-Jahr des Plots zurï¿½ck.
 	 * 
 	 * @return das Release-Jahr
 	 */
@@ -99,7 +101,7 @@ public class MovieInfo
 	}
 
 	/**
-	 * Gibt die Kurzbeschreibung des Plots zurück.
+	 * Gibt die Kurzbeschreibung des Plots zurï¿½ck.
 	 * 
 	 * @return die Kurzbeschreibung des Plots
 	 */
@@ -109,7 +111,7 @@ public class MovieInfo
 	}
 
 	/**
-	 * Gibt die Genres zurück.
+	 * Gibt die Genres zurï¿½ck.
 	 * 
 	 * @return die Genres
 	 */
@@ -119,7 +121,7 @@ public class MovieInfo
 	}
 
 	/**
-	 * Gibt die Liste der Regisseure zurück.
+	 * Gibt die Liste der Regisseure zurï¿½ck.
 	 * 
 	 * @return die Liste der Regisseure
 	 */
@@ -129,7 +131,7 @@ public class MovieInfo
 	}
 
 	/**
-	 * Gibt die Liste der Drehbuchautoren zurück.
+	 * Gibt die Liste der Drehbuchautoren zurï¿½ck.
 	 * 
 	 * @return die Liste der Drehbuchautoren
 	 */
@@ -139,7 +141,7 @@ public class MovieInfo
 	}
 
 	/**
-	 * Gibt die Liste der Schauspieler zurück.
+	 * Gibt die Liste der Schauspieler zurï¿½ck.
 	 * 
 	 * @return die Liste der Schauspieler
 	 */
@@ -149,7 +151,7 @@ public class MovieInfo
 	}
 
 	/**
-	 * Gibt die IMDb-ID zurück.
+	 * Gibt die IMDb-ID zurï¿½ck.
 	 * 
 	 * @return die IMDb-ID
 	 */
@@ -159,7 +161,7 @@ public class MovieInfo
 	}
 
 	/**
-	 * Gibt die URL zur Seite des Films auf IMDb zurück.
+	 * Gibt die URL zur Seite des Films auf IMDb zurï¿½ck.
 	 * 
 	 * @return die URL zur Seite des Films auf IMDb
 	 */
@@ -169,7 +171,7 @@ public class MovieInfo
 	}
 
 	/**
-	 * Gibt den Rating zurück.
+	 * Gibt das IMDBRating zurï¿½ck.
 	 * 
 	 * @return der Rating
 	 */
@@ -177,9 +179,19 @@ public class MovieInfo
 	{
 		return this._ImdbRating;
 	}
+	
+	/**
+	 * Gibt das persÃ¶nliche Rating zurï¿½ck.
+	 * 
+	 * @return der Rating
+	 */
+	public Integer getRating()
+	{
+		return this._Rating;
+	}
 
 	/**
-	 * Gibt die Quell-URL des Posters zurück.
+	 * Gibt die Quell-URL des Posters zurï¿½ck.
 	 * 
 	 * @return die Quell-URL des Posters
 	 */
@@ -189,9 +201,9 @@ public class MovieInfo
 	}
 
 	/**
-	 * Gibt die Länge in Minuten zurück.
+	 * Gibt die Lï¿½nge in Minuten zurï¿½ck.
 	 * 
-	 * @return die Länge in Minuten
+	 * @return die Lï¿½nge in Minuten
 	 */
 	public Double getDuration()
 	{

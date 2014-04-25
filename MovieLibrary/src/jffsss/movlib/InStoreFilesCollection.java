@@ -184,6 +184,9 @@ public class InStoreFilesCollection implements Closeable
 		_prop.addProperty("valueType", "number");
 		_properties.add("MovieImdbRating", _prop);
 		_prop = new JsonObject();
+		_prop.addProperty("valueType", "number");
+		_properties.add("MovieRating", _prop);
+		_prop = new JsonObject();
 		_prop.addProperty("valueType", "url");
 		_properties.add("MoviePosterSource", _prop);
 
@@ -251,6 +254,7 @@ public class InStoreFilesCollection implements Closeable
 				}
 				_JsonArrayObject.addProperty("MovieImdbId", _InStoreFile.getMovieInfo().getImdbId());
 				_JsonArrayObject.addProperty("MovieImdbRating", _InStoreFile.getMovieInfo().getImdbRating());
+				_JsonArrayObject.addProperty("MovieRating", _InStoreFile.getMovieInfo().getRating());
 				_JsonArrayObject.addProperty("MoviePosterSource", _InStoreFile.getMovieInfo().getPosterSource());
 				_JsonArrayObject.addProperty("FileSize", _InStoreFile.getFileInfo().getSize() / (1024*1024));
 				_JsonArray.add(_JsonArrayObject);
@@ -553,7 +557,7 @@ public class InStoreFilesCollection implements Closeable
 	public void indexFile(FileInfo _FileInfo, MovieInfo _MovieInfo) throws IOException
 	{
 		Document _Document = createDocument(_FileInfo, _MovieInfo);
-		_Document.add(new IntField("Movie:Rating", -1, Field.Store.YES));
+		_Document.add(new IntField("Movie:Rating", 0, Field.Store.YES));
 		this._IndexWriter.addDocument(_Document);
 		this._IndexWriter.commit();
 	}
@@ -681,6 +685,17 @@ public class InStoreFilesCollection implements Closeable
 					_IMDbRating = null;
 				}
 			}
+			Integer _Rating;
+			{
+				try
+				{
+					_Rating = Integer.valueOf(_Document.get("Movie:Rating"));
+				}
+				catch (Exception e)
+				{
+					_Rating = null;
+				}
+			}
 			Double _Duration;
 			{
 				try
@@ -693,7 +708,7 @@ public class InStoreFilesCollection implements Closeable
 				}
 			}
 			String _PosterSource = _Document.get("Movie:PosterSource");
-			_MovieInfo = new MovieInfo(_Title, _TitleDe, _Year, _Plot, _Genres, _Directors, _Writers, _Actors, _IMDbID, _IMDbRating, _PosterSource, _Duration);
+			_MovieInfo = new MovieInfo(_Title, _TitleDe, _Year, _Plot, _Genres, _Directors, _Writers, _Actors, _IMDbID, _IMDbRating, _PosterSource, _Duration,_Rating);
 		}
 		return new InStoreFile(_LuceneId, _FileInfo, _MovieInfo);
 	}
@@ -718,7 +733,7 @@ public class InStoreFilesCollection implements Closeable
 			IndexSearcher _IndexSearcher = new IndexSearcher(_DirectoryReader);
 			Similarity _Similarity = new BM25Similarity();
 			_IndexSearcher.setSimilarity(_Similarity);
-			String[] _Fields = {"Movie:Title", "Movie:Title:De", "Movie:Year", "Movie:Plot", "Movie:Genres", "Movie:Directors", "Movie:Writers", "Movie:Actors"};
+			String[] _Fields = {"Movie:Title", "Movie:Title:De", "Movie:Year", "Movie:Plot", "Movie:Genres", "Movie:Directors", "Movie:Writers", "Movie:Actors", "Movie:Rating"};
 			Map<String, Float> _Boosts = new HashMap<String, Float>();
 			_Boosts.put("Movie:Title", (float) 7.6);
 			_Boosts.put("Movie:Title:De", (float) 7.6);
