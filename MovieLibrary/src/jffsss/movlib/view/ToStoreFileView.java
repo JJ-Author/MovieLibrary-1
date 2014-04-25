@@ -56,7 +56,7 @@ public class ToStoreFileView
 				{
 					String _IMDbID = ToStoreFileView.this._AddMovieText.getText();
 					ToStoreFileView.this._AddMovieText.setText("");
-					ToStoreFileView.this._Model.addProbablyMovie(_IMDbID);
+					ToStoreFileView.this._Model.addProbablyMovie(_IMDbID, -1.0);
 				}
 			};
 			this._AddMovieButton.getButtonPressListeners().add(_Listener);
