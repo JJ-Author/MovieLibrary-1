@@ -4,7 +4,6 @@ import java.util.Collection;
 
 import org.apache.pivot.util.concurrent.Task;
 import org.apache.pivot.util.concurrent.TaskListener;
-import org.apache.pivot.wtk.TaskAdapter;
 
 import jffsss.util.Listeners;
 
@@ -64,7 +63,7 @@ public class ProbablyMovie
 			this._RetrievingStarted = true;
 			Task<MovieInfo> _Task = new GetMovieInfo(_ImdbId);
 			TaskListener<MovieInfo> _TaskListener = new GetMovieInfoListener();
-			_Task.execute(new TaskAdapter<MovieInfo>(_TaskListener));
+			_Task.execute(_TaskListener);
 		}
 	}
 

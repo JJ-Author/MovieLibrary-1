@@ -3,6 +3,8 @@ package jffsss.util;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.apache.pivot.wtk.ApplicationContext;
+
 /**
  * Eine thread-sichere Container-Klasse für die Listener.
  */
@@ -73,12 +75,43 @@ public class Listeners
 	 */
 	public void notifyListeners(String _Command, Object _Arg)
 	{
-		Collection<Listener> _Listeners;
+		Runnable _Runnable = new RunnableImpl(_Command, _Arg);
+		ApplicationContext.queueCallback(_Runnable);
+		/*Collection<Listener> _Listeners;
 		synchronized (this)
 		{
 			_Listeners = new ArrayList<Listener>(this._Listeners);
 		}
 		for (Listener _Listener : _Listeners)
-			_Listener.on(this._Source, _Command, _Arg);
+			_Listener.on(this._Source, _Command, _Arg);*/
+	}
+	
+	
+	
+	private class RunnableImpl implements Runnable
+	{
+		private String _Command;
+		private Object _Arg;
+
+		public RunnableImpl(String _Command, Object _Arg)
+		{
+			this._Command = _Command;
+			this._Arg = _Arg;
+		}
+
+		@Override
+		public void run()
+		{
+			Collection<Listener> _Listeners;
+			synchronized (Listeners.this)
+			{
+				_Listeners = new ArrayList<Listener>(Listeners.this._Listeners);
+			}
+			for (Listener _Listener : _Listeners)
+			{
+				_Listener.on(Listeners.this._Source, this._Command, this._Arg);
+			}
+			
+		}
 	}
 }

@@ -3,14 +3,12 @@ package jffsss.movlib;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.apache.pivot.util.concurrent.Task;
 import org.apache.pivot.util.concurrent.TaskListener;
-import org.apache.pivot.wtk.TaskAdapter;
 
 import jffsss.util.Listeners;
 
@@ -58,7 +56,7 @@ public class ToStoreFile
 	{
 		Task<VideoFileInfo> _Task = new GetVideoFileInfo(_FilePath);
 		TaskListener<VideoFileInfo> _TaskListener = new GetVideoFileInfoListener();
-		_Task.execute(new TaskAdapter<VideoFileInfo>(_TaskListener));
+		_Task.execute(_TaskListener);
 	}
 
 	/**
@@ -112,17 +110,17 @@ public class ToStoreFile
 		{
 			Task<Map<String, Double>> _Task = new GetImdbIdsFromOpenSubtitles(this._VideoFileInfo);
 			TaskListener<Map<String, Double>> _TaskListener = new GetImdbIdsListener(3);
-			_Task.execute(new TaskAdapter<Map<String, Double>>(_TaskListener));
+			_Task.execute(_TaskListener);
 		}
 		{
 			Task<Map<String, Double>> _Task = new GetImdbIdsFromFreeBase(this._VideoFileInfo);
 			TaskListener<Map<String, Double>> _TaskListener = new GetImdbIdsListener(2);
-			_Task.execute(new TaskAdapter<Map<String, Double>>(_TaskListener));
+			_Task.execute(_TaskListener);
 		}
 		{
 			Task<Map<String, Double>> _Task = new GetImdbIdsFromGoogle(this._VideoFileInfo);
 			TaskListener<Map<String, Double>> _TaskListener = new GetImdbIdsListener(1);
-			_Task.execute(new TaskAdapter<Map<String, Double>>(_TaskListener));
+			_Task.execute(_TaskListener);
 		}
 	}
 
