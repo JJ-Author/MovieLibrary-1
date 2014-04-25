@@ -59,7 +59,7 @@ public class InStoreFilesCollection implements Closeable
 	 * Konstruiert ein InStoreFilesCollection-Objekt.
 	 * 
 	 * @param _Directory
-	 *            das Verzeichnis für den Lucene-Index
+	 *            das Verzeichnis fï¿½r den Lucene-Index
 	 * @throws IOException
 	 *             falls ein IO-Fehler auftrat
 	 */
@@ -76,7 +76,7 @@ public class InStoreFilesCollection implements Closeable
 	}
 
 	/**
-	 * Schließt alle Streams.
+	 * Schlieï¿½t alle Streams.
 	 * 
 	 * @throws IOException
 	 *             falls ein IO-Fehler auftrat
@@ -91,7 +91,7 @@ public class InStoreFilesCollection implements Closeable
 	private Listeners onUpdate = null;
 
 	/**
-	 * Gibt die Listener zurück.
+	 * Gibt die Listener zurï¿½ck.
 	 * 
 	 * @return die Listener
 	 */
@@ -260,11 +260,11 @@ public class InStoreFilesCollection implements Closeable
 	}
 
 	/**
-	 * Erstellt ein neues InStoreFile-Objekt, falls keins mit dieser Lucene-ID bereits existierte und fügt es in die
+	 * Erstellt ein neues InStoreFile-Objekt, falls keins mit dieser Lucene-ID bereits existierte und fï¿½gt es in die
 	 * Liste ein.
 	 * 
 	 * @param _LuceneId
-	 *            die Lucene-ID als Schlüssel
+	 *            die Lucene-ID als Schlï¿½ssel
 	 * @return neu erstelltes oder bereits vorhandenes InStoreFile-Objekt
 	 * @throws IOException
 	 *             falls ein IO-Fehler auftrat
@@ -276,7 +276,7 @@ public class InStoreFilesCollection implements Closeable
 	}
 
 	/**
-	 * Erstellt ein neues InStoreFile-Objekt, falls keins mit dieser Lucene-ID bereits existierte und fügt es in die
+	 * Erstellt ein neues InStoreFile-Objekt, falls keins mit dieser Lucene-ID bereits existierte und fï¿½gt es in die
 	 * Liste ein.
 	 * 
 	 * @param _LuceneId
@@ -299,7 +299,7 @@ public class InStoreFilesCollection implements Closeable
 	}
 
 	/**
-	 * Erstellt neue InStoreFile-Objekte, falls keine mit diesen Lucene-IDs bereits existierten und fügt sie in die
+	 * Erstellt neue InStoreFile-Objekte, falls keine mit diesen Lucene-IDs bereits existierten und fï¿½gt sie in die
 	 * Liste ein.
 	 * 
 	 * @param _LuceneIds
@@ -315,7 +315,7 @@ public class InStoreFilesCollection implements Closeable
 	}
 
 	/**
-	 * Erstellt neue InStoreFile-Objekte, falls keine mit diesen Lucene-IDs bereits existierten und fügt sie in die
+	 * Erstellt neue InStoreFile-Objekte, falls keine mit diesen Lucene-IDs bereits existierten und fï¿½gt sie in die
 	 * Liste ein.
 	 * 
 	 * @param _LuceneIds
@@ -337,8 +337,8 @@ public class InStoreFilesCollection implements Closeable
 	}
 
 	/**
-	 * Stellt eine Abfrage an den Lucene-Index, fügt die gefundenen InStoreFile-Objekte in die Liste und gibt diese
-	 * InStoreFile-Objekte zurück.
+	 * Stellt eine Abfrage an den Lucene-Index, fï¿½gt die gefundenen InStoreFile-Objekte in die Liste und gibt diese
+	 * InStoreFile-Objekte zurï¿½ck.
 	 * 
 	 * @param _Query
 	 *            die Abfrage
@@ -380,7 +380,7 @@ public class InStoreFilesCollection implements Closeable
 	}
 
 	/**
-	 * Gibt das InStoreFile-Objekt zur gegebenen Lucene-ID aus der Liste zurück.
+	 * Gibt das InStoreFile-Objekt zur gegebenen Lucene-ID aus der Liste zurï¿½ck.
 	 * 
 	 * @param _LuceneId
 	 *            die Lucene-ID als Schlï¿½ssel
@@ -392,7 +392,7 @@ public class InStoreFilesCollection implements Closeable
 	}
 
 	/**
-	 * Gibt die Gesamtanzahl der indexierten Filme zurück.
+	 * Gibt die Gesamtanzahl der indexierten Filme zurï¿½ck.
 	 * 
 	 * @return die Gesamtanzahl der indexierten Filme
 	 * @throws IOException
@@ -404,7 +404,7 @@ public class InStoreFilesCollection implements Closeable
 	}
 
 	/**
-	 * Gibt das aktuelle DirectoryReader-Objekt zurück.
+	 * Gibt das aktuelle DirectoryReader-Objekt zurï¿½ck.
 	 * 
 	 * @return das aktuelle DirectoryReader-Objekt
 	 * @throws IOException
@@ -421,7 +421,7 @@ public class InStoreFilesCollection implements Closeable
 	}
 	
 	/**
-	 * Erstellt ein Document für Lucene aus den Datei-Informationen und den Film-Informationen.
+	 * Erstellt ein Document fï¿½r Lucene aus den Datei-Informationen und den Film-Informationen.
 	 * 
 	 * @param _FileInfo
 	 *            die Datei-Informationen
@@ -480,8 +480,9 @@ public class InStoreFilesCollection implements Closeable
 		{
 			String _TitleDe = _MovieInfo.getTitleDe();
 			if (_TitleDe == null)
-				throw new IOException("Movie:Title:De");
-			_Document.add(new TextField("Movie:Title:De", _TitleDe, Field.Store.YES));
+				_Document.add(new TextField("Movie:Title:De", "##n/a##", Field.Store.YES));
+			else
+				_Document.add(new TextField("Movie:Title:De", _TitleDe, Field.Store.YES));	
 		}
 		{
 			String _Year = _MovieInfo.getYear();
@@ -561,9 +562,9 @@ public class InStoreFilesCollection implements Closeable
 	 * Erstellt ein neues InStoreFile-Objekt, dessen Informationen aus dem Lucene-Index geladen werden.
 	 * 
 	 * @param _LuceneId
-	 *            die Lucene-ID als Schlüssel
+	 *            die Lucene-ID als Schlï¿½ssel
 	 * @param _DirectoryReader
-	 *            das Verzeichnis für den Lucene-Index
+	 *            das Verzeichnis fï¿½r den Lucene-Index
 	 * @return ein neues InStoreFile-Objekt
 	 * @throws IOException
 	 *             falls ein IO-Fehler auftrat
@@ -698,12 +699,12 @@ public class InStoreFilesCollection implements Closeable
 	}
 
 	/**
-	 * Stellt eine Abfrage an den Lucene-Index und gibt die gefundenen Lucene-IDs zurück.
+	 * Stellt eine Abfrage an den Lucene-Index und gibt die gefundenen Lucene-IDs zurï¿½ck.
 	 * 
 	 * @param _Query
 	 *            die Abfrage
 	 * @param _DirectoryReader
-	 *            das Verzeichnis für den Lucene-Index
+	 *            das Verzeichnis fï¿½r den Lucene-Index
 	 * @return die gefundenen Lucene-IDs
 	 * @throws IOException
 	 *             falls ein IO-Fehler auftrat
@@ -753,7 +754,7 @@ public class InStoreFilesCollection implements Closeable
 	}
 
 	/**
-	 * Prüft, ob ein Dateipfad in Lucene vorhanden ist.
+	 * Prï¿½ft, ob ein Dateipfad in Lucene vorhanden ist.
 	 * @param _FilePath Dateipfad
 	 * @return True wenn Dateipfad gefunden, sonst false.
 	 * @throws IOException
@@ -770,7 +771,7 @@ public class InStoreFilesCollection implements Closeable
 	}
 	
 	/**
-	 * Prüft, ob ein Open Subtitles Hash in Lucene vorhanden ist.
+	 * Prï¿½ft, ob ein Open Subtitles Hash in Lucene vorhanden ist.
 	 * @param _OSHash Hash
 	 * @return True wenn Hash gefunden, sonst false.
 	 * @throws IOException
@@ -792,7 +793,7 @@ public class InStoreFilesCollection implements Closeable
 	 */
 	public void updateFileInformation(String _FilePath) throws IOException
 	{
-		//suche lucene id für die datei mit dem hash von _FilePath
+		//suche lucene id fï¿½r die datei mit dem hash von _FilePath
 		IndexSearcher searcher = new IndexSearcher(this.getDirectoryReader());
 		TermQuery query = new TermQuery(new Term("File:OSHash", OpenSubtitlesHasher.computeHash(new File(_FilePath))));
 		TopDocs topdocs = searcher.search(query, 1);
@@ -800,7 +801,7 @@ public class InStoreFilesCollection implements Closeable
 		if (topdocs.totalHits > 0)
 		{
 			Document _Document = this._DirectoryReader.document(topdocs.scoreDocs[0].doc);
-			if(!_Document.get("File:Path").equals(_FilePath)) //wenn sich der pfad geändert hat, aktualisiere lucene eintrag
+			if(!_Document.get("File:Path").equals(_FilePath)) //wenn sich der pfad geï¿½ndert hat, aktualisiere lucene eintrag
 			{
 				FileInfo _FileInfo = FileInfo.getFromFile(_FilePath);
 								
@@ -841,9 +842,9 @@ public class InStoreFilesCollection implements Closeable
 	}
 
 	/**
-	 * Ändert das MovieLibraryRating für einen Film
+	 * ï¿½ndert das MovieLibraryRating fï¿½r einen Film
 	 * @param _newRating	Neue Bewertung
-	 * @param _LuceneId		Id des Films dessen Bewertung geändert wird
+	 * @param _LuceneId		Id des Films dessen Bewertung geï¿½ndert wird
 	 */
 	public void updateMovieLibraryRating(int _NewRating, InStoreFile _InStoreFile)
 	{
@@ -882,8 +883,8 @@ public class InStoreFilesCollection implements Closeable
 	}
 	
 	/**
-	 * Löscht einen Eintrag in Lucene.
-	 * @param _InStoreFile Eintrag der gelöscht wird.
+	 * Lï¿½scht einen Eintrag in Lucene.
+	 * @param _InStoreFile Eintrag der gelï¿½scht wird.
 	 */
 	public void deleteInStoreFile(InStoreFile _InStoreFile)
 	{
