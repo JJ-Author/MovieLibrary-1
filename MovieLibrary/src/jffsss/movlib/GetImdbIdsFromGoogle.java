@@ -70,7 +70,7 @@ public class GetImdbIdsFromGoogle extends Task<Map<String, Double>>
 						_Factor = (_Factor == 0) ? 2.0 : 1.0;
 						if(_ResultMap.containsKey(_ImdbId))
 						{
-							_ResultMap.put(_ImdbId, _ResultMap.get(_ImdbId) + 1);
+							_ResultMap.put(_ImdbId, _ResultMap.get(_ImdbId) + 0);
 						}
 						else
 						{
