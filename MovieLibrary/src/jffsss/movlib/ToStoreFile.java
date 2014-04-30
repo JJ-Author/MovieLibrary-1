@@ -140,7 +140,9 @@ public class ToStoreFile
 			_ProbablyMovieModel = new ProbablyMovie(this._ProbablyMovies.values());
 			
 			if(_Probability != -1.0)
+			{
 				_ProbablyMovieModel.incProbability(_Probability);
+			}
 			
 			this._ProbablyMovies.put(_ImdbId, _ProbablyMovieModel);
 			this.onUpdate().notifyListeners("DeleteProbablyMovies", null);
@@ -220,7 +222,8 @@ public class ToStoreFile
 			{
 				String _ImdbId = _Result.getKey();
 				double _Factor = _MaxCount > 0 ? _Result.getValue() / _MaxCount : 0;
-				ProbablyMovie _ProbablyMovie = ToStoreFile.this.addProbablyMovie(_ImdbId, _Factor * this._Weight);
+				ToStoreFile.this.addProbablyMovie(_ImdbId, _Factor * this._Weight);
+				//ProbablyMovie _ProbablyMovie = ToStoreFile.this.addProbablyMovie(_ImdbId, _Factor * this._Weight);
 				//_ProbablyMovie.incProbability(_Factor * this._Weight);
 			}
 		}

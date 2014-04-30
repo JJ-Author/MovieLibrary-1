@@ -105,8 +105,11 @@ public class GetImdbIdsFromOpenSubtitles extends Task<Map<String, Double>>
 								String _ImdbId = _ResponseMapListMap.get("MovieImdbID").asString();
 								Double _Factor = _ResponseMapListMap.get("SeenCount").parseAsDouble(1.0);
 								_ResultMapMap.put(_ImdbId, _Factor);
+								System.out.println("Open Subtitles Hit: " + _ImdbId);
 							}
 							_ResultMap.put(_ResultMapKey, _ResultMapMap);
+							if(_ResultMap.isEmpty())
+								System.out.println("No Open Subtitle hits");
 						}
 						catch (Exception e)
 						{}
