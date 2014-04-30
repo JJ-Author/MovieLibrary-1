@@ -109,17 +109,32 @@ public class ToStoreFile
 	{
 		{
 			Task<Map<String, Double>> _Task = new GetImdbIdsFromOpenSubtitles(this._VideoFileInfo);
-			TaskListener<Map<String, Double>> _TaskListener = new GetImdbIdsListener(3);
+			TaskListener<Map<String, Double>> _TaskListener = new GetImdbIdsListener(search_source.OpenSubtitles,search_mode.searchByFileName);
 			_Task.execute(_TaskListener);
 		}
 		{
-			Task<Map<String, Double>> _Task = new GetImdbIdsFromFreeBase(this._VideoFileInfo);
-			TaskListener<Map<String, Double>> _TaskListener = new GetImdbIdsListener(2);
+			Task<Map<String, Double>> _Task = new GetImdbIdsFromFreeBase(this._VideoFileInfo,search_mode.searchByFileName);
+			TaskListener<Map<String, Double>> _TaskListener = new GetImdbIdsListener(search_source.Freebase,search_mode.searchByFileName);
 			_Task.execute(_TaskListener);
 		}
 		{
-			Task<Map<String, Double>> _Task = new GetImdbIdsFromGoogle(this._VideoFileInfo);
-			TaskListener<Map<String, Double>> _TaskListener = new GetImdbIdsListener(1);
+			Task<Map<String, Double>> _Task = new GetImdbIdsFromGoogle(this._VideoFileInfo,search_mode.searchByFileName);
+			TaskListener<Map<String, Double>> _TaskListener = new GetImdbIdsListener(search_source.Google,search_mode.searchByFileName);
+			_Task.execute(_TaskListener);
+		}
+	}
+	
+
+	public void startRetrievingProbablyMoviesByDirectoryName()
+	{
+		{
+			Task<Map<String, Double>> _Task = new GetImdbIdsFromFreeBase(this._VideoFileInfo,search_mode.searchByDirName);
+			TaskListener<Map<String, Double>> _TaskListener = new GetImdbIdsListener(search_source.Freebase,search_mode.searchByDirName);
+			_Task.execute(_TaskListener);
+		}
+		{
+			Task<Map<String, Double>> _Task = new GetImdbIdsFromGoogle(this._VideoFileInfo,search_mode.searchByDirName);
+			TaskListener<Map<String, Double>> _TaskListener = new GetImdbIdsListener(search_source.Google,search_mode.searchByDirName);
 			_Task.execute(_TaskListener);
 		}
 	}
@@ -197,22 +212,48 @@ public class ToStoreFile
 		return new ArrayList<ProbablyMovie>(this._ProbablyMovies.values());
 	}
 
+	public static enum search_mode   {searchByFileName,searchByDirName};
+	public static enum search_source {OpenSubtitles,Google,Freebase};
 	/**
 	 * GetImdbIdsListener ist die Callback-Klasse zur startRetrievingProbablyMovies-Methode.
 	 */
 	private class GetImdbIdsListener implements TaskListener<Map<String, Double>>
 	{
-		private double _Weight;
 
-		public GetImdbIdsListener(double _Weight)
+		private double _Weight;
+		private search_mode _mode;
+		private search_source _source;
+		//private boolean _madeDirSearch = false;
+		
+		public GetImdbIdsListener(search_source source,search_mode mode)
 		{
-			this._Weight = _Weight;
+			this._source = source;
+			switch (source) { //weights for the global percentage value calculation
+			case OpenSubtitles:
+				_Weight = 3.0;
+				break;
+			case Freebase:
+				_Weight = 2.0;
+				break;
+			case Google:
+				_Weight = 1.0;
+				break;
+			default:
+				break;
+			}
+			this._mode = mode;
+			
 		}
 
 		@Override
 		public void taskExecuted(Task<Map<String, Double>> _Task)
 		{
 			Map<String, Double> _Results = _Task.getResult();
+			if (this._source==search_source.Google && _Results.isEmpty() && this._mode == search_mode.searchByFileName)
+			{
+				ToStoreFile.this.startRetrievingProbablyMoviesByDirectoryName();	
+			}
+				
 			double _MaxCount = 0;
 			for (Map.Entry<String, Double> _Result : _Results.entrySet())
 			{

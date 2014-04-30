@@ -7,6 +7,7 @@ import java.util.Map;
 import jffsss.ParseException;
 import jffsss.api.GoogleApi;
 import jffsss.util.d.DObject;
+import jffsss.movlib.ToStoreFile.search_mode;
 
 import org.apache.pivot.util.concurrent.Task;
 import org.apache.pivot.util.concurrent.TaskExecutionException;
@@ -18,6 +19,7 @@ import org.apache.pivot.util.concurrent.TaskExecutionException;
 public class GetImdbIdsFromGoogle extends Task<Map<String, Double>>
 {
 	private VideoFileInfo _VideoFileInfo;
+	private search_mode _mode;
 
 	/**
 	 * Konstruiert ein GetImdbIdsFromGoogle-Objekt.
@@ -25,9 +27,10 @@ public class GetImdbIdsFromGoogle extends Task<Map<String, Double>>
 	 * @param _VideoFileInfo
 	 *            das VideoFileInfo-Objekt
 	 */
-	public GetImdbIdsFromGoogle(VideoFileInfo _VideoFileInfo)
+	public GetImdbIdsFromGoogle(VideoFileInfo _VideoFileInfo, search_mode _mode)
 	{
 		this._VideoFileInfo = _VideoFileInfo;
+		this._mode = _mode;
 	}
 
 	@Override
@@ -35,8 +38,13 @@ public class GetImdbIdsFromGoogle extends Task<Map<String, Double>>
 	{
 		try
 		{
+			String name;
+			if(_mode==search_mode.searchByFileName)
+				name = this._VideoFileInfo.getCleanedFileName();
+			else
+				name = this._VideoFileInfo.getCleanedDirName();
 			GoogleApi _Api = new GoogleApi();
-			DObject _Response = _Api.requestSearch(this._VideoFileInfo.getCleanedFileName() + " site:imdb.com", 0, 5);
+			DObject _Response = _Api.requestSearch(name + " site:imdb.com", 0, 5);
 			if (_Response.asMap().get("StatusCode").parseAsInteger() == 200)
 			{
 				return parseResponse(_Response.asMap().get("Content"));

@@ -79,6 +79,11 @@ public class FileInfo
 	{
 		return (this._Path == null) ? null : (new File(this._Path)).getParent();
 	}
+	
+	public String getDirectoryName()
+	{
+		return (this._Path == null) ? null : (new File(this._Path)).getParentFile().getName();
+	}
 
 	/**
 	 * Gibt die Größe der Datei zurück.

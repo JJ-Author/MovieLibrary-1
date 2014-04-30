@@ -7,6 +7,7 @@ import java.util.Map;
 import jffsss.ParseException;
 import jffsss.api.FreeBaseApi;
 import jffsss.util.d.DObject;
+import jffsss.movlib.ToStoreFile.search_mode;
 
 import org.apache.pivot.util.concurrent.Task;
 import org.apache.pivot.util.concurrent.TaskExecutionException;
@@ -18,6 +19,7 @@ import org.apache.pivot.util.concurrent.TaskExecutionException;
 public class GetImdbIdsFromFreeBase extends Task<Map<String, Double>>
 {
 	private VideoFileInfo _VideoFileInfo;
+	private search_mode _mode;
 
 	/**
 	 * Konstruiert ein GetImdbIdsFromFreeBase-Objekt.
@@ -25,9 +27,10 @@ public class GetImdbIdsFromFreeBase extends Task<Map<String, Double>>
 	 * @param _VideoFileInfo
 	 *            das VideoFileInfo-Objekt
 	 */
-	public GetImdbIdsFromFreeBase(VideoFileInfo _VideoFileInfo)
+	public GetImdbIdsFromFreeBase(VideoFileInfo _VideoFileInfo,search_mode mode)
 	{
 		this._VideoFileInfo = _VideoFileInfo;
+		this._mode = mode;
 	}
 
 	@Override
@@ -37,15 +40,20 @@ public class GetImdbIdsFromFreeBase extends Task<Map<String, Double>>
 		{
 			FreeBaseApi _Api = new FreeBaseApi();
 			String langs = "de,en";
-			DObject _Response = _Api.requestSearch2(true, null, "(all name{full}:\"" + this._VideoFileInfo.getCleanedFileName() + "\" type:/film/film)", "(key:/authority/imdb/title/)", 5, langs);
+			String _movieName;
+			if (_mode==search_mode.searchByFileName)
+				_movieName = this._VideoFileInfo.getCleanedFileName();
+			else
+				_movieName = this._VideoFileInfo.getCleanedDirName();
+			DObject _Response = _Api.requestSearch2(true, null, "(all name{full}:\"" + _movieName + "\" type:/film/film)", "(key:/authority/imdb/title/)", 5, langs);
 			if (hasNoHit(_Response.asMap().get("Content")))
 			{
-				_Response = _Api.requestSearch2(true, null, "(all name{phrase}:\"" + this._VideoFileInfo.getCleanedFileName() + "\" type:/film/film)", "(key:/authority/imdb/title/)", 5, langs);
+				_Response = _Api.requestSearch2(true, null, "(all name{phrase}:\"" + _movieName + "\" type:/film/film)", "(key:/authority/imdb/title/)", 5, langs);
 				//System.out.println(this._VideoFileInfo.getCleanedFileName() + ": NO HITS full");
 			}
 			if (hasNoHit(_Response.asMap().get("Content")))
 			{
-				_Response = _Api.requestSearch2(true, "\"" + this._VideoFileInfo.getCleanedFileName() + "\"", "(all type:/film/film)", "(key:/authority/imdb/title/)", 5, langs);
+				_Response = _Api.requestSearch2(true, "\"" + _movieName + "\"", "(all type:/film/film)", "(key:/authority/imdb/title/)", 5, langs);
 				//System.out.println(this._VideoFileInfo.getCleanedFileName() + ": NO HITS phrase");
 			}
 			if (hasNoHit(_Response.asMap().get("Content")))

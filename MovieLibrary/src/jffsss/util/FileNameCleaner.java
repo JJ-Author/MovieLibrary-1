@@ -11,6 +11,8 @@ public class FileNameCleaner
 		_Result = _Result.replaceAll("(?i)\\.[a-z2-4]{3}$", ""); // delete file suffix
 		_Result = _Result.replaceAll("(?i)\\.ts$", "");
 		_Result = _Result.replaceAll("(?i)\\.mpeg$", "");
+		_Result = _Result.replaceAll("(?i)\\.divx$", "");
+		_Result = _Result.replaceAll("(?i)\\.xvid$", "");
 		_Result = _Result.replace('_', ' '); // use only blanks instead of underscore
 		_Result = _Result.replaceAll("5\\.1", "");
 		_Result = _Result.replaceAll("7\\.1", "");
@@ -36,7 +38,7 @@ public class FileNameCleaner
 		_Result = _Result.replaceAll("(?i)mp3", "");
 		_Result = _Result.replaceAll("(?i)mp4", "");
 		_Result = _Result.replaceAll("(?i)BluRay.*$", "");
-		_Result = _Result.replaceAll("(?i)German", "");
+		_Result = _Result.replaceAll("(?i)German.*$", "");
 		_Result = _Result.replaceAll("DL", "");
 		_Result = _Result.replaceAll("(?i)RETAIL", "");
 		_Result = _Result.replaceAll("(?i)UNCUT", "");

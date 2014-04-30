@@ -14,6 +14,7 @@ public class VideoFileInfo
 	private FileInfo _FileInfo;
 	private String _OpenSubtitlesHash;
 	private String _CleanedFileName;
+	private String _CleanedDirName;
 
 	/**
 	 * Konstruiert ein VideoFileInfo-Objekt.
@@ -25,11 +26,12 @@ public class VideoFileInfo
 	 * @param _CleanedFileName
 	 *            der bereinigte Name der Datei
 	 */
-	public VideoFileInfo(FileInfo _FileInfo, String _OpenSubtitlesHash, String _CleanedFileName)
+	public VideoFileInfo(FileInfo _FileInfo, String _OpenSubtitlesHash, String _CleanedFileName, String _CleanedDirName)
 	{
 		this._FileInfo = _FileInfo;
 		this._OpenSubtitlesHash = _OpenSubtitlesHash;
 		this._CleanedFileName = _CleanedFileName;
+		this._CleanedDirName = _CleanedDirName;
 	}
 
 	/**
@@ -46,7 +48,8 @@ public class VideoFileInfo
 		FileInfo _FileInfo = FileInfo.getFromFile(_FilePath);
 		String _OpenSubtitlesHash = OpenSubtitlesHasher.computeHash(new File(_FilePath));
 		String _CleanedFileName = FileNameCleaner.getCleanedFileName(_FileInfo.getName());
-		return new VideoFileInfo(_FileInfo, _OpenSubtitlesHash, _CleanedFileName);
+		String _CleanedDirName = FileNameCleaner.getCleanedFileName(_FileInfo.getDirectoryName());
+		return new VideoFileInfo(_FileInfo, _OpenSubtitlesHash, _CleanedFileName,_CleanedDirName);
 	}
 
 	/**
@@ -70,12 +73,25 @@ public class VideoFileInfo
 	}
 
 	/**
-	 * Gibt den bereinigten Name der Datei zurück.
+	 * Gibt den bereinigten Namen der Datei zurück.
 	 * 
 	 * @return der bereinigte Name der Datei
 	 */
 	public String getCleanedFileName()
 	{
 		return this._CleanedFileName;
+	}
+	
+	/**
+	 * Gibt den bereinigten Namen des Ordners der Datei zurück.
+	 * 
+	 * @return der bereinigte Name des Ordners der Datei
+	 */
+	public String getCleanedDirName()
+	{
+		System.out.println("dir "+this._CleanedDirName);
+		System.out.println(this._FileInfo.getDirectoryName());
+		System.out.println(this._FileInfo.getDirectory());
+		return this._CleanedDirName;
 	}
 }
