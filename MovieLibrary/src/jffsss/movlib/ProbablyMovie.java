@@ -125,6 +125,31 @@ public class ProbablyMovie
 			}
 		}
 	}
+	
+	/**
+	 * Reduziert die Wahrscheinlichkeit des Films.
+	 * 
+	 * @param _Count
+	 *            der Wert, um den der Zähler in der Wahrscheinlichkeitsberechnung reduziert wird
+	 */
+	public void decProbability(double _Count)
+	{
+		if(this._ProbabilityCount >= _Count)
+		{
+			this._ProbabilityCount -= _Count;
+		}
+		else
+		{
+			this._ProbabilityCount = 0.1;
+		}
+		if (this._ProbablyMovies != null)
+		{
+			for (ProbablyMovie _ProbablyMovie : this._ProbablyMovies)
+			{
+				_ProbablyMovie.onUpdate().notifyListeners("SetProbability", null);
+			}
+		}
+	}
 
 	/**
 	 * Gibt den Zähler zurück, der in der Wahrscheinlichkeitsberechnung benutzt wird. Der Nenner wird berechnet, indem

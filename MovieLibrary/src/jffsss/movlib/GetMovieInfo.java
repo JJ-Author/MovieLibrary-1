@@ -146,6 +146,7 @@ public class GetMovieInfo extends Task<MovieInfo>
 				System.out.println("parsing OMDB Duration failed");
 				_Duration = null;
 			}
+			System.out.println("Movie: " + _Title + " Poster: " + _PosterSource);
 			MovieInfo _MovieInfo = new MovieInfo(_Title, _TitleDe, _Year, _Plot, _Genres, _Directors, _Writers, _Actors, _IMDbID, _IMDbRating, _PosterSource, _Duration,0);
 			return _MovieInfo;
 		}
@@ -180,5 +181,28 @@ public class GetMovieInfo extends Task<MovieInfo>
 				throw new RuntimeException("FreeBaseParseMovieDetail");
 			}
 		return name;
+	}
+	
+	/**
+	 * Liefert das Poster eines Films auf Ofdb.
+	 * @param ImdbId	Id des Films
+	 * @return	URL des Posters
+	 */
+	public static String getMoviePoster(String ImdbId)
+	{
+		String _PosterSource;
+		try
+		{
+			GetMovieInfoFromOfdb g = new GetMovieInfoFromOfdb();
+			String url = g.getPosterURL("tt" + ImdbId);
+			_PosterSource = url;
+		}
+		catch (Exception e)
+		{
+			System.out.println("Fehler beim Suchen des deutschen Posters: " + e.getMessage());
+			_PosterSource = null;
+		}
+		
+		return _PosterSource;
 	}
 }

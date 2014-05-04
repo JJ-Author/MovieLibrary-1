@@ -12,6 +12,8 @@ import org.apache.pivot.util.concurrent.TaskListener;
 
 import jffsss.util.Listeners;
 
+import jffsss.movlib.GetMovieInfo;
+
 /**
  * ToStoreFile beinhalten die Informationen des in der Datenbank zu speichernden Films.
  */
@@ -157,6 +159,11 @@ public class ToStoreFile
 			if(_Probability != -1.0)
 			{
 				_ProbablyMovieModel.incProbability(_Probability);
+				String poster = GetMovieInfo.getMoviePoster(_ImdbId);
+				if(poster==null || poster=="" || poster=="http://img.ofdb.de/film/na.gif")
+				{
+					_ProbablyMovieModel.decProbability(1.5);
+				}
 			}
 			
 			this._ProbablyMovies.put(_ImdbId, _ProbablyMovieModel);
