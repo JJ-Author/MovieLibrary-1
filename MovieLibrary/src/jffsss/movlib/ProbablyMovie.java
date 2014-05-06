@@ -7,6 +7,8 @@ import org.apache.pivot.util.concurrent.TaskListener;
 
 import jffsss.util.Listeners;
 
+import jffsss.movlib.ToStoreFile;
+
 /**
  * ProbablyMovie beinhalten die Informationen zu einem Film und eine Wahrscheinlichkeit, die sich aus einer Menge von
  * anderen ProbablyMovie-Objekten ergibt.
@@ -17,6 +19,8 @@ public class ProbablyMovie
 	private double _ProbabilityCount;
 	private boolean _RetrievingStarted; 
 	private Collection<ProbablyMovie> _ProbablyMovies;
+	private ToStoreFile father;
+	private boolean retrievalFinished;
 
 	/**
 	 * Konstruiert ein ProbablyMovie-Objekt.
@@ -25,13 +29,14 @@ public class ProbablyMovie
 	 *            eine Menge von anderen ProbablyMovie-Objekten und diesem Objekt, aus denen sich die Wahrscheinlichkeit
 	 *            ergibt
 	 */
-	public ProbablyMovie(Collection<ProbablyMovie> _ProbablyMovies)
+	public ProbablyMovie(Collection<ProbablyMovie> _ProbablyMovies, ToStoreFile _father)
 	{
 		super();
 		this._MovieInfo = null;
 		this._ProbabilityCount = 0;
 		this._ProbablyMovies = _ProbablyMovies;
 		this._RetrievingStarted = false;
+		this.father = _father;
 	}
 
 	private Listeners onUpdate = null;

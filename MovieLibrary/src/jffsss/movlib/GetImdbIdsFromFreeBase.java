@@ -49,16 +49,16 @@ public class GetImdbIdsFromFreeBase extends Task<Map<String, Double>>
 			if (hasNoHit(_Response.asMap().get("Content")))
 			{
 				_Response = _Api.requestSearch2(true, null, "(all name{phrase}:\"" + _movieName + "\" type:/film/film)", "(key:/authority/imdb/title/)", 5, langs);
-				//System.out.println(this._VideoFileInfo.getCleanedFileName() + ": NO HITS full");
+				System.out.println(this._VideoFileInfo.getCleanedFileName() + ": NO HITS full");
 			}
 			if (hasNoHit(_Response.asMap().get("Content")))
 			{
 				_Response = _Api.requestSearch2(true, "\"" + _movieName + "\"", "(all type:/film/film)", "(key:/authority/imdb/title/)", 5, langs);
-				//System.out.println(this._VideoFileInfo.getCleanedFileName() + ": NO HITS phrase");
+				System.out.println(this._VideoFileInfo.getCleanedFileName() + ": NO HITS phrase");
 			}
 			if (hasNoHit(_Response.asMap().get("Content")))
 			{
-				//System.out.println(this._VideoFileInfo.getCleanedFileName() + ": NO HITS query");
+				System.out.println(this._VideoFileInfo.getCleanedFileName() + ": NO HITS query");
 			}
 			return parseResponse(_Response.asMap().get("Content"));
 		}

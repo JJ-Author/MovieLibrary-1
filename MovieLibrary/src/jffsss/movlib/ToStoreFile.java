@@ -154,16 +154,28 @@ public class ToStoreFile
 		ProbablyMovie _ProbablyMovieModel = this._ProbablyMovies.get(_ImdbId);
 		if (_ProbablyMovieModel == null)
 		{
-			_ProbablyMovieModel = new ProbablyMovie(this._ProbablyMovies.values());
+			_ProbablyMovieModel = new ProbablyMovie(this._ProbablyMovies.values(), this);
 			
 			if(_Probability != -1.0)
 			{
-				_ProbablyMovieModel.incProbability(_Probability);
+				/*_ProbablyMovieModel.incProbability(_Probability);
 				String poster = GetMovieInfo.getMoviePoster(_ImdbId);
-				if(poster==null || poster=="" || poster=="http://img.ofdb.de/film/na.gif")
+				System.out.println("###### Imdb ID: " + _ImdbId + "Movie Poster: " + poster);
+				if(poster==null || poster.equals("") || poster.equals("http://img.ofdb.de/film/na.gif"))
 				{
-					_ProbablyMovieModel.decProbability(1.5);
+					_ProbablyMovieModel.decProbability(0.5);
+				}*/
+				
+				String poster = GetMovieInfo.getMoviePoster(_ImdbId);
+				if(poster==null || poster.equals("") || poster.equals("http://img.ofdb.de/film/na.gif"))
+				{
+					_ProbablyMovieModel.incProbability((2/3.0)*_Probability);
 				}
+				else
+				{
+					_ProbablyMovieModel.incProbability(_Probability);
+				}
+				
 			}
 			
 			this._ProbablyMovies.put(_ImdbId, _ProbablyMovieModel);
@@ -270,7 +282,7 @@ public class ToStoreFile
 			{
 				String _ImdbId = _Result.getKey();
 				double _Factor = _MaxCount > 0 ? _Result.getValue() / _MaxCount : 0;
-				ToStoreFile.this.addProbablyMovie(_ImdbId, _Factor * this._Weight);
+				ToStoreFile.this.addProbablyMovie(_ImdbId, _Factor * this._Weight); //Rating der Quelle * Gewicht
 				//ProbablyMovie _ProbablyMovie = ToStoreFile.this.addProbablyMovie(_ImdbId, _Factor * this._Weight);
 				//_ProbablyMovie.incProbability(_Factor * this._Weight);
 			}

@@ -14,7 +14,7 @@ import org.apache.pivot.util.concurrent.Task;
 import org.apache.pivot.util.concurrent.TaskExecutionException;
 
 /**
- * GetMovieInfo ist eine Task-Klasse fï¿½r das asynchrone Finden der Film-Informationen mit Hilfe von OMDb-Seite.
+ * GetMovieInfo ist eine Task-Klasse für das asynchrone Finden der Film-Informationen mit Hilfe von OMDb-Seite.
  */
 public class GetMovieInfo extends Task<MovieInfo>
 {
