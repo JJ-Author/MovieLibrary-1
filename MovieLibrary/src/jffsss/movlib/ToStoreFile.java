@@ -12,8 +12,6 @@ import org.apache.pivot.util.concurrent.TaskListener;
 
 import jffsss.util.Listeners;
 
-import jffsss.movlib.GetMovieInfo;
-
 /**
  * ToStoreFile beinhalten die Informationen des in der Datenbank zu speichernden Films.
  */
@@ -22,6 +20,9 @@ public class ToStoreFile
 	private VideoFileInfo _VideoFileInfo;
 	private Map<Object, ProbablyMovie> _ProbablyMovies;
 
+	
+	public static double BadPosterPenalty = (2/3.0);
+
 	/**
 	 * Konstruiert ein ToStoreFile-Objekt.
 	 */
@@ -29,6 +30,7 @@ public class ToStoreFile
 	{
 		this._VideoFileInfo = null;
 		this._ProbablyMovies = new HashMap<Object, ProbablyMovie>();
+
 	}
 
 	private Listeners onUpdate = null;
@@ -140,7 +142,38 @@ public class ToStoreFile
 			_Task.execute(_TaskListener);
 		}
 	}
+	
+	public void updateProbablyMovieView()
+	{
+		Set<Object> added = new HashSet<Object>();
+		added.addAll(this._ProbablyMovies.keySet());
+		
+		this.onUpdate().notifyListeners("DeleteProbablyMovies", null);
+		
+		for(int i=0; i < this._ProbablyMovies.size(); i++)
+		{
+			double highestRating = Integer.MIN_VALUE;
+			Object ImdbId = null;
+							
+			for (Map.Entry<Object, ProbablyMovie> movie : this._ProbablyMovies.entrySet())
+			{
+				if(added.contains(movie.getKey()) && (movie.getValue().getProbabilityCount() > highestRating && movie.getValue().getProbabilityCount() > -1))
+				{
+					highestRating = movie.getValue().getProbabilityCount();
+					ImdbId = movie.getKey();
+				}
+			}
+			
+			if(highestRating != Integer.MIN_VALUE & ImdbId != null)
+			{
+				this.onUpdate().notifyListeners("AddProbablyMovie", this._ProbablyMovies.get(ImdbId));
+				this._ProbablyMovies.get(ImdbId).startRetrieving(ImdbId.toString());
+				added.remove(ImdbId);
+			}
+		}
+	}
 
+	
 	/**
 	 * Erstellt ein neues ProbablyMovie-Objekt, falls keins mit dieser IMDb-ID bereits existierte, fügt es in die Liste
 	 * ein und führt dessen Methode <CODE>startRetrieving</CODE> aus.
@@ -152,60 +185,20 @@ public class ToStoreFile
 	public ProbablyMovie addProbablyMovie(String _ImdbId, double _Probability)
 	{
 		ProbablyMovie _ProbablyMovieModel = this._ProbablyMovies.get(_ImdbId);
+		
 		if (_ProbablyMovieModel == null)
 		{
 			_ProbablyMovieModel = new ProbablyMovie(this._ProbablyMovies.values(), this);
-			
-			if(_Probability != -1.0)
-			{
-				/*_ProbablyMovieModel.incProbability(_Probability);
-				String poster = GetMovieInfo.getMoviePoster(_ImdbId);
-				System.out.println("###### Imdb ID: " + _ImdbId + "Movie Poster: " + poster);
-				if(poster==null || poster.equals("") || poster.equals("http://img.ofdb.de/film/na.gif"))
-				{
-					_ProbablyMovieModel.decProbability(0.5);
-				}*/
-				
-				String poster = GetMovieInfo.getMoviePoster(_ImdbId);
-				if(poster==null || poster.equals("") || poster.equals("http://img.ofdb.de/film/na.gif"))
-				{
-					_ProbablyMovieModel.incProbability((2/3.0)*_Probability);
-				}
-				else
-				{
-					_ProbablyMovieModel.incProbability(_Probability);
-				}
-				
-			}
-			
 			this._ProbablyMovies.put(_ImdbId, _ProbablyMovieModel);
-			this.onUpdate().notifyListeners("DeleteProbablyMovies", null);
-			
-			Set<Object> added = new HashSet<Object>();
-			added.addAll(this._ProbablyMovies.keySet());
-			
-			for(int i=0; i < this._ProbablyMovies.size(); i++)
-			{
-				double highestRating = Integer.MIN_VALUE;
-				Object ImdbId = null;
-								
-				for (Map.Entry<Object, ProbablyMovie> movie : this._ProbablyMovies.entrySet())
-				{
-					if(added.contains(movie.getKey()) && (movie.getValue().getProbabilityCount() > highestRating && movie.getValue().getProbabilityCount() > -1))
-					{
-						highestRating = movie.getValue().getProbabilityCount();
-						ImdbId = movie.getKey();
-					}
-				}
-				
-				if(highestRating != Integer.MIN_VALUE & ImdbId != null)
-				{
-					this.onUpdate().notifyListeners("AddProbablyMovie", this._ProbablyMovies.get(ImdbId));
-					this._ProbablyMovies.get(ImdbId).startRetrieving(ImdbId.toString());
-					added.remove(ImdbId);
-				}
-			}
+			//this.onUpdate().notifyListeners("DeleteProbablyMovies", null);
 		}
+			
+		if(_Probability != -1.0)
+		{
+			_ProbablyMovieModel.incProbability(_Probability * _ProbablyMovieModel.getPosterPenalty() * _ProbablyMovieModel.getLevenshteinPenalty());
+		}
+		
+		updateProbablyMovieView();
 		return _ProbablyMovieModel;
 	}
 

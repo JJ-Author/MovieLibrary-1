@@ -6,6 +6,7 @@ import org.apache.pivot.util.concurrent.Task;
 import org.apache.pivot.util.concurrent.TaskListener;
 
 import jffsss.util.Listeners;
+import jffsss.util.LevenshteinDistance;
 
 import jffsss.movlib.ToStoreFile;
 
@@ -17,10 +18,11 @@ public class ProbablyMovie
 {
 	private MovieInfo _MovieInfo;
 	private double _ProbabilityCount;
+	private double PosterPenalty;
+	private double LevenshteinPenalty;
 	private boolean _RetrievingStarted; 
 	private Collection<ProbablyMovie> _ProbablyMovies;
 	private ToStoreFile father;
-	private boolean retrievalFinished;
 
 	/**
 	 * Konstruiert ein ProbablyMovie-Objekt.
@@ -35,8 +37,10 @@ public class ProbablyMovie
 		this._MovieInfo = null;
 		this._ProbabilityCount = 0;
 		this._ProbablyMovies = _ProbablyMovies;
-		this._RetrievingStarted = false;
 		this.father = _father;
+		this._RetrievingStarted=false;
+		this.PosterPenalty = 1.0;
+		this.LevenshteinPenalty = 1.0;
 	}
 
 	private Listeners onUpdate = null;
@@ -82,6 +86,7 @@ public class ProbablyMovie
 		{
 			MovieInfo _MovieInfo = _Task.getResult();
 			ProbablyMovie.this.setMovieInfo(_MovieInfo);
+			ProbablyMovie.this.updateProbability();
 		}
 
 		@Override
@@ -112,6 +117,26 @@ public class ProbablyMovie
 	{
 		return this._MovieInfo;
 	}
+	
+	/**
+	 * Gibt die Poter Penalty zurück.
+	 * 
+	 * @return Poster Penalty
+	 */
+	public double getPosterPenalty()
+	{
+		return this.PosterPenalty;
+	}
+	
+	/**
+	 * Gibt die Levenshtein Penalty zurück.
+	 * 
+	 * @return Levenshtein Penalty
+	 */
+	public double getLevenshteinPenalty()
+	{
+		return this.LevenshteinPenalty;
+	}
 
 	/**
 	 * Erhöht die Wahrscheinlichkeit des Films.
@@ -132,21 +157,29 @@ public class ProbablyMovie
 	}
 	
 	/**
-	 * Reduziert die Wahrscheinlichkeit des Films.
-	 * 
-	 * @param _Count
-	 *            der Wert, um den der Zähler in der Wahrscheinlichkeitsberechnung reduziert wird
+	 * Überprüft das Filmposter und passt evtl die Wahrscheinlichkeit an.
 	 */
-	public void decProbability(double _Count)
+	private void updateProbability()
 	{
-		if(this._ProbabilityCount >= _Count)
+		if(this._MovieInfo.getPosterSource()==null || this._MovieInfo.getPosterSource().equals("") || this._MovieInfo.getPosterSource().equals("http://img.ofdb.de/film/na.gif")) 
 		{
-			this._ProbabilityCount -= _Count;
+			//Reduziert Wsk wenn kein Poster für den Film gefunden wurde
+			this.PosterPenalty = ToStoreFile.BadPosterPenalty;
+			this._ProbabilityCount = this._ProbabilityCount * this.PosterPenalty;
+		}
+		
+		//Multipliziert Wsk mit der Ähnlichkeit zum bereinigten Dateinamen
+		if(this._MovieInfo.getTitleDe() == null)
+		{
+			this.LevenshteinPenalty = LevenshteinDistance.similarity(this._MovieInfo.getTitle(), this.father.getVideoFileInfo().getCleanedFileName());
 		}
 		else
 		{
-			this._ProbabilityCount = 0.1;
+			this.LevenshteinPenalty = LevenshteinDistance.similarity(this._MovieInfo.getTitleDe(), this.father.getVideoFileInfo().getCleanedFileName());
 		}
+		System.out.println("Movie: " + this._MovieInfo.getTitle() + " Cleaned Filename: " + this.father.getVideoFileInfo().getCleanedFileName() + " Levenshtein Ähnlichkeit: " + this.LevenshteinPenalty);
+		this._ProbabilityCount = this._ProbabilityCount * this.LevenshteinPenalty;
+		
 		if (this._ProbablyMovies != null)
 		{
 			for (ProbablyMovie _ProbablyMovie : this._ProbablyMovies)
@@ -154,6 +187,8 @@ public class ProbablyMovie
 				_ProbablyMovie.onUpdate().notifyListeners("SetProbability", null);
 			}
 		}
+		
+		this.father.updateProbablyMovieView();
 	}
 
 	/**
