@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.io.File;
 
 import jffsss.movlib.MovieLibrary;
+import jffsss.movlib.VideoFileFilter;
 import jffsss.movlib.view.MovieLibraryView;
 
 import org.apache.pivot.collections.Map;
@@ -31,6 +32,7 @@ public class MovieLibraryLauncher implements Application
 	public void startup(Display _Display, Map<String, String> _Properties) throws Exception
 	{
 		this._Model = new MovieLibrary(new File(_Properties.get("WorkingDirectory")));
+		VideoFileFilter.setFileExtensions(_Properties.get("FileExtensions"));
 		this._View = new MovieLibraryView(this._Model);
 
 		this._View.getComponent().open(_Display);

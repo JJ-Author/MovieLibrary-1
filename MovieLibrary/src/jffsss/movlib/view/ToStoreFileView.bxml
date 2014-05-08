@@ -14,7 +14,7 @@
 					<TablePane.Column width="-1"/>
 				</columns>
 				<TablePane.Row height="-1">
-					<Label bxml:id="FilePathText"/>
+					<Label bxml:id="FilePathText" cursor="hand"/>
 					<TablePane.Filler/>
 					<TextInput bxml:id="AddMovieText" prompt="IMDb ID"/>
 					<PushButton bxml:id="AddMovieButton" buttonData="Add Movie"/>

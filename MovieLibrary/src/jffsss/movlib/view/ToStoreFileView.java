@@ -1,5 +1,7 @@
 package jffsss.movlib.view;
 
+import java.awt.Desktop;
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,8 +14,11 @@ import org.apache.pivot.beans.BXMLSerializer;
 import org.apache.pivot.wtk.Border;
 import org.apache.pivot.wtk.Button;
 import org.apache.pivot.wtk.ButtonPressListener;
+import org.apache.pivot.wtk.Component;
+import org.apache.pivot.wtk.ComponentMouseButtonListener;
 import org.apache.pivot.wtk.FlowPane;
 import org.apache.pivot.wtk.Label;
+import org.apache.pivot.wtk.Mouse;
 import org.apache.pivot.wtk.PushButton;
 import org.apache.pivot.wtk.TextInput;
 
@@ -46,6 +51,42 @@ public class ToStoreFileView
 		{
 			e.printStackTrace();
 			throw new NullPointerException();
+		}
+		{
+			ComponentMouseButtonListener _Listener = new ComponentMouseButtonListener()
+			{
+				@Override
+				public boolean mouseClick(Component _Component, Mouse.Button _MouseButton, int _X, int _Y, int _Count)
+				{
+					System.out.println(_FilePathText.toString());
+					if (ToStoreFileView.this._Model.getVideoFileInfo() != null)
+					{
+						if (Desktop.isDesktopSupported())
+						{
+							try
+							{
+								Desktop.getDesktop().open(new File(ToStoreFileView.this._Model.getVideoFileInfo().getFileInfo().getPath()));
+							}
+							catch (Exception e)
+							{}
+						}
+					}
+					return true;
+				}
+
+				@Override
+				public boolean mouseDown(Component _Component, Mouse.Button _MouseButton, int _X, int _Y)
+				{
+					return false;
+				}
+
+				@Override
+				public boolean mouseUp(Component _Component, Mouse.Button _MouseButton, int _X, int _Y)
+				{
+					return false;
+				}
+			};
+			this._FilePathText.getComponentMouseButtonListeners().add(_Listener);
 		}
 		this._Model.onUpdate().addListener(this._onUpdateListener);
 		{
