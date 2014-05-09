@@ -54,6 +54,8 @@ public class GetMovieInfo extends Task<MovieInfo>
 		{
 			Map<String, DObject> _OmdbResponseMap = _OmdbResponse.asMap();
 			Map<String, DObject> _FreeBaseResponseMap = _FreeBaseResponse.asMap();
+			//String tmp = _OmdbResponse.toString();
+			//System.out.println(_OmdbResponse.toString());
 			String _Title = _OmdbResponseMap.get("Title").asString();
 			String _TitleDe;
 			try

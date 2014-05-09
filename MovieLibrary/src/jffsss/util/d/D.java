@@ -91,7 +91,7 @@ public class D
 	 */
 	public static DObject fromJson(InputStream _InputStream) throws IOException, ParseException
 	{
-		return fromJson(new InputStreamReader(_InputStream));
+		return fromJson(new InputStreamReader(_InputStream,"UTF-8"));
 	}
 
 	public static DObject fromJson(Reader _Reader) throws IOException, ParseException

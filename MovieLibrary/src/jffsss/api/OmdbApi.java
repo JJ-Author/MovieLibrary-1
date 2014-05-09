@@ -39,6 +39,7 @@ public class OmdbApi
 			_Connection.setRequestProperty("User-Agent", "Mozilla/4.0");
 			_Connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 			_Connection.setRequestProperty("X-Requested-With", "XMLHttpRequest");
+			_Connection.setRequestProperty("Accept-Charset", "UTF-8");
 			int _StatusCode = _Connection.getResponseCode();
 			if (_StatusCode == 200)
 			{
