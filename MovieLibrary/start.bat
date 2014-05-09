@@ -1,0 +1,1 @@
+java -Djava.library.path=%~dp0lib\ -cp "%~dp0bin;%~dp0lib\*" jffsss.launch.MovieLibraryLauncher  --WorkingDirectory=%~dp0
