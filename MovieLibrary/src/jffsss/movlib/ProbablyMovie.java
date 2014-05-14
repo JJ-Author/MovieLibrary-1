@@ -168,15 +168,17 @@ public class ProbablyMovie
 			this._ProbabilityCount = this._ProbabilityCount * this.PosterPenalty;
 		}
 		
-		//Multipliziert Wsk mit der Ähnlichkeit zum bereinigten Dateinamen
-		if(this._MovieInfo.getTitleDe() == null)
+		//Multipliziert Wsk mit der Ähnlichkeit zum bereinigten Dateinamen		
+		double EnglishLevenshteinPenalty = LevenshteinDistance.similarity(this._MovieInfo.getTitle(), this.father.getVideoFileInfo().getCleanedFileName());
+
+		double GermanLevenshteinPenalty = 0.0;
+		if(this._MovieInfo.getTitleDe() != null)
 		{
-			this.LevenshteinPenalty = LevenshteinDistance.similarity(this._MovieInfo.getTitle(), this.father.getVideoFileInfo().getCleanedFileName());
+			GermanLevenshteinPenalty = LevenshteinDistance.similarity(this._MovieInfo.getTitleDe(), this.father.getVideoFileInfo().getCleanedFileName());
 		}
-		else
-		{
-			this.LevenshteinPenalty = LevenshteinDistance.similarity(this._MovieInfo.getTitleDe(), this.father.getVideoFileInfo().getCleanedFileName());
-		}
+		
+		this.LevenshteinPenalty = Math.max(GermanLevenshteinPenalty, Math.max(EnglishLevenshteinPenalty, 0.1));
+		
 		System.out.println("Movie: " + this._MovieInfo.getTitle() + " Cleaned Filename: " + this.father.getVideoFileInfo().getCleanedFileName() + " Levenshtein Ähnlichkeit: " + this.LevenshteinPenalty);
 		this._ProbabilityCount = this._ProbabilityCount * this.LevenshteinPenalty;
 		
