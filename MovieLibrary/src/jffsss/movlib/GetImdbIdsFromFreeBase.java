@@ -1,5 +1,6 @@
 package jffsss.movlib;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -101,12 +102,24 @@ public class GetImdbIdsFromFreeBase extends Task<Map<String, Double>>
 					try
 					{
 						Map<String, DObject> _ResponseMapListMap = _ResponseMapListElement.asMap();
-						String _ImdbId = _ResponseMapListMap.get("output").asMap().get("key:/authority/imdb/title/").asMap().get("/type/object/key").asList().get(0).asString().substring(24);
+						/* Bugfix 
+						 * der einfache Befehl //String _ImdbId = _ResponseMapListMap.get("output").asMap().get("key:/authority/imdb/title/").asMap().get("/type/object/key").asList().get(0).asString().substring(24);
+						 * funktioniert nicht da die ID manchmal so {key:/authority/imdb/title/ => {/type/object/id => [/authority/imdb/title/tt1483013]}}
+						 * oder so {key:/authority/imdb/title/ => {/type/object/key => [/authority/imdb/title/tt0289879]}} zurückgegeben wird
+						 */
+						Map<String, DObject> _ImdbIdMap = _ResponseMapListMap.get("output").asMap().get("key:/authority/imdb/title/").asMap();
+						List<DObject> _ImdbIdList = new ArrayList<DObject>(_ImdbIdMap.values());
+						String _ImdbId = _ImdbIdList.get(0).asList().get(0).asString().substring(24);
+						/* Bugfix ende
+						 */
 						Double _Factor = _ResponseMapListMap.get("score").parseAsDouble(1.0);
 						_ResultMap.put(_ImdbId, _Factor);
 					}
 					catch (Exception e)
-					{}
+					{
+						System.out.println("###### Freebase Result Parsing error (probably for the Imdb-ID of the Candidate with the name "+_ResponseMapListElement.asMap().get("name")+") and freebase key:"+_ResponseMapListElement.asMap().get("id")+" Exception Message: "+e.getMessage());
+						e.printStackTrace();
+					}
 				}
 			}
 			catch (Exception e)

@@ -30,6 +30,8 @@ public class FileNameCleaner
 		_Result = _Result.replaceAll("(?i)hdrip.*$", "");
 		_Result = _Result.replaceAll("(?i)dvdrip", "");
 		_Result = _Result.replaceAll("(?i)dubbed", "");
+		_Result = _Result.replaceAll("(?i)3DBD.*$", "");
+		_Result = _Result.replaceAll("(?i)SBS.*$", "");
 		_Result = _Result.replaceAll("(?i)[xh]?264.*$", "");
 		_Result = _Result.replaceAll("(?i)divx", "");
 		_Result = _Result.replaceAll("(?i)xvid", "");
