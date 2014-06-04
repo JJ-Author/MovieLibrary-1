@@ -248,7 +248,7 @@ public class ToStoreFile
 				_Weight = 2.0;
 				break;
 			case Google:
-				_Weight = 1.0;
+				_Weight = 2.0;
 				break;
 			default:
 				break;

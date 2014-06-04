@@ -75,7 +75,7 @@ public class GetImdbIdsFromGoogle extends Task<Map<String, Double>>
 					{
 						Map<String, DObject> _ResponseListMap = _ResponseListElement.asMap();
 						String _ImdbId = MovieInfo.extractImdbIdFromUrl(_ResponseListMap.get("Link").asString());
-						_Factor = (_Factor == 0) ? 2.0 : 1.0;
+						_Factor = (_Factor == 0) ? 1.0 : 0.5;
 						if(_ResultMap.containsKey(_ImdbId))
 						{
 							_ResultMap.put(_ImdbId, _ResultMap.get(_ImdbId) + 0);
